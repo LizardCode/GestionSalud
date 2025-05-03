@@ -1,0 +1,96 @@
+﻿@using LizardCode.Framework.Application.Models.Repeater;
+
+@model LizardCode.SalmaSalud.Application.Models.AperturaAutoCuentas.AperturaAutoCuentasViewModel
+@{
+    Layout = "~/Views/Shared/MaestroLayout.cshtml";
+
+    ViewBag.MainClass = "ABMAperturaAutoCuentasView";
+
+    ViewBag.Title = "Mantenimiento de Asientos de Apertura de Cuentas";
+    ViewBag.TitleNew = "Nuevo Asiento...";
+    ViewBag.TitleEdit = "Modificar Asiento...";
+    ViewBag.TitleRemove = "Eliminar Asiento...";
+    ViewBag.ItemMenu = "AperturaAutoCuentas";
+
+    ViewBag.ButtonNew = true;
+    ViewBag.ButtonEdit = true;
+    ViewBag.ButtonRemove = true;
+
+    ViewBag.AjaxGetAll = Url.Action("ObtenerTodos", "AperturaAutoCuentas");
+    ViewBag.AjaxGet = Url.Action("Obtener", "AperturaAutoCuentas");
+    ViewBag.AjaxAdd = Url.Action("Nuevo", "AperturaAutoCuentas");
+    ViewBag.AjaxUpdate = Url.Action("Modificar", "AperturaAutoCuentas");
+    ViewBag.AjaxDelete = Url.Action("Eliminar", "AperturaAutoCuentas");
+
+    ViewBag.Tabs = new string[] { "General" };
+}
+
+@section Styles {
+    <link href="/css/Views/AperturaAutoCuentas/index.css?3661" rel="stylesheet" />
+}
+
+@section Filters {
+    <div class="col">
+
+        <div class="row">
+            @Html.FilterDropDownListFor(m => m.IdEjercicio, Model.MaestroEjercicios, "Ejercicio", colSize: "col-md-4")
+            @Html.FilterTextBoxFor(m => m.Descripcion, "Descripción", colSize: "col-md-4")
+        </div>
+    
+    </div>
+}
+
+@section GridColumns {
+
+    <th>ID</th>
+    <th>Fecha</th>
+    <th>Descripción</th>
+    <th>Ejercicio</th>
+    <th>Tipo Asiento</th>
+    <th></th>
+}
+
+@section CrudForm {
+
+    <div class="col">
+        <div class="row">
+            <div class="col">
+                <h4>Datos del Asiento</h4>
+            </div>
+        </div>
+        <div class="row">
+            @Html.HiddenFor(m => m.IdAsientoApertura)
+            @Html.FormGroupDropDownListFor(m => m.IdEjercicio, Model.MaestroEjercicios, "Ejercicio", colSize: "col-md-3", addValidator:true, editingDisabled: true)
+            @Html.FormGroupPickerDateFor(m => m.Fecha, title: "Fecha", colSize: "col-md-3", addValidator: true, editingDisabled: true)
+            @Html.FormGroupTextBoxFor(m => m.Descripcion, title: "Descripción", addValidator: true, colSize: "col-md-6", editingDisabled: false)
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <button type="button" class="btn btn-primary mb-2 btnCargaItems">Cargar Items</button>
+            </div>
+        </div>
+        
+        <hr />
+
+        <div class="row">
+            <div class="col">
+                <h4>Carga de Items</h4>
+            </div>
+        </div>
+            
+        <div class="row">
+            <div class="col">
+                @await Component.InvokeAsync("Repeater", new RepeaterViewModel().SetItems(
+                    Model.Items,
+                    x => new(nameof(x.IdCuentaContable), Model.MaestroCuentasContables)
+                ))
+            </div>
+        </div>
+    </div>
+
+}
+
+@section Scripts {
+    <script src="/js/Views/AperturaAutoCuentas/index.js?3661"></script>
+}

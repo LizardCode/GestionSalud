@@ -1,0 +1,47 @@
+﻿@model LizardCode.SalmaSalud.Application.Models.RubrosArticulos.RubrosArticulosViewModel
+@{
+    Layout = "~/Views/Shared/MaestroLayout.cshtml";
+
+    ViewBag.MainClass = "ABMRubrosArticulosView";
+
+    ViewBag.Title = "Mantenimiento de Rubro de Artículos";
+    ViewBag.TitleNew = "Nuevo Rubro de Articulos...";
+    ViewBag.TitleEdit = "Modificar Rubro de Articulos...";
+    ViewBag.TitleRemove = "Eliminar Rubro de Articulos...";
+    ViewBag.ItemMenu = "Rubros de Artículos";
+
+    ViewBag.ButtonNew = true;
+    ViewBag.ButtonEdit = true;
+    ViewBag.ButtonRemove = true;
+
+    ViewBag.AjaxGetAll = Url.Action("ObtenerTodos", "RubrosArticulos");
+    ViewBag.AjaxGet = Url.Action("Obtener", "RubrosArticulos");
+    ViewBag.AjaxAdd = Url.Action("Nuevo", "RubrosArticulos");
+    ViewBag.AjaxUpdate = Url.Action("Modificar", "RubrosArticulos");
+    ViewBag.AjaxDelete = Url.Action("Eliminar", "RubrosArticulos");
+
+    ViewBag.Tabs = new string[] { "General" };
+}
+
+@section Styles {
+    <link href="/css/Views/RubrosArticulos/index.css?3661" rel="stylesheet" />
+}
+
+@section GridColumns {
+
+    <th>ID</th>
+    <th>Descripción</th>
+
+}
+
+@section CrudForm {
+
+    @Html.FormGroupTextBoxFor(m => m.IdRubroArticulo, title: "ID", editingDisabled: true, newVisible: false)
+
+    @Html.FormGroupTextBoxFor(m => m.Descripcion, title: "Descripción", addValidator: true)
+
+}
+
+@section Scripts {
+    <script src="/js/Views/RubrosArticulos/index.js?3661"></script>
+}

@@ -1,0 +1,110 @@
+﻿.user-info {
+    padding-top: 10px !important;
+    height: 65px !important;
+}
+
+.field-validation-error {
+    color: red;
+    font-weight: 400;
+    font-size: 11px;
+}
+
+.titulo_tabla {
+    font-size: 18px !important;
+    font-weight: 400 !important;
+    color: #000 !important;
+}
+
+.titulo_mensaje {
+    font-size: 18px !important;
+    font-weight: 400 !important;
+    color: #000 !important;
+}
+
+
+
+
+.font12 {
+    font-size: 12px !important;
+    color: #000 !important;
+    font-weight: 400;
+}
+
+.font10 {
+    font-size: 10px !important;
+    color: #000 !important
+}
+
+.font8 {
+    font-size: 8px !important;
+    color: #000 !important
+}
+
+.badge-primary {
+    color: #000;
+    background-color: #A2E7DB;
+}
+
+.badge-warning {
+    color: #000;
+    background-color: #FFDB7E;
+}
+
+.badge-danger {
+    color: #000;
+    background-color: #FF7878;
+}
+
+.azul1 {
+    background-color: #4b9eff !important
+}
+
+.azul2 {
+    background-color: #93c5ff !important
+}
+
+.badge {
+    font-weight: 600;
+    line-height: 1.4;
+    padding: 3px 6px;
+    font-size: 10px;
+    font-weight: 600;
+    box-shadow: none !important;
+    transition: all 0.3s ease-out;
+    -webkit-transition: all 0.3s ease-out;
+}
+
+.font22 {
+    font-size: 22px !important;
+    color: #000;
+    font-weight: 700 !important
+}
+
+.font38 {
+    font-size: 38px !important;
+    color: #fff;
+    font-weight: 700 !important
+}
+
+.w700 {
+    font-weight: 700 !important
+}
+
+.font-white {
+    color: #fff !important;
+}
+
+.btn-slider {
+    border: 1px solid #fff !important;
+    color: #fff !important;
+}
+
+.style-custom-1 .carousel-caption {
+    width: 80% !important;
+}
+.iInfoBusqueda {
+    background-color: aliceblue;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}

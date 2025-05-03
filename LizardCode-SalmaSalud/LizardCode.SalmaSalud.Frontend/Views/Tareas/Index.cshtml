@@ -1,0 +1,65 @@
+﻿@model LizardCode.SalmaSalud.Application.Models.Tareas.TareasViewModel
+@{
+    Layout = "~/Views/Shared/MaestroLayout.cshtml";
+
+    ViewBag.MainClass = "ABMTareasView";
+
+    ViewBag.Title = "Mantenimiento de Tareas";
+    ViewBag.TitleNew = "Nueva Tarea...";
+    ViewBag.TitleEdit = "Modificar Tarea...";
+    ViewBag.TitleRemove = "Eliminar Tarea...";
+    ViewBag.ItemMenu = "Tareas";
+
+    ViewBag.ButtonNew = true;
+    ViewBag.ButtonEdit = true;
+    ViewBag.ButtonRemove = true;
+
+    ViewBag.AjaxGetAll = Url.Action("ObtenerTodos", "Tareas");
+    ViewBag.AjaxGet = Url.Action("Obtener", "Tareas");
+    ViewBag.AjaxAdd = Url.Action("Nuevo", "Tareas");
+    ViewBag.AjaxUpdate = Url.Action("Modificar", "Tareas");
+    ViewBag.AjaxDelete = Url.Action("Eliminar", "Tareas");
+
+    ViewBag.Tabs = new string[] { "General" };
+}
+
+@section Styles {
+    <link href="/css/Views/Tareas/index.css?3661" rel="stylesheet" />
+}
+
+@section GridColumns {
+
+    <th>ID</th>
+    <th>Descripción</th>
+    <th>IdTipoTarea</th>
+    <th>Tipo</th>
+    <th>Cta.Cliente</th>
+    <th>Cta.Proveedor</th>
+    <th></th>
+
+}
+
+@section CrudForm {
+
+    @Html.FormGroupTextBoxFor(m => m.IdTarea, title: "ID", editingDisabled: true, newVisible: false)
+
+    @Html.FormGroupTextBoxFor(m => m.Descripcion, title: "Descripción", addValidator: true)
+
+    @Html.FormGroupDropDownListFor(m => m.IdTipoTarea, Model.MaestroTipoTareas, "Tipo de Tarea", addValidator: true)
+
+    <div class="form-group field col-md-12">
+        <label class="form-label" for="IdTareaGrupo">Grupo Tarea</label>
+        <div class="controls">
+            @Html.HiddenFor(m => m.IdTareaGrupo)
+        </div>
+    </div>
+
+    @Html.FormGroupDropDownListFor(m => m.IdCuentaCliente, Model.MaestroCuentasContables, "Cuenta Integradora de Clientes", addValidator: true)
+
+    @Html.FormGroupDropDownListFor(m => m.IdCuentaProveedor, Model.MaestroCuentasContables, "Cuenta Integradora de Proveedores", addValidator: true)
+
+}
+
+@section Scripts {
+    <script src="/js/Views/Tareas/index.js?3661"></script>
+}

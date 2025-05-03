@@ -1,0 +1,139 @@
+﻿div.repeater-component {
+
+}
+
+div.repeater-component > table {
+
+}
+
+div.repeater-component > table > thead > tr > th {
+    padding-right: 5px;
+    color: #3b3f5c;
+    white-space: nowrap;
+    box-sizing: content-box;
+}
+
+div.repeater-component > table > thead > tr > th > span {
+    display: block;
+    padding: 1px 2px;
+    border-bottom: solid 1px #dcdcdc;
+}
+
+div.repeater-component > table > tbody:before {
+    content: ' ';
+    display: block;
+    line-height: 10px;
+}
+
+div.repeater-component > table > tbody > tr.repeater-row-template {
+    display: none;
+}
+
+div.repeater-component > table > tbody > tr > td {
+    padding-right: 10px;
+    box-sizing: content-box;
+}
+
+div.repeater-component > table > thead > tr > th.hidden,
+div.repeater-component > table > tbody > tr > td.hidden {
+    display: none;
+}
+
+div.repeater-component > table > tbody > tr > td:last-child {
+    display: none;
+    width: 44px;
+    min-width: 44px;
+    max-width: 44px;
+    padding-right: 0;
+}
+
+div.repeater-component > table > tbody > tr > td:last-child > i {
+    font-size: 22px;
+    color: #3b3f5c;
+    padding-right: 4px;
+    cursor: pointer;
+}
+
+div.repeater-component > table > tbody > tr > td:last-child > i:last-child {
+    padding-right: 0;
+}
+
+div.repeater-component > table > tbody > tr > td:last-child > i:hover {
+    color: #008a70;
+}
+
+div.repeater-component > table > tbody > tr:hover > td:last-child {
+    display: block;
+}
+
+div.repeater-component > table > tbody > tr > td > .repeater-control {
+    width: 100%;
+    border: none;
+    border-top: solid 1px transparent;
+    border-left: solid 1px transparent;
+    border-bottom: solid 1px #dcdcdc;
+    padding: 1px 2px;
+    text-transform: uppercase;
+}
+
+div.repeater-component > table > tbody > tr > td > .repeater-control:hover:not(:focus) {
+    background-color: #008a700a;
+}
+
+div.repeater-component > table > tbody > tr > td > .repeater-control::selection {
+    background-color: #008a70a9;
+    color: white;
+}
+
+div.repeater-component > table > tbody > tr > td > .repeater-control[readonly],
+div.repeater-component > table > tbody > tr > td > .repeater-control[disabled] {
+    background: none;
+    color: lightgray;
+    cursor: not-allowed;
+}
+
+div.repeater-component > table > tbody > tr > td > .repeater-control:not([readonly]):not([disabled]):focus {
+    border-left: solid 1px #00dbcd;
+    border-bottom-color: #00dbcd;
+    color: #008a70;
+}
+
+div.repeater-component > table > tbody > tr > td > select.repeater-control {
+    appearance: none;
+    cursor: pointer;
+}
+
+div.repeater-component > table > tbody > tr > td > select.repeater-control:not([readonly]):not([disabled]) {
+    padding-right: 16px;
+    background-image: linear-gradient(45deg, transparent 50%, #94959e 50%), linear-gradient(135deg, #94959e 50%, transparent 50%);
+    background-position: calc(100% - 7px) 50%, calc(100% - 3px) 50%;
+    background-size: 5px 5px, 5px 5px;
+    background-repeat: no-repeat;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+div.repeater-component > table > tbody > tr > td > select.repeater-control:not([readonly]):not([disabled]):focus {
+    background-image: linear-gradient(45deg, transparent 50%, #00bbaf 50%), linear-gradient(135deg, #00bbaf 50%, transparent 50%);
+}
+
+div.repeater-component > table > tfoot > tr > td > div {
+    text-align: center;
+    color: black;
+    font-size: 16px;
+    padding: 10px;
+    cursor: pointer;
+}
+
+div.repeater-component > table > tfoot.hidden {
+    display: none;
+}
+
+div.repeater-component > table > tfoot > tr > td > div:hover {
+    background-color: #008a700a;
+}
+
+div.repeater-component > table > tfoot > tr > td > div:active {
+    background-color: #008a7034;
+}

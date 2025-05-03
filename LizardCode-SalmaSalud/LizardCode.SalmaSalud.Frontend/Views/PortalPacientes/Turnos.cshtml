@@ -1,0 +1,131 @@
+﻿@using LizardCode.SalmaSalud.Domain.Enums;
+@model LizardCode.SalmaSalud.Application.Models.PortalPacientes.TurnosSolicitudViewModel;
+@{
+    Layout = "~/Views/Shared/BaseLayoutPortal.cshtml";
+
+    ViewBag.Title = "";
+    ViewBag.MainClass = "TurnosView";
+}
+
+@section Styles {
+    <link href="/lib/datatables/DataTables-1.10.20/css/dataTables.bootstrap4.min.css" rel="stylesheet" />
+    <link href="/lib/datatables/Buttons-1.6.1/css/buttons.bootstrap4.min.css" rel="stylesheet" />
+    <link href="/lib/select2/css/select2.css" rel="stylesheet" />
+    <link href="/lib/datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet" />
+    <link href="/lib/timepicker/css/bootstrap-timepicker.min.css" rel="stylesheet" />
+    <link href="/css/Shared/dt-global_style.css?3661" rel="stylesheet" />
+
+    <link href="/css/Shared/maestroLayout.css?3661" rel="stylesheet" />
+    <link href="/css/Shared/modal.css?3661" rel="stylesheet" />
+    <link href="/css/Views/PortalPacientes/turnos.css?3661" rel="stylesheet" />
+}
+
+<div class="@ViewBag.MainClass" data-mainclass="@ViewBag.MainClass">
+    <div class="widget-header mb-2">
+        <div class="row">
+            <div class="col">
+                <h4>Solicitudes de Turnos</h4>
+            </div>
+        </div>
+    </div>
+    <div class="row toolbar">
+        <div class="col-md-3 toolbar-extended">
+            
+        </div>
+        <div class="col-md-9">
+            <div class="toolbar-actions">
+                <button type="button" class="btn btn-primary btNew" title="Nueva Solicitud"><i class="fa fa-plus"></i> <span>Nueva Solicitud</span></button>
+            </div>
+        </div>
+    </div>
+
+    <div class="row layout-top-spacing">
+        <div class="col-12">
+            <div class="accordion" id="accordionExample">
+                @{
+                    int i = 0;
+                }
+                @foreach (var turno in Model.Turnos)
+                {
+                    <div class="card">
+                        <div class="card-header" id="headingOne">
+                            <h2 class="mb-0">
+                                <button class="btn btn-link btn-block text-left btnVerTurno" data-id-turno="@turno.IdTurnoSolicitud" data-idx="@i" type="button" data-toggle="collapse" data-target="@string.Format("#collapse{0}", i)" aria-expanded="false" aria-controls="@string.Format("collapse{0}", i)">
+                                    @Html.Raw(string.Format("{0} - {1} - {2} ", turno.FechaSolicitud.ToString("dd/MM/yyyy"), turno.Especialidad,
+                                                string.Format("<span class=\"badge badge-{0}\">{1}</span>", turno.EstadoClase, turno.Estado)))
+                                </button>
+                            </h2>
+                        </div>
+
+                        <div id="@string.Format("collapse{0}", i)" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+                            <div class="card-body" id="@string.Format("turnosBody{0}", i)">
+                                <div class="row alert alert-secondary">
+                                    <div class="col">
+                                        <b>Fecha Solicitud: </b>
+                                        <p>@turno.FechaSolicitud.ToString("dd/MM HH:mm")</p>
+                                    </div>
+                                    <div class="col">
+                                        <b>Fecha Asignada: </b>
+                                        <p>@turno.FechaAsignacion?.ToString("dd/MM HH:mm")</p>
+                                    </div>
+                                    <div class="col">
+                                        <b>Observaciones: </b>
+                                        <p>@turno.ObservacionesAsignacion</p>
+                                    </div>
+                                </div>
+                                @if (turno.IdEstadoTurnoSolicitud == (int)EstadoTurnoSolicitud.Solicitado)
+                                {
+                                    <div class="row">
+                                        <div class="col mt-3">
+                                            <button type="button" class="btn btn-danger btnCancelarTurno" data-width-class="modal-50" data-ajax-action="@string.Format("/TurnosSolicitud/Cancelar", turno.IdTurnoSolicitud)" data-id-turno-solicitud="@turno.IdTurnoSolicitud">
+                                                <i class="fa fa-times"></i> CANCELAR
+                                            </button>                                                    
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    i++;
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="/lib/datepicker/js/bootstrap-datepicker.min.js"></script>
+    <script src="/lib/datepicker/js/bootstrap-datepicker.es.min.js"></script>
+    <script src="/lib/timepicker/js/bootstrap-timepicker.js"></script>
+    <script src="/lib/datatables/DataTables-1.10.20/js/jquery.dataTables.min.js"></script>
+    <script src="/lib/datatables/DataTables-1.10.20/js/dataTables.bootstrap4.min.js"></script>
+    <script src="/lib/datatables/DateTime-1.10.x/datetime-moment.js"></script>
+    <script src="/lib/datatables/Buttons-1.6.1/js/dataTables.buttons.min.js"></script>
+    <script src="/lib/datatables/Buttons-1.6.1/js/buttons.bootstrap4.min.js"></script>
+    <script src="/lib/datatables/Select-1.3.1/js/dataTables.select.min.js"></script>
+    <script src="/lib/datatables/Select-1.3.1/js/select.bootstrap4.min.js"></script>
+    <script src="/lib/select2/js/select2.min.js"></script>
+    <script src="/lib/select2/js/select2_locale_es.js?3661"></script>
+    <script src="/lib/accounting/accounting.min.js"></script>
+    <script src="/lib/autonumeric/autoNumeric.min.js"></script>
+    <script src="/lib/jquery-alphanum/jquery.alphanum.js"></script>
+    <script src="/lib/cleave/cleave.min.js"></script>
+    <script src="/lib/cleave/cleave.jquery.js"></script>
+    <script src="/lib/cleave/cleave-phone.ar.js"></script>
+    <script src="/lib/flatpickr/flatpickr.js"></script>
+    <script src="/lib/flatpickr/es.js"></script>
+
+    <script src="/js/Helpers/dataTables.helper.js?3661"></script>
+    <script src="/js/Helpers/select2.helper.js?3661"></script>
+    <script src="/js/Helpers/formData.helper.js?3661"></script>
+    <script src="/js/Helpers/ajax-action.js?3661"></script>
+    <script src="/js/Helpers/constraints.helper.js?3661"></script>
+    <script src="/js/Helpers/accounting.helper.js"></script>
+    <script src="/js/Helpers/dropdown-group-list.helper.js?3661"></script>
+    <script src="/js/Helpers/parseDynamicContent.helper.js?3661"></script>
+
+    <script src="/js/Shared/enums.js?3661"></script>
+    <script src="/js/Shared/modals.js?3661"></script>
+
+    <script src="/js/Views/PortalPacientes/turnos.js?3661"></script>
+}

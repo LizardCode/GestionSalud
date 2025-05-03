@@ -1,0 +1,48 @@
+﻿@model LizardCode.SalmaSalud.Application.Models.Reportes.PrestacionesFinanciadorViewModel
+@{
+    Layout = "~/Views/Shared/ReportLayout.cshtml";
+
+    ViewBag.MainClass = "PrestacionesFinanciadorView";
+
+    ViewBag.Title = "Prestaciones por Financiador";
+    ViewBag.ItemMenu = "Prestaciones por Financiador";
+
+    ViewBag.ButtonExcel = true;
+    ViewBag.ButtonPDF = false;
+    ViewBag.ButtonPrint = false;
+
+    ViewBag.AjaxGetAll = Url.Action("ObtenerPrestacionesFinanciador", "Reportes");
+}
+
+@section Styles {
+    <link href="/css/Views/Reportes/index.css?3661" rel="stylesheet" />
+}
+
+@section Filters {
+    <div class="col">
+
+        <div class="row">
+            @Html.FilterPickerDateFor(m => m.FechaDesde, "Fecha Desde", colSize: "col-md-3")
+            @Html.FilterPickerDateFor(m => m.FechaHasta, "Fecha Hasta", colSize: "col-md-3")
+            @Html.FilterDropDownListFor(m => m.IdTipoPrestacion, Model.MaestroTiposPrestacion, "Tipo Prestación", colSize: "col-md-3")
+            @Html.FilterDropDownListFor(m => m.IdFinanciador, Model.MaestroFinanciadores, "Financiador", colSize: "col-md-3")
+        </div>
+
+    </div>
+}
+
+@section GridColumns {
+
+    <th></th>
+    <th>Fecha</th>
+    <th>Tipo</th>
+    <th>Prestacion</th>
+    <th>Código</th>
+    <th>Financiador</th>
+    <th>Especialidad</th>
+    <th>Valor</th>
+}
+
+@section Scripts {
+    <script src="/js/Views/Reportes/prestacionesFinanciador.js?3661"></script>
+}

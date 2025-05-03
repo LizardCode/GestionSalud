@@ -1,0 +1,199 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="GetTableColumn" xml:space="preserve">
+    <value>select 
+        replace(col.name, ' ', '_') ColumnName,
+        case typ.name 
+            when 'bigint' then 'long'
+            when 'binary' then 'byte[]'
+            when 'bit' then 'bool'
+            when 'char' then 'String'
+            when 'date' then 'DateTime'
+            when 'datetime' then 'DateTime'
+            when 'datetime2' then 'DateTime'
+            when 'datetimeoffset' then 'DateTimeOffset'
+            when 'decimal' then 'decimal'
+            when 'float' then 'float'
+            when 'image' then 'byte[]'
+            when 'int' then 'int'
+            when 'money' then 'decimal'
+            when 'nchar' then 'char'
+            when 'ntext' then 'string'
+            when 'numeric' then 'decimal'
+            when 'nvarchar' then 'string'
+            when 'real' then 'double'
+            when 'smalldatetime' then 'DateTime'
+            when 'smallint' then 'short'
+            when 'smallmoney' then 'decimal'
+            when 'text' then 'string'
+            when 'time' then 'TimeSpan'
+            when 'timestamp' then 'DateTime'
+            when 'tinyint' then 'byte'
+            when 'uniqueidentifier' then 'Guid'
+            when 'varbinary' then 'byte[]'
+            when 'varchar' then 'string'
+            else 'UNKNOWN_' + typ.name
+        END + CASE WHEN col.is_nullable=1 AND typ.name NOT IN ('binary', 'varbinary', 'image', 'text', 'ntext', 'varchar', 'nvarchar', 'char', 'nchar') THEN '?' ELSE '' END ColumnTypeNet , 
+		CASE WHEN col.is_nullable=1 AND typ.name NOT IN ('binary', 'varbinary', 'image', 'text', 'ntext', 'varchar', 'nvarchar', 'char', 'nchar') THEN CONVERT(BIT, 1) ELSE CONVERT(BIT, 0) END IsNullable,
+		CASE WHEN typ.name IN ('text', 'ntext', 'varchar', 'nvarchar', 'char', 'nchar') THEN col.max_length ELSE NULL END  AS MaxLengthString,
+		col.is_identity AS IsIdentity,
+		CASE WHEN PKTable.column_name IS NOT NULL THEN CONVERT(BIT, 1) ELSE CONVERT(BIT, 0) END AS IsPrimaryKey,
+		CASE WHEN fk.fk_column IS NOT NULL THEN CONVERT(BIT, 1) ELSE CONVERT(BIT, 0) END AS IsForeignKey,
+		fk.ReferencedTable
+    from sys.columns col
+        join sys.types typ ON  col.system_type_id = typ.system_type_id AND col.user_type_id = typ.user_type_id  
+		LEFT JOIN (
+				SELECT
+					parent_object_id,
+					parent_column_id AS column_id,
+					COL_NAME(parent_object_id, parent_column_id) as fk_column,	
+					OBJECT_NAME(referenced_object_id) as ReferencedTable
+			FROM sys.foreign_key_columns
+
+		) fk ON col.object_id = fk.parent_object_id AND col.column_id = fk.column_id
+
+		LEFT JOIN (
+					SELECT
+						  KC.[parent_object_id],
+						  SCHEMA_NAME(KC.[schema_id]) AS [schema_name],
+						  OBJECT_NAME(KC.[parent_object_id]) AS [table_name],
+						  KC.[name],
+						  I.[type_desc],
+						  IC.key_ordinal,
+						  COL_NAME(I.[object_id], IC.column_id) AS [column_name],
+						  IC.is_descending_key,
+						  IC.is_included_column
+						FROM
+						  sys.key_constraints AS KC
+						  INNER JOIN sys.indexes AS I ON KC.unique_index_id = I.index_id AND KC.parent_object_id = I.[object_id]
+						  INNER JOIN sys.index_columns AS IC ON I.[object_id] = IC.[object_id] AND I.index_id = IC.index_id
+						WHERE
+						  KC.[type] = 'PK'
+ 				) AS PKTable ON  PKTable.parent_object_id = col.object_id AND  PKTable.column_name = col.name
+    where object_id = object_id(@TableName)
+	ORDER BY col.column_id</value>
+  </data>
+  <data name="GetTables" xml:space="preserve">
+    <value>SELECT S.name AS NameS,T.name As NameT,S.name + '.' + T.name As  Name  
+FROM sys.tables T INNER JOIN sys.schemas S ON T.schema_id = S.schema_id 
+WHERE T.name &lt;&gt; 'sysdiagrams'
+ORDER by 3</value>
+  </data>
+</root>

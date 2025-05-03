@@ -1,0 +1,115 @@
+﻿@model LizardCode.SalmaSalud.Application.Models.Cheques.ChequesViewModel
+@using LizardCode.Framework.Application.Models.Repeater;
+@{
+    Layout = "~/Views/Shared/MaestroLayout.cshtml";
+
+    ViewBag.MainClass = "ABMChequesView";
+
+    ViewBag.Title = "Mantenimiento de Cheques";
+    ViewBag.TitleNew = "Nuevo Cheque...";
+    ViewBag.TitleEdit = "Modificar Cheque...";
+    ViewBag.TitleRemove = "Anular Cheque...";
+    ViewBag.ItemMenu = "Cheques";
+
+    ViewBag.ButtonNew = true;
+    ViewBag.ButtonEdit = false;
+    ViewBag.ButtonRemove = true;
+
+    ViewBag.AjaxGetAll = Url.Action("ObtenerTodos", "Cheques");
+    ViewBag.AjaxGet = Url.Action("Obtener", "Cheques");
+    ViewBag.AjaxAdd = Url.Action("Nuevo", "Cheques");
+    ViewBag.AjaxUpdate = Url.Action("Modificar", "Cheques");
+    ViewBag.AjaxDelete = Url.Action("Eliminar", "Cheques");
+    ViewBag.AjaxDebitar = Url.Action("Debitar", "Cheques");
+
+    ViewBag.Tabs = new string[] { "General" };
+}
+
+@section Styles {
+    <link href="/css/Views/Cheques/index.css?3661" rel="stylesheet" />
+}
+
+@section ToolbarButtons {
+    <button type="button" class="btn btn-secondary btDebitar" title="Debitar"><i class="far fa-money-check-edit-alt"></i> <span>Debitar</span></button>
+
+}
+
+@section Filters {
+    <div class="col">
+
+        <div class="row">
+            @Html.FilterDropDownListFor(m => m.IdTipoCheque, Model.MaestroTipoCheque, "Tipo de Cheque", colSize: "col-md-4")
+            @Html.FilterDropDownListFor(m => m.IdEstadoCheque, Model.MaestroEstadoCheque, "Estado Cheque", colSize: "col-md-4")
+            @Html.FilterTextBoxFor(m => m.NumeroCheque, "Número de Cheque", value: string.Empty, colSize: "col-md-4")
+        </div>
+  
+    </div>
+}
+
+@section GridColumns {
+
+    <th>ID</th>
+    <th></th>
+    <th>Tipo</th>
+    <th>N° Cheque</th>
+    <th>Fecha</th>
+    <th>Fecha Dif.</th>
+    <th>Banco</th>
+    <th></th>
+    <th></th>
+    <th>Estado</th>
+    <th>Importe</th>
+    <th></th>
+
+}
+
+@section CrudForm {
+
+    @Html.FormGroupTextBoxFor(m => m.IdCheque, title: "ID", editingDisabled: true, newVisible: false)
+
+    @Html.FormGroupDropDownListFor(m => m.IdBanco, Model.MaestroBancos, "Banco", addValidator: true)
+
+    @Html.FormGroupDropDownListFor(m => m.IdTipoCheque, Model.MaestroTipoChequePropios, "Tipo de Cheque", addValidator: true)
+
+    @Html.FormGroupInputGroupFor(m => m.NroDesde, title: "N° Cheque Desde", icon: "#", addValidator: true, editingDisabled: false)
+
+    @Html.FormGroupInputGroupFor(m => m.NroHasta, title: "N° ChequeHasta", icon: "#", addValidator: true, editingDisabled: false)
+
+}
+
+@section CustomModals {
+
+    @using (Html.BeginModal("Cheques a Debitar...", (string)ViewBag.MainClass, "modalDebitar", (string)ViewBag.AjaxDebitar))
+    {
+        <div class="row">
+            @Html.FormGroupDropDownListFor(m => m.IdEjercicio, Model.MaestroEjercicios, "Ejercicio", colSize: "col-md-4", addValidator:true, editingDisabled: false)
+            @Html.FormGroupPickerDateFor(m => m.Fecha, title: "Fecha", colSize: "col-md-3", addValidator: true, editingDisabled: false)
+            @Html.FormGroupDropDownListFor(m => m.IdBancoDebitar, Model.MaestroBancos, "Banco", colSize: "col-md-5", addValidator: true, editingDisabled: false)
+        </div>
+
+        <br />
+
+        <div class="col">        
+            <div class="dvChequesADebitar">
+                <div class="row">
+                    <div class="col">
+                        <h4>Listado de Cheques</h4>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col dvChequesADebitar">
+                        @await Component.InvokeAsync("Repeater", new RepeaterViewModel().SetItems(
+                            Model.ChequesADebitar,
+                            "ChequesADebitar"
+                        ))
+                    </div>
+                </div>
+            </div>
+        </div>        
+    }
+}
+
+@section Scripts {
+    <script src="/js/Views/Cheques/index.js?3661"></script>
+}

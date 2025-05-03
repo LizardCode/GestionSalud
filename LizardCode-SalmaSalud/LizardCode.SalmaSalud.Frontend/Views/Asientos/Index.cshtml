@@ -1,0 +1,127 @@
+﻿@using LizardCode.Framework.Application.Models.Repeater;
+
+@model LizardCode.SalmaSalud.Application.Models.Asientos.AsientosViewModel
+@{
+    Layout = "~/Views/Shared/MaestroLayout.cshtml";
+
+    ViewBag.MainClass = "ABMAsientosView";
+
+    ViewBag.Title = "Mantenimiento de Asientos";
+    ViewBag.TitleNew = "Nuevo Asiento...";
+    ViewBag.TitleEdit = "Modificar Asiento...";
+    ViewBag.TitleRemove = "Eliminar Asiento...";
+    ViewBag.ItemMenu = "Asientos";
+
+    ViewBag.ButtonNew = true;
+    ViewBag.ButtonEdit = true;
+    ViewBag.ButtonRemove = true;
+
+    ViewBag.AjaxGetAll = Url.Action("ObtenerTodos", "Asientos");
+    ViewBag.AjaxGet = Url.Action("Obtener", "Asientos");
+    ViewBag.AjaxAdd = Url.Action("Nuevo", "Asientos");
+    ViewBag.AjaxUpdate = Url.Action("Modificar", "Asientos");
+    ViewBag.AjaxDelete = Url.Action("Eliminar", "Asientos");
+
+    ViewBag.Tabs = new string[] { "General" };
+}
+
+@section Styles {
+    <link href="/css/Views/Asientos/index.css?3661" rel="stylesheet" />
+}
+
+@section Filters {
+    <div class="col">
+
+        <div class="row">
+            @Html.FilterDropDownListFor(m => m.IdEjercicio, Model.MaestroEjercicios, "Ejercicio", colSize: "col-md-4")
+            @Html.FilterTextBoxFor(m => m.Descripcion, "Descripción", colSize: "col-md-4")
+            @Html.FilterDropDownListFor(m => m.IdTipoAsiento, Model.MaestroTipoAsientos, "Tipo de Asiento", colSize: "col-md-4")
+        </div>
+
+        <div class="row">
+            @Html.FilterPickerDateFor(m => m.FechaDesde, "Fecha Desde", value: string.Empty, colSize: "col-md-2")
+            @Html.FilterPickerDateFor(m => m.FechaHasta, "Fecha Hasta", value: string.Empty, colSize: "col-md-2")
+        </div>
+    
+    </div>
+}
+
+@section GridColumns {
+
+    <th>ID</th>
+    <th>Fecha</th>
+    <th>Descripción</th>
+    <th>Tipo Asiento</th>
+    <th></th>
+}
+
+@section CrudForm {
+
+    <div class="col">
+        <div class="row">
+            <div class="col">
+                <h4>Datos del Asiento</h4>
+            </div>
+        </div>
+        <div class="row">
+            @Html.HiddenFor(m => m.IdAsiento)
+            @Html.FormGroupDropDownListFor(m => m.IdEjercicio, Model.MaestroEjercicios, "Ejercicio", colSize: "col-md-3", addValidator:true, editingDisabled: true)
+            @Html.FormGroupPickerDateFor(m => m.Fecha, title: "Fecha", colSize: "col-md-2", addValidator: true, editingDisabled: false)
+            @Html.FormGroupDropDownListFor(m => m.IdTipoAsiento, Model.MaestroTipoAsientos, "Tipo de Asiento", colSize: "col-md-3", addValidator: true)
+            @Html.FormGroupTextBoxFor(m => m.Descripcion, title: "Descripción", addValidator: true, colSize: "col-md-4", editingDisabled: false)
+        </div>
+        <div class="row">
+            
+        </div>
+        
+        <hr />
+
+        <div class="row">
+            <div class="col">
+                <h4>Carga de items</h4>
+            </div>
+        </div>
+            
+        <div class="row">
+            <div class="col">
+                @await Component.InvokeAsync("Repeater", new RepeaterViewModel().SetItems(
+                    Model.Items,
+                    x => new(nameof(x.IdCuentaContable), Model.MaestroCuentasContables)
+                ))
+            </div>
+        </div>
+
+        <div class="inv--total-amounts">
+            <div class="row mt-4">
+                <div class="col-sm-5 col-12 order-sm-0 order-1">
+                </div>
+                <div class="col-sm-7 col-12 order-sm-1 order-0">
+                    <div class="text-sm-right">
+                        <div class="row">
+                            <div class="col-sm-10 col-8 grand-total-title">
+                                <h5>Total Débitos: </h5>
+                            </div>
+                            <div class="col-sm-2 col-4 grand-total-amount">
+                                <h5 class="TotalDebitos">$ 0</h5>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-10 col-8 grand-total-title">
+                                <h5>Total Créditos: </h5>
+                            </div>
+                            <div class="col-sm-2 col-4 grand-total-amount">
+                                <h5 class="TotalCreditos">$ 0</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+
+@section Scripts {
+    <script src="/js/Views/Asientos/index.js?3661"></script>
+}

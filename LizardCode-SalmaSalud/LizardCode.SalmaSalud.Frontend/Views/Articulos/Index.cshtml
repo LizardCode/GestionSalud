@@ -1,0 +1,63 @@
+﻿@model LizardCode.SalmaSalud.Application.Models.Articulos.ArticulosViewModel
+@{
+    Layout = "~/Views/Shared/MaestroLayout.cshtml";
+
+    ViewBag.MainClass = "ABMArticuloView";
+
+    ViewBag.Title = "Mantenimiento de Articulos";
+    ViewBag.TitleNew = "Nuevo Articulo...";
+    ViewBag.TitleEdit = "Modificar Articulo...";
+    ViewBag.TitleRemove = "Eliminar Articulo...";
+    ViewBag.ItemMenu = "Articulos";
+
+    ViewBag.ButtonNew = true;
+    ViewBag.ButtonEdit = true;
+    ViewBag.ButtonRemove = true;
+
+    ViewBag.AjaxGetAll = Url.Action("ObtenerTodos", "Articulos");
+    ViewBag.AjaxGet = Url.Action("Obtener", "Articulos");
+    ViewBag.AjaxAdd = Url.Action("Nuevo", "Articulos");
+    ViewBag.AjaxUpdate = Url.Action("Modificar", "Articulos");
+    ViewBag.AjaxDelete = Url.Action("Eliminar", "Articulos");
+
+    ViewBag.Tabs = new string[] { "General" };
+}
+
+@section Styles {
+    <link href="/css/Views/Articulos/index.css?3661" rel="stylesheet" />
+}
+
+@section GridColumns {
+
+    <th>ID</th>
+    <th>Cod.Barras</th>
+    <th>Descripción</th>
+    <th>Alicuota</th>
+
+}
+
+@section CrudForm {
+
+    @Html.FormGroupTextBoxFor(m => m.IdArticulo, title: "ID", editingDisabled: true, newVisible: false)
+
+    @Html.FormGroupDropDownListFor(m => m.IdRubroArticulo, Model.MaestroRubros, "Rubro", addValidator: false)
+
+    @Html.FormGroupTextBoxFor(m => m.CodigoBarras, title: "Código de Barras", addValidator: true)
+
+    @Html.FormGroupTextBoxFor(m => m.Descripcion, title: "Descripción", addValidator: true)
+
+    @Html.FormGroupDropDownListFor(m => m.Alicuota, Model.MaestroAlicuotas, "Alicuota", addValidator: true)
+
+    @Html.FormGroupTextAreaFor(m => m.Detalle, title: "Detalle", addValidator: true)
+
+    <hr />
+
+    @Html.FormGroupDropDownListFor(m => m.IdCuentaContableVentas, Model.MaestroCuentasContablesVentas, "Cuenta Contable Ventas", addValidator: false)
+
+    @Html.FormGroupDropDownListFor(m => m.IdCuentaContableCompras, Model.MaestroCuentasContablesCompras, "Cuenta Contable Compras", addValidator: false)
+
+}
+
+@section Scripts {
+    <script src="/js/Views/Articulos/index.js?3661"></script>
+}

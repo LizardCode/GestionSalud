@@ -1,0 +1,98 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32421.90
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LizadCode.SalmaSalud.Notifications.Service", "LizadCode.SalmaSalud.Notifications.Service\LizadCode.SalmaSalud.Notifications.Service.csproj", "{D4389717-6E93-4450-8027-034285238C7A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LizadCode.SalmaSalud.Notifications.Application", "LizadCode.SalmaSalud.Notifications.Application\LizadCode.SalmaSalud.Notifications.Application.csproj", "{D5997120-9FA6-421D-88F0-06A0BFC219EC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LizadCode.SalmaSalud.Notifications.Domain", "LizadCode.SalmaSalud.Notifications.Domain\LizadCode.SalmaSalud.Notifications.Domain.csproj", "{9821ACEE-8AE9-4492-A3B7-C168E2DD0075}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LizadCode.SalmaSalud.Notifications.Infrastructure", "LizadCode.SalmaSalud.Notifications.Infrastructure\LizadCode.SalmaSalud.Notifications.Infrastructure.csproj", "{6214C02E-514D-4B87-94E6-BD4B83CEF6BF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dawa.Framework", "Dawa.Framework", "{F5B8E55E-BDDD-40FC-9B72-80C2A4B01D6A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dapper", "Dapper", "{39F54267-DE3D-4915-B4FE-0881650E42E4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Helpers", "Helpers", "{2BB9A32D-9E67-46BC-B888-25592B3A05C3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ApiBase", "ApiBase", "{CE2D1B90-C83C-4F58-BEB1-1D100A44F846}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dawa.Framework.Application", "..\..\..\Dawa-Framework\ApiBase\Dawa.Framework.Aplication\Dawa.Framework.Application.csproj", "{9A1A3E85-33D1-49EE-A0DA-1C46E6961036}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dawa.Framework.Infrastructure", "..\..\..\Dawa-Framework\ApiBase\Dawa.Framework.Infrastructure\Dawa.Framework.Infrastructure.csproj", "{3B9EC7F4-9577-48D1-96B8-77074A55AB56}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dapper.Contrib.Extensions", "..\..\..\Dawa-Framework\Dapper\Dapper.Contrib.Extensions\Dapper.Contrib.Extensions.csproj", "{20F7EF72-D87F-4C8E-8C29-34C726AC12E7}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dapper.DataTables", "..\..\..\Dawa-Framework\Dapper\Dapper.DataTables\Dapper.DataTables.csproj", "{31774A4C-C2E2-4AD2-88CA-F907AAF42F50}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dawa.Framework.Helpers.Utilities", "..\..\..\Dawa-Framework\Helpers\Dawa.Framework.Helpers.Utilities\Dawa.Framework.Helpers.Utilities.csproj", "{AE7E71D8-1DD9-4654-B4E4-25F50A3E807D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dawa.Framework.Helpers.ChatApi", "..\..\..\Dawa-Framework\Helpers\Dawa.Framework.Helpers.ChatApi\Dawa.Framework.Helpers.ChatApi.csproj", "{C2B9B04B-015D-40C7-BEDA-03F229FC12B1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D4389717-6E93-4450-8027-034285238C7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D4389717-6E93-4450-8027-034285238C7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D4389717-6E93-4450-8027-034285238C7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D4389717-6E93-4450-8027-034285238C7A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D5997120-9FA6-421D-88F0-06A0BFC219EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D5997120-9FA6-421D-88F0-06A0BFC219EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D5997120-9FA6-421D-88F0-06A0BFC219EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D5997120-9FA6-421D-88F0-06A0BFC219EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9821ACEE-8AE9-4492-A3B7-C168E2DD0075}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9821ACEE-8AE9-4492-A3B7-C168E2DD0075}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9821ACEE-8AE9-4492-A3B7-C168E2DD0075}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9821ACEE-8AE9-4492-A3B7-C168E2DD0075}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6214C02E-514D-4B87-94E6-BD4B83CEF6BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6214C02E-514D-4B87-94E6-BD4B83CEF6BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6214C02E-514D-4B87-94E6-BD4B83CEF6BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6214C02E-514D-4B87-94E6-BD4B83CEF6BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9A1A3E85-33D1-49EE-A0DA-1C46E6961036}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A1A3E85-33D1-49EE-A0DA-1C46E6961036}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9A1A3E85-33D1-49EE-A0DA-1C46E6961036}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9A1A3E85-33D1-49EE-A0DA-1C46E6961036}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B9EC7F4-9577-48D1-96B8-77074A55AB56}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B9EC7F4-9577-48D1-96B8-77074A55AB56}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B9EC7F4-9577-48D1-96B8-77074A55AB56}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B9EC7F4-9577-48D1-96B8-77074A55AB56}.Release|Any CPU.Build.0 = Release|Any CPU
+		{20F7EF72-D87F-4C8E-8C29-34C726AC12E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20F7EF72-D87F-4C8E-8C29-34C726AC12E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20F7EF72-D87F-4C8E-8C29-34C726AC12E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20F7EF72-D87F-4C8E-8C29-34C726AC12E7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{31774A4C-C2E2-4AD2-88CA-F907AAF42F50}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{31774A4C-C2E2-4AD2-88CA-F907AAF42F50}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{31774A4C-C2E2-4AD2-88CA-F907AAF42F50}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{31774A4C-C2E2-4AD2-88CA-F907AAF42F50}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AE7E71D8-1DD9-4654-B4E4-25F50A3E807D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE7E71D8-1DD9-4654-B4E4-25F50A3E807D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE7E71D8-1DD9-4654-B4E4-25F50A3E807D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE7E71D8-1DD9-4654-B4E4-25F50A3E807D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C2B9B04B-015D-40C7-BEDA-03F229FC12B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2B9B04B-015D-40C7-BEDA-03F229FC12B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2B9B04B-015D-40C7-BEDA-03F229FC12B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2B9B04B-015D-40C7-BEDA-03F229FC12B1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{39F54267-DE3D-4915-B4FE-0881650E42E4} = {F5B8E55E-BDDD-40FC-9B72-80C2A4B01D6A}
+		{2BB9A32D-9E67-46BC-B888-25592B3A05C3} = {F5B8E55E-BDDD-40FC-9B72-80C2A4B01D6A}
+		{CE2D1B90-C83C-4F58-BEB1-1D100A44F846} = {F5B8E55E-BDDD-40FC-9B72-80C2A4B01D6A}
+		{9A1A3E85-33D1-49EE-A0DA-1C46E6961036} = {CE2D1B90-C83C-4F58-BEB1-1D100A44F846}
+		{3B9EC7F4-9577-48D1-96B8-77074A55AB56} = {CE2D1B90-C83C-4F58-BEB1-1D100A44F846}
+		{20F7EF72-D87F-4C8E-8C29-34C726AC12E7} = {39F54267-DE3D-4915-B4FE-0881650E42E4}
+		{31774A4C-C2E2-4AD2-88CA-F907AAF42F50} = {39F54267-DE3D-4915-B4FE-0881650E42E4}
+		{AE7E71D8-1DD9-4654-B4E4-25F50A3E807D} = {2BB9A32D-9E67-46BC-B888-25592B3A05C3}
+		{C2B9B04B-015D-40C7-BEDA-03F229FC12B1} = {2BB9A32D-9E67-46BC-B888-25592B3A05C3}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {36066334-CB58-4F6A-BE2B-1100BE3D2424}
+	EndGlobalSection
+EndGlobal

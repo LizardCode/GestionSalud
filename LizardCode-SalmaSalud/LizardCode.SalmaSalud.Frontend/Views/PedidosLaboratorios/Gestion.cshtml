@@ -1,0 +1,74 @@
+﻿@model LizardCode.SalmaSalud.Application.Models.PedidosLaboratorios.GestionPedidosViewModel
+@{
+    Layout = "~/Views/Shared/MaestroLayout.cshtml";
+
+    ViewBag.MainClass = "PedidosLaboratoriosGestionView";
+
+    ViewBag.Title = "Gestión de Pedidos a Laboratorios";
+    ViewBag.TitleNew = "...";
+    ViewBag.TitleEdit = "...";
+    ViewBag.TitleRemove = "...";
+    ViewBag.RemoveListadoDe = true;
+    ViewBag.ItemMenu = "Gestión de Pedidos a Laboratorios";
+
+    ViewBag.ButtonNew = false;
+    ViewBag.ButtonEdit = false;
+    ViewBag.ButtonRemove = false;
+
+    ViewBag.AjaxGetAll = Url.Action("ObtenerPedidos", "PedidosLaboratorios");
+}
+
+@section Styles {
+    <link href="/css/Views/PedidosLaboratorios/index.css?3661" rel="stylesheet" />
+}
+
+@section ToolbarButtons {
+    <button type="button" class="btn btn-primary btEnviado" title="Marcar Enviado" data-id-bloque="0" disabled><i class="fas fa-truck"></i> <span>Enviado a Laboratorio</span></button>
+    <button type="button" class="btn btn-info btRecibido" title="Marcar Recibido" data-id-bloque="0" disabled><i class="fas fa-check-circle"></i> <span>Recibido</span></button>
+}
+
+@section Filters {
+
+    <div class="col">
+
+        <div class="row">
+            @Html.FilterPickerDateFor(m => m.FiltroFechaDesde, "Fecha Pedido Desde", value: string.Empty, colSize: "col-md-2")
+            @Html.FilterPickerDateFor(m => m.FiltroFechaHasta, "Fecha Pedido Hasta", value: string.Empty, colSize: "col-md-2")
+            @Html.FilterTextBoxFor(m => m.IdPresupuesto, "ID Presup", value: string.Empty, colSize: "col-md-2")
+        </div>
+        <div class="row">
+            @Html.FilterDropDownListFor(m => m.IdPacienteFilter, Model.MaestroPacientes, "Paciente", colSize: "col-md-4")
+            @Html.FilterDropDownListFor(m => m.IdLaboratorioFilter, Model.MaestroLaboratorios, "Laboratorio", colSize: "col-md-4")
+            @Html.FilterDropDownListFor(m => m.IdEstadoPedidoLaboratorio, Model.MaestroEstados, "Estado", colSize: "col-md-4")
+        </div>
+    </div>
+
+}
+
+@section GridColumns {
+
+    <th></th>
+    <th>ID</th>
+    <th>Fecha</th>
+    <th>ID Presup.</th>
+    <th>Paciente</th>
+    <th>Laboratorio</th>
+    <th>Estado</th>
+    <th>Env. Lab.</th>
+    <th>N° Sobre</th>
+    <th>Estimado</th>
+    <th>Recibido</th>
+    <th>Hist.</th>
+}
+
+
+@section CrudForm {
+}
+
+@section CustomModals {
+}
+
+@section Scripts {
+    <script src="/js/Views/PedidosLaboratorios/gestion.js?3661"></script>
+    <script src="/js/Shared/modals.js?3661"></script>
+}

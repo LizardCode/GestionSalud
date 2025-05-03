@@ -1,0 +1,127 @@
+﻿@using System.Linq.Expressions;
+@using LizardCode.Framework.Application.Models.MasterDetail
+@using LizardCode.Framework.Application.Common.Annotations;
+@using LizardCode.Framework.Application.Common.Enums;
+@using System.Reflection
+@using System.Collections
+@using System.ComponentModel.DataAnnotations
+@model LizardCode.Framework.Application.Models.MasterDetail.MasterDetailViewModel
+@{
+    Layout = null;
+}
+
+<div class="master-detail-component">
+    <table class="master-detail-table">
+        <thead>
+            <tr>
+                @foreach (var column in Model.Columns)
+                {
+                    var hidden = (column.Type == MasterDetailColumnType.Hidden ? $"class=\"hidden\"" : "");
+                    var width = (
+                        column.Width > 0
+                            ? $"style=\"width:{column.Width}px;min-width:{column.Width}px;max-width:{column.Width}px\""
+                            : "style=\"width:100%\""
+                    );
+
+                    <th @Html.Raw(hidden)@Html.Raw(width) data-property="@column.PropertyName"><span>@column.Header</span></th>
+                }
+                <th></th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @{
+                var template = Activator.CreateInstance(Model.ItemType);
+
+                Model.Items.Insert(0, template);
+                RenderRow(template, 0, "master-detail-row-template");
+            }
+
+            @foreach (var item in Model.Items.Skip(1))
+            {
+                var idx = Model.Items.IndexOf(item) - 1;
+                RenderRow(item, idx);
+            }
+        </tbody>
+
+        <tfoot class="@(Model.Items.Count > 1 ? "hidden" : "")">
+            @{
+                var ncols = Model.Columns.Count(c => c.Type != MasterDetailColumnType.Hidden);
+            }
+
+            <tr>
+                <td colspan="@ncols">
+                    <div class="btn btn-outline-primary">
+                        Lista vacía, haga click aquí para agregar un item nuevo
+                    </div>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+
+@{
+    void RenderRow(object item, int index, string @class = null)
+    {
+        var classAttr = (string.IsNullOrWhiteSpace(@class) ? "" : $"class=\"{@class}\"");
+        <tr @Html.Raw(classAttr)>
+
+            @foreach (var column in Model.Columns)
+            {
+                var pi = Model.ItemType.GetProperty(column.PropertyName);
+                var value = pi.GetValue(item);
+                var name = $"{Model.Collection}[{index}].{column.PropertyName}";
+                var hidden = (column.Type == MasterDetailColumnType.Hidden ? $"class=\"hidden\"" : "");
+
+                var format = column.Format switch
+                {
+                    MasterDetailColumnFormat.Currency => $"data-format=currency",
+                    MasterDetailColumnFormat.Date => $"data-format=date",
+                    MasterDetailColumnFormat.DateTime => $"data-format=datetime",
+                    _ => ""
+                };
+
+                var htmlAttribues = new Dictionary<string, object>
+                {
+                    { "class", "master-detail-cell" }
+                };
+
+                <td @Html.Raw(hidden)>
+                    <input type="hidden" class="master-detail-cell-value" id="@name" name="@name" value="@value" data-property="@column.PropertyName" />
+
+                    @switch  (column.Type)
+                    {
+                        case MasterDetailColumnType.Hidden:
+                            <span class="master-detail-cell" id="@name" name="@name" @format data-property="@column.PropertyName">@value</span>
+                            break;
+
+                        case MasterDetailColumnType.Text:
+                            <span class="master-detail-cell" id="@name" name="@name" @format data-property="@column.PropertyName">@value</span>
+                            break;
+
+                        case MasterDetailColumnType.Lookup:
+                            var listValue = column.ValueList?.FirstOrDefault(f => f.Value == value?.ToString());
+                            var finalValue = "";
+
+                            if (listValue != null)
+                                finalValue = listValue.Text;
+
+                            <span class="master-detail-cell" id="@name" @format name="@name" data-property="@column.PropertyDisplayName">@finalValue</span>
+                            break;
+
+                        case MasterDetailColumnType.Check:
+                            <span class="master-detail-cell" id="@name" name="@name" data-property="@column.PropertyName">
+                                <span class="check-mark checkbox-primary @((bool)value ? "checked" : "")"></span>
+                            </span>
+                            break;
+
+                        default:
+                            throw new NotImplementedException(column.Type.ToString());
+                    }
+                </td>
+            }
+
+            <td><i class="fal fa-pen-square action-edit"></i><i class="fal fa-plus-square action-add"></i><i class="fal fa-minus-square action-remove"></i></td>
+        </tr>
+    }
+}

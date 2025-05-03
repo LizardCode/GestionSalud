@@ -1,0 +1,129 @@
+﻿@using LizardCode.Framework.Application.Models.Repeater;
+@model LizardCode.SalmaSalud.Application.Models.Evoluciones.EvolucionViewModel
+@{
+    Layout = "~/Views/Shared/MaestroLayout.cshtml";
+
+    ViewBag.MainClass = "ABMEvolucionesView";
+
+    ViewBag.Title = "Evoluciones";
+    ViewBag.TitleNew = "...";
+    ViewBag.TitleEdit = "...";
+    ViewBag.TitleRemove = "...";
+    ViewBag.ItemMenu = "Evoluciones";
+
+    ViewBag.ButtonNew = false;//PermisosBusiness.Instance.VerificarPermisos(ModuloOperativo.Usuarios, Permiso.Alta);
+    ViewBag.ButtonEdit = false;//PermisosBusiness.Instance.VerificarPermisos(ModuloOperativo.Usuarios, Permiso.Modificacion);
+    ViewBag.ButtonRemove = false;//PermisosBusiness.Instance.VerificarPermisos(ModuloOperativo.Usuarios, Permiso.Baja);
+
+    ViewBag.AjaxGetAll = Url.Action("ObtenerTodos", "Evoluciones");
+    //ViewBag.AjaxGet = Url.Action("Obtener", "Evoluciones");
+    ViewBag.AjaxAdd = Url.Action("Nuevo", "Evoluciones");
+    //ViewBag.AjaxUpdate = Url.Action("Modificar", "Evoluciones");
+    //ViewBag.AjaxDelete = Url.Action("Eliminar", "Evoluciones");
+
+    ViewBag.Tabs = new string[] { "General", "Odontograma" };
+}
+
+@section Styles {
+    <link href="/css/Views/Turnos/index.css?3661" rel="stylesheet" />
+}
+
+@section Filters {
+    
+    <div class="col">
+        <div class="row">
+            @Html.FilterDropDownListFor(m => m.IdEspecialidad, Model.MaestroEspecialidades, "Especialidad", colSize: "col-md-4")
+            @Html.FilterDropDownListFor(m => m.IdProfesional, Model.MaestroProfesionales, "Profesional", colSize: "col-md-4")
+        </div>
+
+        <div class="row">
+            @Html.FilterPickerDateFor(m => m.FechaDesde, "Fecha Desde", value: DateTime.Now.Date.ToString("dd/MM/yyyy"), colSize: "col-md-2")
+            @Html.FilterPickerDateFor(m => m.FechaHasta, "Fecha Hasta", value: DateTime.Now.Date.AddDays(14).ToString("dd/MM/yyyy"), colSize: "col-md-2")
+        </div>
+    </div>
+
+}
+
+@section GridColumns {
+
+    <th></th>
+    <th>Especialidad</th>
+    <th>Profesional</th>
+    <th>Paciente</th>
+    <th>Estado</th>
+    <th></th>
+
+}
+
+@section CrudForm {
+    
+    <div class="col-md-12">
+        <div class="row">
+            <div class="alert alert-primary text-center" role="alert">
+                <b>@string.Format("{0}.", "Datos del paciente...")</b>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="row">
+            <div class="col">
+                <h4>Prestaciones Nomenclador</h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col dvItems">
+                @await Component.InvokeAsync("Repeater", new RepeaterViewModel().SetItems(
+                                                Model.Prestaciones,
+                                                "Prestaciones",
+                                                x => new(nameof(x.IdPrestacion), Model.MaestroProfesionales)
+                                                ))
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="row">
+            <div class="col">
+                <h4>Otras Prestaciones</h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col dvItems">
+                @await Component.InvokeAsync("Repeater", new RepeaterViewModel().SetItems(
+                                                Model.OtrasPrestaciones,
+                                                "OtrasPrestaciones",
+                                                x => new(nameof(x.IdOtraPrestacion), Model.MaestroProfesionales)
+                                                ))
+            </div>
+        </div>
+    </div>
+
+    <hr />
+
+    <div class="col">
+        <div class="row">
+            <div class="col">
+                <h4>Observaciones</h4>
+            </div>
+        </div>
+        <div class="row">
+            @Html.FormGroupTextAreaFor(m => m.Observaciones, title: "",  fieldCss: "form-control", addValidator: false, editingDisabled: false)
+        </div>
+    </div>
+}
+
+@section CrudTab01 {
+
+}
+
+@section CustomModals {    
+
+
+}
+
+@section Scripts {
+
+    <script src="/js/Shared/modals.js?3661"></script>
+    <script src="/js/Views/Evoluciones/index.js?3661"></script>
+}

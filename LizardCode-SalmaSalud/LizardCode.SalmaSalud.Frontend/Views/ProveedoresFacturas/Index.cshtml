@@ -1,0 +1,52 @@
+﻿@using LizardCode.Framework.Application.Models.Repeater;
+
+@model LizardCode.SalmaSalud.Application.Models.ProveedoresFacturas.ProveedoresFacturasViewModel
+@{
+    Layout = "~/Views/Shared/ReportLayout.cshtml";
+
+    ViewBag.MainClass = "ReportProveedoresFacturasView";
+
+    ViewBag.Title = "Facturas";
+    ViewBag.ItemMenu = "Facturas";
+
+    ViewBag.ButtonExcel = true;
+    ViewBag.ButtonPDF = true;
+    ViewBag.ButtonPrint = true;
+
+    ViewBag.AjaxGetAll = Url.Action("ObtenerTodos", "ProveedoresFacturas");
+}
+
+@section Styles {
+    <link href="/css/Views/ProveedoresFacturas/index.css?3661" rel="stylesheet" />
+}
+
+@section Filters {
+    <div class="col">
+
+        <div class="row">
+            @Html.FilterPickerDateFor(m => m.FechaDesde, "Fecha Desde", colSize: "col-md-2")
+            @Html.FilterPickerDateFor(m => m.FechaHasta, "Fecha Hasta", colSize: "col-md-2")
+        </div>
+    
+    </div>
+}
+
+@section GridColumns {
+
+    <th></th>
+    <th>Comprobante</th>
+    <th></th>
+    <th></th>
+    <th>Número</th>
+    <th>Fecha</th>
+    <th></th>
+	<th>Total</th>
+    <th>Estado</th>
+    <th>CAE</th>
+    <th>Vto</th>
+
+}
+
+@section Scripts {
+    <script src="/js/Views/ProveedoresFacturas/index.js?3661"></script>
+}

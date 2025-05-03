@@ -1,0 +1,155 @@
+﻿@using System.Linq.Expressions;
+@using System.Reflection
+@using System.Collections
+@using System.ComponentModel.DataAnnotations
+@model LizardCode.Framework.Aplication.Models.Repeater.RepeaterViewModel
+@{
+    Layout = null;
+}
+
+<div class="repeater-component">
+    <table class="repeater-table">
+        <thead>
+            <tr>
+                @foreach (var column in Model.Columns)
+                {
+                    var hidden = (column.Type == RepeaterColumnType.Hidden ? $"class=\"hidden\"" : "");
+                    var width = (
+                        column.Width > 0
+                            ? $"style=\"width:{column.Width}px;min-width:{column.Width}px;max-width:{column.Width}px\""
+                            : "style=\"width:100%\""
+                    );
+
+                    <th @Html.Raw(hidden)@Html.Raw(width) data-property="@column.PropertyName"><span>@column.Header</span></th>
+                }
+                <th></th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @{
+                var template = Activator.CreateInstance(Model.ItemType);
+
+                Model.Items.Insert(0, template);
+                RenderRow(template, 0, "repeater-row-template");
+            }
+
+            @foreach (var item in Model.Items.Skip(1))
+            {
+                var idx = Model.Items.IndexOf(item) - 1;
+                RenderRow(item, idx);
+            }
+        </tbody>
+
+        <tfoot class="@(Model.Items.Count > 1 ? "hidden" : "")">
+            @{
+                var ncols = Model.Columns.Count(c => c.Type != RepeaterColumnType.Hidden);
+            }
+
+            <tr>
+                <td colspan="@ncols">
+                    <div>
+                        <span>Lista vacía, haga click aquí para agregar un item nuevo</span>
+                    </div>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+
+@{
+    void RenderRow(object item, int index, string @class = null)
+    {
+        var classAttr = (string.IsNullOrWhiteSpace(@class) ? "" : $"class=\"{@class}\"");
+        <tr @Html.Raw(classAttr)>
+
+            @foreach (var column in Model.Columns)
+            {
+                var pi = Model.ItemType.GetProperty(column.PropertyName);
+                var value = pi.GetValue(item);
+                var name = $"Items[{index}].{column.PropertyName}";
+                var hidden = (column.Type == RepeaterColumnType.Hidden ? $"class=\"hidden\"" : "");
+                var htmlAttribues = new Dictionary<string, object>
+                {
+                    { "class", "repeater-control" },
+                    { "data-tooltip-validation", "true" }
+                };
+
+                ParseClientValidators(pi, htmlAttribues);
+                ParseClientConstraints(pi, htmlAttribues);
+
+                if (column.Readonly)
+                {
+                    var prop = column.Type == RepeaterColumnType.DropDown ? "disabled" : "readonly";
+                    htmlAttribues.Add(prop, true);
+                }
+
+                switch  (column.Type)
+                {
+                    case RepeaterColumnType.Hidden:
+                        <td @Html.Raw(hidden)><input type="hidden" class="repeater-control" id="@name" name="@name" value="@value" /></td>
+                        break;
+
+                    case RepeaterColumnType.Input:
+                        <td>@Html.TextBox(name, value, null, htmlAttribues)</td>
+                        break;
+
+                    case RepeaterColumnType.DropDown:
+                        htmlAttribues.Merge("class", "no-select2");
+                        <td>@Html.DropDownList(name, column.ValueList ?? Enumerable.Empty<SelectListItem>(), string.Empty, htmlAttribues)</td>
+                        break;
+
+                    default:
+                        throw new NotImplementedException();
+                }
+            }
+
+            <td><i class="fal fa-plus-square action-add"></i><i class="fal fa-minus-square action-remove"></i></td>
+        </tr>
+    }
+
+    void ParseClientValidators(PropertyInfo pi, Dictionary<string, object> htmlAttributes)
+    {
+        var customAttributes = pi.GetCustomAttributes();
+
+        foreach (var attr in customAttributes)
+        {
+            switch (attr.GetType())
+            {
+                case Type required when required == typeof(RequiredAttribute):
+                case Type requiredex when requiredex == typeof(RequiredExAttribute):
+                    {
+                        var casted = (RequiredAttribute)attr;
+                        var message = casted.ErrorMessage;
+
+                        htmlAttributes
+                            .Append("data-val", "true")
+                            .Append("data-val-required", message);
+                    }
+                    break;
+            }
+        }
+    }
+
+    void ParseClientConstraints(PropertyInfo pi, Dictionary<string, object> htmlAttributes)
+    {
+        var customAttributes = pi.GetCustomAttributes();
+
+        foreach (var attr in customAttributes)
+        {
+            switch (attr.GetType())
+            {
+                case Type required when required == typeof(MaskConstraintAttribute):
+                    {
+                        var casted = (MaskConstraintAttribute)attr;
+
+                        htmlAttributes
+                            .Append("data-constraint", "mask")
+                            .Append("data-constraint-type", casted.Type.ToString().ToLower())
+                            .Append("data-constraint-mask", casted.Mask);
+                    }
+                    break;
+            }
+        }   
+    }
+}

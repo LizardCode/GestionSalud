@@ -1,0 +1,47 @@
+﻿@model LizardCode.SalmaSalud.Application.Models.CentrosCosto.CentrosCostoViewModel
+@{
+    Layout = "~/Views/Shared/MaestroLayout.cshtml";
+
+    ViewBag.MainClass = "ABMCentrosCostoView";
+
+    ViewBag.Title = "Mantenimiento de Centros de Costo";
+    ViewBag.TitleNew = "Nuevo Centro de Costo...";
+    ViewBag.TitleEdit = "Modificar Centro de Costo...";
+    ViewBag.TitleRemove = "Eliminar Centro de Costo...";
+    ViewBag.ItemMenu = "Centro de Costo";
+
+    ViewBag.ButtonNew = true;
+    ViewBag.ButtonEdit = true;
+    ViewBag.ButtonRemove = true;
+
+    ViewBag.AjaxGetAll = Url.Action("ObtenerTodos", "CentrosCosto");
+    ViewBag.AjaxGet = Url.Action("Obtener", "CentrosCosto");
+    ViewBag.AjaxAdd = Url.Action("Nuevo", "CentrosCosto");
+    ViewBag.AjaxUpdate = Url.Action("Modificar", "CentrosCosto");
+    ViewBag.AjaxDelete = Url.Action("Eliminar", "CentrosCosto");
+
+    ViewBag.Tabs = new string[] { "General" };
+}
+
+@section Styles {
+    <link href="/css/Views/CentrosCosto/index.css?3661" rel="stylesheet" />
+}
+
+@section GridColumns {
+
+    <th>ID</th>
+    <th>Descripción</th>
+
+}
+
+@section CrudForm {
+
+    @Html.FormGroupTextBoxFor(m => m.IdCentroCosto, title: "ID", editingDisabled: true, newVisible: false)
+
+    @Html.FormGroupTextBoxFor(m => m.Descripcion, title: "Descripción", addValidator: true)
+
+}
+
+@section Scripts {
+    <script src="/js/Views/CentrosCosto/index.js?3661"></script>
+}

@@ -1,0 +1,166 @@
+﻿@using LizardCode.Framework.Application.Models.MasterDetail
+
+@model LizardCode.SalmaSalud.Application.Models.AnulaComprobantesCompra.AnulaComprobantesCompraViewModel
+@{
+    Layout = "~/Views/Shared/MaestroLayout.cshtml";
+
+    ViewBag.MainClass = "ABMAnulaComprobantesCompraView";
+
+    ViewBag.Title = "Nota de Crédito Anula Factura";
+    ViewBag.TitleNew = "Nuevo N/Crédito...";
+    ViewBag.TitleEdit = "Modificar N/Crédito...";
+    ViewBag.TitleRemove = "Eliminar N/Crédito...";
+    ViewBag.ItemMenu = "N/Crédito Anula Factura";
+
+    ViewBag.ButtonNew = true;
+    ViewBag.ButtonEdit = false;
+    ViewBag.ButtonRemove = true;
+
+    ViewBag.AjaxGetAll = Url.Action("ObtenerTodos", "AnulaComprobantesCompra");
+    ViewBag.AjaxGet = Url.Action("Obtener", "AnulaComprobantesCompra");
+    ViewBag.AjaxAdd = Url.Action("Nuevo", "AnulaComprobantesCompra");
+    ViewBag.AjaxUpdate = Url.Action("Modificar", "AnulaComprobantesCompra");
+    ViewBag.AjaxDelete = Url.Action("Eliminar", "AnulaComprobantesCompra");
+
+    ViewBag.Tabs = new string[] { "General" };
+}
+
+@section Styles {
+    <link href="/css/Views/AnulaComprobantesCompra/index.css?3661" rel="stylesheet" />
+}
+
+@section Filters {
+    <div class="col">
+
+        <div class="row">
+            @Html.FilterDropDownListFor(m => m.IdEjercicio, Model.MaestroEjercicios, "Ejercicio", colSize: "col-md-4")
+            @Html.FilterDropDownListFor(m => m.IdProveedor, Model.MaestroProveedores, "Proveedor", colSize: "col-md-4")
+        </div>
+
+        <div class="row">
+            @Html.FilterPickerDateFor(m => m.FechaDesde, "Fecha Desde", value: string.Empty, colSize: "col-md-2")
+            @Html.FilterPickerDateFor(m => m.FechaHasta, "Fecha Hasta", value: string.Empty, colSize: "col-md-2")
+        </div>
+    
+    </div>
+}
+
+@section GridColumns {
+
+    <th>ID</th>
+    <th>Tipo</th>
+    <th>Sucursal</th>
+    <th>Nro</th>
+    <th>Número</th>
+    <th>Fecha</th>
+    <th>Proveedor</th>
+    <th>Moneda</th>
+    <th>Sub-Total</th>
+    <th>Total</th>
+    <th>Estado</th>
+    <th>CAE</th>
+    <th>Vto</th>
+    <th>Acciones</th>
+}
+
+@section CrudForm {
+
+    <div class="col">
+        <div class="row">
+            <div class="col">
+                <h4>Datos del Comprobante</h4>
+            </div>
+        </div>
+        <div class="row">
+            @Html.HiddenFor(m => m.IdComprobanteCompra)
+            @Html.FormGroupDropDownListFor(m => m.IdEjercicio, Model.MaestroEjercicios, "Ejercicio", colSize: "col-md-3", addValidator:true)
+            @Html.FormGroupPickerDateFor(m => m.Fecha, title: "Fecha", colSize: "col-md-2", addValidator: true, editingDisabled: false)
+            @Html.FormGroupDropDownListFor(m => m.IdCondicion, Model.MaestroCondicion, "Condición de Compra", colSize: "col-md-3", addValidator:false)
+            @Html.FormGroupPickerDateFor(m => m.Vto, title: "Vencimiento", colSize: "col-md-2", addValidator: true, editingDisabled: false)
+            @Html.FormGroupDropDownListFor(m => m.IdProveedor, Model.MaestroProveedores, "Proveedor", colSize: "col-md-3", addValidator:true)
+            @Html.FormGroupTextBoxFor(m => m.NumeroComprobante, title: "Número de Comprobante", addValidator: true, colSize: "col-md-2", editingDisabled: true, placeholder: "00000-00000000")
+        </div>
+        <div class="row">
+            @Html.FormGroupDropDownListFor(m => m.IdComprobanteAnular, Model.MaestroComprobantes, "Tipo de Comprobante a Anular", colSize: "col-md-3", addValidator:true, editingDisabled: true)
+            @Html.FormGroupTextBoxFor(m => m.NumeroComprobanteAnular, title: "Número de Comprobante a Anular", addValidator: true, colSize: "col-md-3", editingDisabled: true, placeholder: "00000-00000000")
+            @Html.FormGroupTextBoxFor(m => m.CAE, title: "C.A.E.", addValidator: true, colSize: "col-md-3", editingDisabled: false)
+            @Html.FormGroupPickerDateFor(m => m.VenciminetoCAE, title: "Vencimineto C.A.E.", colSize: "col-md-3", addValidator: true, editingDisabled: false)
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <button type="button" class="btn btn-primary mb-2 btnCargaItems">Cargar Items</button>
+            </div>
+        </div>
+        
+        <hr />
+
+        <div class="row">
+            <div class="col">
+                <h4>Items de la Nota de Crédito</h4>
+            </div>
+        </div>
+            
+        <div class="row">
+            <div class="col">
+                @await Component.InvokeAsync("MasterDetail", new MasterDetailViewModel().SetItems(Model.Items))
+            </div>
+        </div>
+
+        <div class="inv--total-amounts">                                                        
+            <div class="row mt-4">
+                <div class="col-sm-5 col-12 order-sm-0 order-1">
+                </div>
+                <div class="col-sm-7 col-12 order-sm-1 order-0">
+                    <div class="text-sm-right">
+                        <div class="row">
+                            <div class="col-sm-8 col-7">
+                                <p class="">Sub Total: </p>
+                            </div>
+                            <div class="col-sm-4 col-5">
+                                <p class="subtotal">$ 0</p>
+                            </div>
+                            @foreach (var alicuota in Model.MaestroAlicuotas)
+                            {
+                                <div class="impuestos col-sm-8 col-7 hide">
+                                    <p class="text_iva_@alicuota.Value">@alicuota.Text: </p>
+                                </div>
+                                <div class="impuestos col-sm-4 col-5 hide">
+                                    <p class="iva_@alicuota.Value">$ 0</p>
+                                </div>
+                            }
+                            <div class="col-sm-8 col-7 grand-total-title">
+                                <h4 class="">Total : </h4>
+                            </div>
+                            <div class="col-sm-4 col-5 grand-total-amount">
+                                <h4 class="total">$ 0</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+
+@section CustomModals {
+
+    @using (Html.BeginModal("Item Comprobante...", (string)ViewBag.MainClass, "modalMasterDetail"))
+    {
+        <div class="row">
+            @Html.FormGroupTextAreaFor(m => m.Detalle.Descripcion, "Descripción", addValidator: true, rows: 5)
+        </div>
+        <div class="row">
+            @Html.FormGroupInputGroupFor(m => m.Detalle.Alicuota, "Alicuota", icon: "%", addValidator: true, editingDisabled: true)
+        </div>
+        <div class="row">
+            @Html.FormGroupInputGroupFor(m => m.Detalle.Importe, "Importe", icon: "$", addValidator: true, editingDisabled: true)
+        </div>
+    }
+
+}
+
+@section Scripts {
+    <script src="/js/Views/AnulaComprobantesCompra/index.js?3661"></script>
+}

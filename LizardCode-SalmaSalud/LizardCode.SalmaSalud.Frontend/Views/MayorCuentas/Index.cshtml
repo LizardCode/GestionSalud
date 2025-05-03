@@ -1,0 +1,80 @@
+﻿@model LizardCode.SalmaSalud.Application.Models.MayorCuentas.MayorCuentasViewModel
+@{
+    Layout = "~/Views/Shared/ReportLayout.cshtml";
+
+    ViewBag.MainClass = "ReportMayorCuentasView";
+
+    ViewBag.Title = "Mayor de Cuentas Contables";
+    ViewBag.ItemMenu = "Mayor de Cuentas";
+
+    ViewBag.ButtonExcel = true;
+    ViewBag.ButtonPDF = true;
+    ViewBag.ButtonPrint = true;
+
+    ViewBag.AjaxGetAll = Url.Action("ObtenerTodos", "MayorCuentas");
+}
+
+@section Styles {
+    <link href="/css/Views/MayorCuentas/index.css?3661" rel="stylesheet" />
+}
+
+@section Filters {
+    <div class="col">
+
+        <div class="row">
+            @Html.FilterDropDownListFor(m => m.IdEjercicio, Model.MaestroEjercicios, "Ejercicio", colSize: "col-md-4")
+        </div>
+
+        <div class="row">
+            @Html.FilterPickerDateFor(m => m.FechaDesde, "Fecha Desde", colSize: "col-md-2")
+            @Html.FilterPickerDateFor(m => m.FechaHasta, "Fecha Hasta", colSize: "col-md-2")
+        </div>
+
+		<div class="row">
+            @Html.FilterDropDownListFor(m => m.IdCuentaDesde, Model.MaestroCuentas, "Cuenta Desde", colSize: "col-md-4")
+            @Html.FilterDropDownListFor(m => m.IdCuentaHasta, Model.MaestroCuentas, "Cuenta Hasta", colSize: "col-md-4")
+        </div>
+    
+    </div>
+}
+
+@section GridColumns {
+
+    <th>ID</th>
+    <th>Código Cuenta</th>
+    <th>Descripción</th>
+	<th></th>
+
+}
+
+@section TemplateTables {
+
+	<div class="templateDetalleMayorCuenta table-responsive" style="display:none;">
+		<div class="row table-detalle-botones">
+			<div class="col">
+				<button type="button" class="btn btn-primary btnExcelDetalleMayorCuenta" ><i class="fas fa-file-excel"></i> Excel</button>
+				<button type="button" class="btn btn-primary btnPDFDetalleMayorCuenta"><i class="fa fa-file-pdf"></i> PDF</button>
+				<button type="button" class="btn btn-primary btnPrintDetalleMayorCuenta"><i class="fa fa-print"></i> Imprimir</button>
+			</div>
+		</div>
+		<table class="table table-bordered mb-4">
+			<thead>
+				<tr>
+					<th>Fecha</th>
+					<th>Descripción</th>
+					<th>Debe</th>
+					<th>Haber</th>
+					<th>Saldo</th>
+				</tr>
+			</thead>
+			<tbody>
+		
+			</tbody>
+		</table>
+	</div>
+
+}
+
+@section Scripts {
+    <script src="/js/Views/MayorCuentas/index.js?3661"></script>
+}

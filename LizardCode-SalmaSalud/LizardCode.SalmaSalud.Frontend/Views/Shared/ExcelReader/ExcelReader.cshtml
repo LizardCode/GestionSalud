@@ -1,0 +1,35 @@
+﻿@using LizardCode.Framework.Application.Models.ExcelReader;
+@model LizardCode.Framework.Application.Models.ExcelReader.ExcelReaderViewModel
+@{
+    Layout = null;
+    
+    var action = ViewData["ajaxProcesarAction"].ToString();
+}
+
+@using (Html.AjaxBeginForm(action, "ExcelReaderView", "ajaxBegin", "ajaxSuccess", "ajaxFailure", multipart: true, css: "ERV_frmProcesarExcel"))
+{
+    <div class="modal-header">
+        <h5 class="modal-title">Procesar Excel</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true" class="zmdi zmdi-close"></span>
+        </button>
+    </div>
+    <div class="modal-body ExcelReaderView">
+        <div class="row">
+            <div class="col">
+                @Html.FormGroupFileFor(m => m.FileExcel, title: "Documento XLS", fieldCss: "filestyle", buttonText: "Cargar Documento XLS", icon: "fa-xls", accept: ".xls,.xlsx")
+            </div>
+        </div>
+        <div class="row">
+            <div class="col ml-4">
+                <label id="ERV_lblFileExcel" style="display:none;">[NombreArchivo]</label>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" data-dismiss="modal" class="btn btn-default"><i class="fa fa-times"></i> Cancelar</button>
+        <button type="button" class="btn btn-warning ERV_btOkProcesarExcel" disabled><i class="fa fa-check"></i> Procesar</button>
+    </div>
+}
+
+<script src="/js/Shared/excelReader.js?3661"></script>

@@ -1,0 +1,46 @@
+﻿@model LizardCode.SalmaSalud.Application.Models.EstadoResultados.EstadoResultadosViewModel
+@{
+    Layout = "~/Views/Shared/ReportLayout.cshtml";
+
+    ViewBag.MainClass = "ReportEsadoResultadosView";
+
+    ViewBag.Title = "Esado de Resultados";
+    ViewBag.ItemMenu = "Esado de Resultados";
+
+    ViewBag.ButtonExcel = true;
+    ViewBag.ButtonPDF = true;
+    ViewBag.ButtonPrint = true;
+
+    ViewBag.AjaxGetAll = Url.Action("ObtenerTodos", "EstadoResultados");
+}
+
+@section Styles {
+    <link href="/css/Views/EstadoResultados/index.css?3661" rel="stylesheet" />
+}
+
+@section Filters {
+    <div class="col">
+
+        <div class="row">
+            @Html.FilterDropDownListFor(m => m.IdEjercicio, Model.MaestroEjercicios, "Ejercicio", colSize: "col-md-4")
+			@Html.FilterPickerDateFor(m => m.FechaHasta, "Fecha Hasta", colSize: "col-md-2")
+        </div>
+    
+    </div>
+}
+
+@section GridColumns {
+
+    <th>Item</th>
+    <th>Rubro</th>
+    <th>Código Integración</th>
+    <th>N° Cuenta</th>
+    <th>Descripción</th>
+	<th>Saldo</th>
+    <th>Total</th>
+
+}
+
+@section Scripts {
+    <script src="/js/Views/EstadoResultados/index.js?3661"></script>
+}

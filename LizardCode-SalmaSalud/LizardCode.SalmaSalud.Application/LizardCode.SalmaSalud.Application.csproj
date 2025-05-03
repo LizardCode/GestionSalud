@@ -1,0 +1,55 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Version>0.6.0.0</Version>
+    <FileVersion>0.6.305.0</FileVersion>
+    <AnalysisLevel>5.0</AnalysisLevel>
+    <Configurations>Release;Debug</Configurations>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <ShouldCreateLogs>True</ShouldCreateLogs>
+    <AdvancedSettingsExpanded>True</AdvancedSettingsExpanded>
+    <UpdateAssemblyVersion>True</UpdateAssemblyVersion>
+    <UpdateAssemblyFileVersion>True</UpdateAssemblyFileVersion>
+    <UpdateAssemblyInfoVersion>False</UpdateAssemblyInfoVersion>
+    <AssemblyVersionSettings>None.IncrementOnDemand.None.None</AssemblyVersionSettings>
+    <UpdatePackageVersion>False</UpdatePackageVersion>
+    <AssemblyInfoVersionType>SettingsVersion</AssemblyInfoVersionType>
+    <InheritWinAppVersionFrom>None</InheritWinAppVersionFrom>
+    <AssemblyFileVersionSettings>None.IncrementOnDemand.DayOfYearStamp.None</AssemblyFileVersionSettings>
+    <PrimaryVersionType>AssemblyFileVersionAttribute</PrimaryVersionType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CsvHelper" Version="31.0.0" />
+    <PackageReference Include="Dapper" Version="2.1.28" />
+    <PackageReference Include="Dapper-QueryBuilder" Version="1.2.9" />
+    <PackageReference Include="Dapper.Contrib" Version="2.0.78" />
+    <PackageReference Include="File.TypeChecker" Version="4.0.0" />
+    <PackageReference Include="File.TypeChecker.Web" Version="2.0.0" />
+    <PackageReference Include="Imageflow.AllPlatforms" Version="0.12.0" />
+    <PackageReference Include="Mapster" Version="7.4.0" />
+    <PackageReference Include="Mapster.DependencyInjection" Version="1.0.1" />
+    <PackageReference Include="MySql.Data" Version="8.3.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="NLog" Version="5.2.8" />
+    <PackageReference Include="QRCoder" Version="1.4.3" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
+    <PackageReference Include="System.Drawing.Common" Version="8.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\LizardCode-Framework\ApiBase\LizardCode.Framework.Aplication\LizardCode.Framework.Application.csproj" />
+    <ProjectReference Include="..\..\LizardCode-Framework\Dapper\Dapper.DataTables\Dapper.DataTables.csproj" />
+    <ProjectReference Include="..\..\LizardCode-Framework\Helpers\LizardCode.Framework.Helpers.AFIP\AFIP\LizardCode.Framework.Helpers.AFIP.csproj" />
+    <ProjectReference Include="..\..\LizardCode-Framework\Helpers\LizardCode.Framework.Helpers.ChatApi\LizardCode.Framework.Helpers.ChatApi.csproj" />
+    <ProjectReference Include="..\..\LizardCode-Framework\Helpers\LizardCode.Framework.Helpers.Excel\LizardCode.Framework.Helpers.Excel.csproj" />
+    <ProjectReference Include="..\..\LizardCode-Framework\Helpers\LizardCode.Framework.Helpers.ITextSharp\LizardCode.Framework.Helpers.ITextSharp.csproj" />
+    <ProjectReference Include="..\..\LizardCode-Framework\Helpers\LizardCode.Framework.Helpers.SendGrid\LizardCode.Framework.Helpers.SendGrid.csproj" />
+    <ProjectReference Include="..\..\LizardCode-Framework\Helpers\LizardCode.Framework.Helpers.Utilities\LizardCode.Framework.Helpers.Utilities.csproj" />
+    <ProjectReference Include="..\LizardCode.SalmaSalud.Domain\LizardCode.SalmaSalud.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

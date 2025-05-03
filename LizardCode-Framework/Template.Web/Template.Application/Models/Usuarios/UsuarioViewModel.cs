@@ -1,0 +1,30 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System.ComponentModel.DataAnnotations;
+
+namespace Template.Application.Models.Usuarios
+{
+    public class UsuarioViewModel
+    {
+        public int IdUsuario { get; set; }
+
+        [Required(ErrorMessage = "Obligatorio")]
+        public int IdTipoUsuario { get; set; }
+
+        [Required(ErrorMessage = "Obligatorio")]
+        [RegularExpression("^[a-zA-Z][a-zA-Z0-9]{4,49}$", ErrorMessage = "El login debe empezar con una letra y solo puede contener letras y números y debe tener al menos 5 caracteres")]
+        [Remote("ValidarLogin", "Usuarios", HttpMethod = "Post", ErrorMessage = "Login en uso")]
+        public string Login { get; set; }
+
+        [Required(ErrorMessage = "Obligatorio")]
+        public string Nombre { get; set; }
+
+        [Required(ErrorMessage = "Obligatorio")]
+        [EmailAddress(ErrorMessage = "Formato incorrecto")]
+        public string Email { get; set; }
+
+        public bool Admin { get; set; }
+
+        public SelectList MaestroTipoUsuarios { get; set; }
+    }
+}

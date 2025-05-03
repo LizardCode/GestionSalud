@@ -1,0 +1,24 @@
+﻿.pac-container {
+    z-index: 10002;
+}
+
+.fa-info-dashboard {
+    font-size: 15px;
+    /*color: #7fa6be;*/
+}
+
+.imgFirma-delete-icon {
+    background-color: #df3535;
+    border: 0px solid;
+    color: #fff;
+    cursor: pointer;
+    height: 20px;
+    line-height: 20px;
+    position: absolute;
+    font-size: 10px;
+    /* top: -9.5px; */
+    text-align: center;
+    width: 20px;
+    border-radius: 50%;
+    /* right: 20%; */
+}

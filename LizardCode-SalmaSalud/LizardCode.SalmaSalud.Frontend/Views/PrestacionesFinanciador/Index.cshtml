@@ -1,0 +1,104 @@
+﻿@using LizardCode.Framework.Application.Models.Repeater
+@model LizardCode.SalmaSalud.Application.Models.PrestacionesFinanciador.PrestacionViewModel
+@{
+    Layout = "~/Views/Shared/MaestroLayout.cshtml";
+
+    ViewBag.MainClass = "ABMPrestacionesView";
+
+    ViewBag.Title = "Prestaciones del Fianciador: " + @ViewData["Financiador"];
+    ViewBag.TitleNew = "Nueva Prestacion...";
+    ViewBag.TitleEdit = "Modificar Prestacion...";
+    ViewBag.TitleRemove = "Eliminar Prestacion...";
+    ViewBag.ItemMenu = "Financiadores";
+
+    ViewBag.ButtonNew = true;
+    ViewBag.ButtonEdit = true;
+    ViewBag.ButtonRemove = true;
+
+    ViewBag.AjaxGetAll = Url.Action("ObtenerTodos", "PrestacionesFinanciador");
+    ViewBag.AjaxGet = Url.Action("Obtener", "PrestacionesFinanciador");
+    ViewBag.AjaxAdd = Url.Action("Nuevo", "PrestacionesFinanciador");
+    ViewBag.AjaxUpdate = Url.Action("Modificar", "PrestacionesFinanciador");
+    ViewBag.AjaxDelete = Url.Action("Eliminar", "PrestacionesFinanciador");
+
+    ViewBag.Tabs = new string[] { "General", "Valores por Profesional" };
+    ViewBag.OverrideTitle = true;
+}
+
+@section Styles {
+    <link href="/css/Views/Prestaciones/index.css?3661" rel="stylesheet" />
+}
+
+@section ToolbarButtons {
+
+    <button type="button" class="btn btn-success btImportar" title="Importar Planilla Excel"><i class="fas fa-upload"></i> <span>Importar XLS</span></button>
+}
+
+@section Filters {
+    
+    <div class="col">
+
+        <div class="row">
+            @Html.FilterDropDownListFor(m => m.IdFinanciadorPlan, Model.MaestroFinanaciadorPlanes, "Plan", colSize: "col-md-4")
+            @Html.FilterDropDownListFor(m => m.IdPrestacion, Model.MaestroPrestaciones, "Prestacion INTERNA??? ", colSize: "col-md-8")
+        </div>
+
+    </div>
+}
+
+@section GridColumns {
+
+    <th>Plan</th>
+    <th>Descripcion</th>
+    <th>Valor</th>
+    <th>Código</th>
+    <th>Código Int.</th>
+}
+
+@section CrudForm {
+
+    @Html.FormGroupTextBoxFor(m => m.IdFinanciadorPrestacion, title: "ID", editingDisabled: true, newVisible: false)
+
+    @Html.FormGroupDropDownListFor(m => m.IdFinanciadorPlan, Model.MaestroFinanaciadorPlanes, "Plan", fieldCss: "select2-field validate prestacionesInternas", addValidator: true, editingDisabled: true)
+
+    @Html.FormGroupTextBoxFor(m => m.Codigo, title: "Código", addValidator: true, autocomplete: false, colSize: "col-md-4", editingDisabled: true)
+
+    @Html.FormGroupTextBoxFor(m => m.Descripcion, title: "Descripcion", addValidator: true, autocomplete: false, colSize: "col-md-8")
+
+    @Html.FormGroupInputGroupFor(m => m.Valor, "Valor", icon: "$", addValidator: true, colSize: "col-md-4")
+
+    @Html.FormGroupInputGroupFor(m => m.ValorFijo, "Fijo Prof.", icon: "$", addValidator: true, colSize: "col-md-4")
+
+    @Html.FormGroupInputGroupFor(m => m.Porcentaje, "Porc. Prof.", icon: "%", addValidator: true, colSize: "col-md-4")
+
+    @Html.FormGroupInputGroupFor(m => m.CoPago, "Co-Pago", icon: "$", addValidator: true, colSize: "col-md-4")
+
+    @Html.FormGroupDropDownListFor(m => m.IdPrestacion, Model.MaestroPrestaciones, "Prestacion Int.", fieldCss: "select2-field validate prestacionesInternas", addValidator: true)
+
+}
+
+@section CrudTab01 {
+
+    <div class="col">
+        <div class="row">
+            <div class="col">
+                <h4>Valores por Profesional (Excepciones)</h4>
+            </div>
+        </div>
+
+        <div class="row dvProfesionales">
+            <div class="col">
+                @await Component.InvokeAsync("Repeater", new RepeaterViewModel().SetItems(
+                         Model.Profesionales,
+                         "Profesionales",
+                         x => new(nameof(x.IdProfesional), Model.MaestroProfesionales)                         
+                    ))
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    <script src="/js/Views/PrestacionesFinanciador/index.js?3661"></script>
+    <script src="/js/Shared/modals.js?3661"></script>
+}

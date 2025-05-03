@@ -1,0 +1,13 @@
+﻿@model LizardCode.SalmaSalud.Application.Models.Base.Ambiente
+@{
+    Layout = null;
+}
+
+@if (Model.EsProduccion)
+{
+    @Model.Version
+}
+else
+{
+    <span class="ambiente">@Model.Nombre</span><text> - @Model.Version</text>
+}

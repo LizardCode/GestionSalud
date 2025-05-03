@@ -1,0 +1,51 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Version>0.6.0.0</Version>
+    <FileVersion>0.6.305.0</FileVersion>
+    <AnalysisLevel>5.0</AnalysisLevel>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <ShouldCreateLogs>True</ShouldCreateLogs>
+    <AdvancedSettingsExpanded>True</AdvancedSettingsExpanded>
+    <UpdateAssemblyVersion>True</UpdateAssemblyVersion>
+    <UpdateAssemblyFileVersion>True</UpdateAssemblyFileVersion>
+    <UpdateAssemblyInfoVersion>False</UpdateAssemblyInfoVersion>
+    <AssemblyVersionSettings>None.IncrementOnDemand.None.None</AssemblyVersionSettings>
+    <UpdatePackageVersion>False</UpdatePackageVersion>
+    <AssemblyInfoVersionType>SettingsVersion</AssemblyInfoVersionType>
+    <InheritWinAppVersionFrom>None</InheritWinAppVersionFrom>
+    <AssemblyFileVersionSettings>None.IncrementOnDemand.DayOfYearStamp.None</AssemblyFileVersionSettings>
+    <PrimaryVersionType>AssemblyFileVersionAttribute</PrimaryVersionType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="DataAnnotations\**" />
+    <EmbeddedResource Remove="DataAnnotations\**" />
+    <None Remove="DataAnnotations\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="File.TypeChecker" Version="1.5.2" />
+    <PackageReference Include="File.TypeChecker.Web" Version="1.4.0" />
+    <PackageReference Include="Hashids.net" Version="1.4.1" />
+    <PackageReference Include="Imageflow.AllPlatforms" Version="0.7.24" />
+    <PackageReference Include="Mapster" Version="7.2.0" />
+    <PackageReference Include="Mapster.DependencyInjection" Version="1.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.9" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="NLog" Version="4.7.11" />
+    <PackageReference Include="System.Drawing.Common" Version="5.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\ApiBase\LizardCode.Framework.Infrastructure\LizardCode.Framework.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Dapper\Dapper.DataTables\Dapper.DataTables.csproj" />
+    <ProjectReference Include="..\..\Helpers\LizardCode.Framework.Helpers.Utilities\LizardCode.Framework.Helpers.Utilities.csproj" />
+    <ProjectReference Include="..\Template.Domain\Template.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

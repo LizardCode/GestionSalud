@@ -1,0 +1,138 @@
+﻿@using LizardCode.Framework.Application.Models.Repeater;
+
+@model LizardCode.SalmaSalud.Application.Models.CodigosRetencion.CodigosRetencionViewModel
+@{
+    Layout = "~/Views/Shared/MaestroLayout.cshtml";
+
+    ViewBag.MainClass = "ABMCodigosRetencionView";
+
+    ViewBag.Title = "Mantenimiento de Códigos de Retención";
+    ViewBag.TitleNew = "Nuevo Códigos de Retención...";
+    ViewBag.TitleEdit = "Modificar Códigos de Retención...";
+    ViewBag.TitleRemove = "Eliminar Códigos de Retención...";
+    ViewBag.ItemMenu = "CodigosRetencion";
+
+    ViewBag.ButtonNew = true;
+    ViewBag.ButtonEdit = true;
+    ViewBag.ButtonRemove = true;
+
+    ViewBag.AjaxGetAll = Url.Action("ObtenerTodos", "CodigosRetencion");
+    ViewBag.AjaxGet = Url.Action("Obtener", "CodigosRetencion");
+    ViewBag.AjaxAdd = Url.Action("Nuevo", "CodigosRetencion");
+    ViewBag.AjaxUpdate = Url.Action("Modificar", "CodigosRetencion");
+    ViewBag.AjaxDelete = Url.Action("Eliminar", "CodigosRetencion");
+
+    ViewBag.Tabs = new string[] { "General", "Ganancias", "I.V.A.", "Ing. Brutos", "S.U.S.S.", "I.V.A. Monotributo", "Ganancias Monotributo" };
+}
+
+@section Styles {
+    <link href="/css/Views/CodigosRetencion/index.css?3661" rel="stylesheet" />
+}
+
+@section GridColumns {
+
+    <th>ID</th>
+    <th>Descripción</th>
+    <th>Regimen</th>
+    <th>IdTipoRentecion</th>
+    <th>Tipo Retención</th>
+    <th></th>
+}
+
+@section CrudForm {
+
+    @Html.FormGroupTextBoxFor(m => m.IdCodigoRetencion, title: "ID", editingDisabled: true, newVisible: false)
+    @Html.FormGroupTextBoxFor(m => m.Descripcion, title: "Descripción", addValidator: true)
+    @Html.FormGroupDropDownListFor(m => m.IdTipoRetencion, Model.MaestroTipoRetencion, "Tipo de Retención", editingDisabled: true, addValidator:false)
+    @Html.FormGroupTextBoxFor(m => m.Regimen, title: "Regimen", addValidator: true)
+
+}
+
+<!-- Ganancias -->
+@section CrudTab01 {
+
+    <div class="col">
+        <div class="row">
+            <div class="col">
+                <h4>Datos de la Retención de Ganancias</h4>
+            </div>
+        </div>
+        <div class="row">
+            @Html.FormGroupInputGroupFor(m => m.ImporteNoSujetoGanancias, title: "Importe No Sujeto", icon: "$", colSize: "col-md-6", addValidator: true)
+            @Html.FormGroupInputGroupFor(m => m.ImporteMinimoRetencionGanancias, title: "Importe Mínimo de Retención", icon: "$", colSize: "col-md-6", addValidator: true)
+        </div>
+        <div class="row">
+            @Html.FormGroupCheckboxFor(m => m.AcumulaPagos, title: "Acumula Pagos en el Mes", colSize: "col-md-12")
+        </div>
+        
+        <hr />
+
+        <div class="row">
+            <div class="col">
+                <h4>Items - Retención de Ganancias</h4>
+            </div>
+        </div>
+            
+        <div class="row">
+            <div class="col dvGanancias">
+                @await Component.InvokeAsync("Repeater", new RepeaterViewModel().SetItems(
+                    Model.Items
+                ))
+            </div>
+        </div>
+    </div>
+
+}
+
+<!-- IVA -->
+@section CrudTab02 {
+
+    @Html.FormGroupInputGroupFor(m => m.ImporteNoSujetoIVA, title: "Importe No Sujeto", icon: "$", colSize: "col-md-6", addValidator: true)
+    @Html.FormGroupInputGroupFor(m => m.PorcentajeRetencionIVA, title: "Porcentaje de Retención", icon: "%", colSize: "col-md-6", addValidator: true)
+
+}
+
+<!-- Ingresos Brutos -->
+@section CrudTab03 {
+
+    <div class="col">
+        <div class="row">
+            @Html.FormGroupInputGroupFor(m => m.ImporteNoSujetoIngBrutos, title: "Importe No Sujeto", icon: "$", colSize: "col-md-6", addValidator: true)
+            @Html.FormGroupInputGroupFor(m => m.PorcentajeRetencionIngBrutos, title: "Porcentaje de Retención", icon: "%", colSize: "col-md-6", addValidator: true)
+        </div>
+        <div class="row">
+            @Html.FormGroupCheckboxFor(m => m.PadronRetencionAGIP, title: "Es Agente de Percepción AGIP", colSize: "col-md-12")
+            @Html.FormGroupCheckboxFor(m => m.PadronRetencionARBA, title: "Es Agente de Percepción ARBA", colSize: "col-md-12")
+        </div>
+    </div>
+}
+
+<!-- SUSS -->
+@section CrudTab04 {
+
+    @Html.FormGroupInputGroupFor(m => m.ImporteNoSujetoSUSS, title: "Importe No Sujeto", icon: "$", colSize: "col-md-6", addValidator: true)
+    @Html.FormGroupInputGroupFor(m => m.PorcentajeRetencionSUSS, title: "Porcentaje de Retención", icon: "%", colSize: "col-md-6", addValidator: true)
+
+}
+
+<!-- IVA Monotributo -->
+@section CrudTab05 {
+
+    @Html.FormGroupInputGroupFor(m => m.ImporteNoSujetoIVAMonotributo, title: "Importe No Sujeto", icon: "$", colSize: "col-md-4", addValidator: true)
+    @Html.FormGroupInputGroupFor(m => m.PorcentajeRetencionIVAMonotributo, title: "Porcentaje de Retención", icon: "%", colSize: "col-md-4", addValidator: true)
+    @Html.FormGroupInputGroupFor(m => m.CantidadMesesIVAMonotributo, title: "Cantidad de Meses", icon: "#", colSize: "col-md-4", addValidator: true)
+
+}
+
+<!-- Ganancias Monotributo -->
+@section CrudTab06 {
+
+    @Html.FormGroupInputGroupFor(m => m.ImporteNoSujetoGanMonotributo, title: "Importe No Sujeto", icon: "$", colSize: "col-md-4", addValidator: true)
+    @Html.FormGroupInputGroupFor(m => m.PorcentajeRetencionGanMonotributo, title: "Porcentaje de Retención", icon: "%", colSize: "col-md-4", addValidator: true)
+    @Html.FormGroupInputGroupFor(m => m.CantidadMesesGanMonotributo, title: "Cantidad de Meses", icon: "#", colSize: "col-md-4", addValidator: true)
+
+}
+
+@section Scripts {
+    <script src="/js/Views/CodigosRetencion/index.js?3661"></script>
+}

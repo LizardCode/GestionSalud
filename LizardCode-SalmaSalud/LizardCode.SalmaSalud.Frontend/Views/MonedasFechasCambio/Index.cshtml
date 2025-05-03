@@ -1,0 +1,50 @@
+﻿@model LizardCode.SalmaSalud.Application.Models.MonedasFechasCambio.MonedasFechasCambioViewModel
+@{
+    Layout = "~/Views/Shared/MaestroLayout.cshtml";
+
+    ViewBag.MainClass = "ABMMonedasFechasCambioView";
+
+    ViewBag.Title = "Mantenimiento de Cotizaciones";
+    ViewBag.TitleEdit = "Modificar Cotización...";
+    ViewBag.ItemMenu = "Cotización de Monedas";
+
+    ViewBag.ButtonNew = false;
+    ViewBag.ButtonEdit = true;
+    ViewBag.ButtonRemove = false;
+
+    ViewBag.EditAutoClose = false;
+
+    ViewBag.AjaxGetAll = Url.Action("ObtenerTodos", "MonedasFechasCambio");
+    ViewBag.AjaxGet = Url.Action("Obtener", "MonedasFechasCambio");
+    ViewBag.AjaxAdd = Url.Action("Nuevo", "MonedasFechasCambio");
+    ViewBag.AjaxUpdate = Url.Action("Modificar", "MonedasFechasCambio");
+    ViewBag.AjaxDelete = Url.Action("Eliminar", "MonedasFechasCambio");
+
+    ViewBag.Tabs = new string[] { "General" };
+}
+
+@section Styles {
+    <link href="/css/Views/MonedasFechasCambio/index.css?3661" rel="stylesheet" />
+}
+
+@section GridColumns {
+
+    <th>ID</th>
+    <th>Descripción</th>
+    <th>Símbolo</th>
+    <th>Código</th>
+    <th></th>
+
+}
+
+@section CrudForm {
+
+    @Html.HiddenFor(m => m.IdMoneda)
+    @Html.FormGroupTextBoxFor(m => m.Fecha, title: "Fecha", addValidator: true, fieldCss: "flatpicker")
+    @Html.FormGroupInputGroupFor(m => m.Cotizacion, "Cotización", icon: "$", addValidator: true, colSize: "col-md-4")
+
+}
+
+@section Scripts {
+    <script src="/js/Views/MonedasFechasCambio/index.js?3661"></script>
+}

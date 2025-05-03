@@ -1,0 +1,123 @@
+﻿@model LizardCode.SalmaSalud.Application.Models.Proveedores.ProveedorViewModel
+@{
+    Layout = "~/Views/Shared/MaestroLayout.cshtml";
+
+    ViewBag.MainClass = "ABMProveedoresView";
+
+    ViewBag.Title = "Mantenimiento de Proveedores";
+    ViewBag.TitleNew = "Nuevo proveedor...";
+    ViewBag.TitleEdit = "Modificar proveedor...";
+    ViewBag.TitleRemove = "Eliminar proveedor...";
+    ViewBag.ItemMenu = "Proveedores";
+
+    ViewBag.ButtonNew = true;
+    ViewBag.ButtonEdit = true;
+    ViewBag.ButtonRemove = true;
+
+    ViewBag.AjaxGetAll = Url.Action("ObtenerTodos", "Proveedores");
+    ViewBag.AjaxGet = Url.Action("Obtener", "Proveedores");
+    ViewBag.AjaxAdd = Url.Action("Nuevo", "Proveedores");
+    ViewBag.AjaxUpdate = Url.Action("Modificar", "Proveedores");
+    ViewBag.AjaxDelete = Url.Action("Eliminar", "Proveedores");
+
+    ViewBag.Tabs = new string[] { "General", "Dirección", "Reteciones" };
+}
+
+@section Styles {
+    <link href="/css/Views/Proveedores/index.css?3661" rel="stylesheet" />
+}
+
+@section Filters {
+
+    @Html.FilterTextBoxFor(m => m.FiltroCUIT, "C.U.I.T.", value: string.Empty, placeholder: "__-________-_")
+    @Html.FilterTextBoxFor(m => m.FiltroRazonSocial, "Razón Social")
+
+}
+
+@section GridColumns {
+
+    <th>ID</th>
+    <th>Razón Social</th>
+    <th>Tipo IVA</th>
+    <th>CUIT</th>
+    <th>Teléfono</th>
+    <th>Email</th>
+    <th>Localidad</th>
+    <th>Domicilio</th>
+
+}
+
+@section CrudForm {
+
+    @Html.FormGroupTextBoxFor(m => m.IdProveedor, title: "ID", editingDisabled: true, newVisible: false)
+
+    @Html.FormGroupButtonGroupFor(m => m.CUIT, buttonCss: "btnCUIT", buttonText: "AFIP", title: "C.U.I.T.", addValidator: true, position: "append")
+
+    @Html.FormGroupDropDownListFor(m => m.Empresas, Model.MaestroEmpresas, "Empresas", addValidator: true, multiple: true)
+
+    @Html.FormGroupTextBoxFor(m => m.RazonSocial, title: "Razón Social", addValidator: true)
+
+    @Html.FormGroupTextBoxFor(m => m.NombreFantasia, title: "Nombre de Fantasia", addValidator: false)
+
+    @Html.FormGroupDropDownListFor(m => m.IdTipoIVA, Model.MaestroTipoIVA, "Tipo de IVA", fieldCss: "select2-field tipoIVA", addValidator: true)
+
+    @Html.FormGroupTextBoxFor(m => m.NroIBr, title: "N° de Ingresos Brutos", addValidator: false)
+
+    @Html.FormGroupDropDownGroupFor(m => m.Telefono, "IdTipoTelefono", Model.MaestroTipoTelefono, title: "Teléfono", addValidator: true)
+
+    @Html.FormGroupTextBoxFor(m => m.Email, title: "Email", fieldCss: "form-control lowercase", addValidator: true)
+
+}
+
+@section CrudTab01 {
+
+    @Html.HiddenFor(m => m.Latitud)
+    @Html.HiddenFor(m => m.Longitud)
+
+    @Html.FormGroupTextBoxFor(m => m.Direccion, title: "Dirección", colSize: "col-md-8", autocomplete: false, addValidator: true)
+
+    @Html.FormGroupTextBoxFor(m => m.Piso, title: "Piso", colSize: "col-md-2")
+
+    @Html.FormGroupTextBoxFor(m => m.Departamento, title: "Depto.", colSize: "col-md-2")
+
+    @Html.FormGroupTextBoxFor(m => m.Provincia, title: "Provincia", colSize: "col-md-5")
+
+    @Html.FormGroupTextBoxFor(m => m.Localidad, title: "Localidad", colSize: "col-md-5")
+
+    @Html.FormGroupTextBoxFor(m => m.CodigoPostal, title: "Código Postal", colSize: "col-md-2")
+}
+
+@section CrudTab02 {
+
+    <div id="RetencionAll" name="RetencionAll" class="col-md-12">
+        @Html.FormGroupDropDownListFor(m => m.IdCodigoRetencionGanancias, Model.MaestroRetencionGanancias, "Retención de Ganancias", addValidator: false)
+
+        @Html.FormGroupDropDownListFor(m => m.IdCodigoRetencionIVA, Model.MaestroRetencionIVA, "Retención de IVA", addValidator: false)
+
+        @Html.FormGroupDropDownListFor(m => m.IdCodigoRetencionIBr, Model.MaestroRetencionIBr, "Retención de Ingresos Brutos", addValidator: false)
+
+        @Html.FormGroupDropDownListFor(m => m.IdCodigoRetencionSUSS, Model.MaestroRetencionSUSS, "Retención de SUSS", addValidator: false)
+    </div>
+
+    <div id="RetencionMonotributo" name="RetencionMonotributo" class="col-md-12">
+        @Html.FormGroupDropDownListFor(m => m.IdCodigoRetencionGananciasMonotributo, Model.MaestroRetencionGananciasMonotributo, "Retención de Ganancias", addValidator: false)
+
+        @Html.FormGroupDropDownListFor(m => m.IdCodigoRetencionIVAMonotributo, Model.MaestroRetencionIVAMonotributo, "Retención de IVA", addValidator: false)
+    </div>
+
+    <div id="SinRetencion" name="SinRetencion" class="col-md-12">
+        <div class="alert alert-arrow-left alert-icon-left alert-light-primary mb-4" role="alert">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bell">
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+            </svg>
+            <strong>Atención!</strong> El Tipo de IVA seleccionado no configura Retenciones.
+        </div>
+    </div>
+
+}
+
+@section Scripts {
+    <script src="/js/Views/Proveedores/index.js?3661"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBAnt1IhTMCk1BVOjr_p4q8IxlicSEVGyw&libraries=places&callback=ABMProveedoresView.initAutocomplete"></script>
+}

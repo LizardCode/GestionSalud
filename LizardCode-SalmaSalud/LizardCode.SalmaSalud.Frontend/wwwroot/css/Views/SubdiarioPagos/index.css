@@ -1,0 +1,23 @@
+﻿.pac-container {
+    z-index: 10002;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.text-left {
+    text-align: left;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.detalle {
+    font-size: 1.7em;
+}
+
+.btExcelImputacion {
+    margin-bottom: 10px;
+}

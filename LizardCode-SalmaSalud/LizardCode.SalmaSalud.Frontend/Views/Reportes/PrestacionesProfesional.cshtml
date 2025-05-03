@@ -1,0 +1,46 @@
+﻿@model LizardCode.SalmaSalud.Application.Models.Reportes.PrestacionesProfesionalViewModel
+@{
+    Layout = "~/Views/Shared/ReportLayout.cshtml";
+
+    ViewBag.MainClass = "PrestacionesProfesionalView";
+
+    ViewBag.Title = "Prestaciones por Profesional";
+    ViewBag.ItemMenu = "Prestaciones por Profesional";
+
+    ViewBag.ButtonExcel = true;
+    ViewBag.ButtonPDF = false;
+    ViewBag.ButtonPrint = false;
+
+    ViewBag.AjaxGetAll = Url.Action("ObtenerPrestacionesProfesional", "Reportes");
+}
+
+@section Styles {
+    <link href="/css/Views/Reportes/index.css?3661" rel="stylesheet" />
+}
+
+@section Filters {
+    <div class="col">
+
+        <div class="row">
+            @Html.FilterPickerDateFor(m => m.FechaDesde, "Fecha Desde", colSize: "col-md-3")
+            @Html.FilterPickerDateFor(m => m.FechaHasta, "Fecha Hasta", colSize: "col-md-3")
+            @Html.FilterDropDownListFor(m => m.IdProfesional, Model.MaestroProfesionales, "Profesional", colSize: "col-md-4")
+        </div>
+    
+    </div>
+}
+
+@section GridColumns {
+
+    <th></th>
+    <th>Fecha</th>
+    <th>Prestacion</th>
+    <th>Código</th>
+    <th>Profesional</th>
+    <th>Especialidad</th>
+    <th>Valor</th>
+}
+
+@section Scripts {
+    <script src="/js/Views/Reportes/prestacionesProfesional.js?3661"></script>
+}

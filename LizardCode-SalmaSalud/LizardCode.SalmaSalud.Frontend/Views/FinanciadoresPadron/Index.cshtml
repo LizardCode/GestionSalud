@@ -1,0 +1,62 @@
+﻿@using LizardCode.Framework.Application.Models.Repeater
+@model LizardCode.SalmaSalud.Application.Models.FinanciadoresPadron.FinanciadorPadronViewModel
+@{
+    Layout = "~/Views/Shared/MaestroLayout.cshtml";
+
+    ViewBag.MainClass = "ABMPrestacionesView";
+
+    ViewBag.Title = "Afiliados del Financiador: " + @ViewData["Financiador"];
+    ViewBag.TitleNew = "Agregar Afiliado...";
+    ViewBag.TitleEdit = "Modificar Afiliado...";
+    ViewBag.TitleRemove = "Eliminar Afiliado...";
+    ViewBag.ItemMenu = "Financiadores";
+
+    ViewBag.ButtonNew = true;
+    ViewBag.ButtonEdit = true;
+    ViewBag.ButtonRemove = true;
+
+    ViewBag.AjaxGetAll = Url.Action("ObtenerTodos", "FinanciadoresPadron");
+    ViewBag.AjaxGet = Url.Action("Obtener", "FinanciadoresPadron");
+    ViewBag.AjaxAdd = Url.Action("Nuevo", "FinanciadoresPadron");
+    ViewBag.AjaxUpdate = Url.Action("Modificar", "FinanciadoresPadron");
+    ViewBag.AjaxDelete = Url.Action("Eliminar", "FinanciadoresPadron");
+
+    ViewBag.Tabs = new string[] { "Afiliado" };
+    ViewBag.OverrideTitle = true;
+}
+
+@section Styles {
+    <link href="/css/Views/FinanciadoresPadron/index.css?3661" rel="stylesheet" />
+}
+
+@section ToolbarButtons {
+
+    <button type="button" class="btn btn-success btImportar" title="Importar Planilla Excel"><i class="fas fa-upload"></i> <span>Importar XLS</span></button>
+}
+
+@* @section Filters {
+
+} *@
+
+@section GridColumns {
+        
+    <th>Documento</th>
+    <th>Nombre</th>
+    <th>Nro. Afiliado</th>
+}
+
+@section CrudForm {
+
+    @Html.FormGroupTextBoxFor(m => m.IdFinanciadorPadron, title: "ID", editingDisabled: true, newVisible: false)
+
+    @Html.FormGroupTextBoxFor(m => m.Documento, title: "Documento", addValidator: true, autocomplete: false, colSize: "col-md-4", editingDisabled: true)
+
+    @Html.FormGroupTextBoxFor(m => m.FinanciadorNro, title: "Nro. Afiliado", addValidator: true, autocomplete: false, colSize: "col-md-8")
+
+    @Html.FormGroupTextBoxFor(m => m.Nombre, title: "Nombre Completo", addValidator: true, autocomplete: false, colSize: "col-md-12")
+}
+
+@section Scripts {
+    <script src="/js/Views/FinanciadoresPadron/index.js?3661"></script>
+    <script src="/js/Shared/modals.js?3661"></script>
+}

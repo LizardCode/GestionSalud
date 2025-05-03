@@ -1,0 +1,53 @@
+﻿@model LizardCode.SalmaSalud.Application.Models.Reportes.TurnosViewModel
+@{
+    Layout = "~/Views/Shared/ReportLayout.cshtml";
+
+    ViewBag.MainClass = "TurnosView";
+
+    ViewBag.Title = "Turnos";
+    ViewBag.ItemMenu = "Turnos";
+
+    ViewBag.ButtonExcel = true;
+    ViewBag.ButtonPDF = false;
+    ViewBag.ButtonPrint = false;
+
+    ViewBag.AjaxGetAll = Url.Action("ObtenerTurnos", "Reportes");
+}
+
+@section Styles {
+    <link href="/css/Views/Reportes/index.css?3661" rel="stylesheet" />
+}
+
+@section Filters {
+    <div class="col">
+
+        <div class="row">
+            @Html.FilterDropDownListFor(m => m.IdTipoTurno, Model.MaestroTiposTurno, "Tipo Turno", colSize: "col-md-3")
+            @Html.FilterDropDownListFor(m => m.IdEstadoTurno, Model.MaestroEstadosTurno, "Estado", colSize: "col-md-3")
+            @Html.FilterDropDownListFor(m => m.IdProfesional, Model.MaestroProfesionales, "Profesional", colSize: "col-md-3")
+            @Html.FilterDropDownListFor(m => m.IdFinanciador, Model.MaestroFinanciadores, "Financiador", colSize: "col-md-3")
+        </div>
+
+        <div class="row">
+            @Html.FilterPickerDateFor(m => m.FechaDesde, "Fecha Desde", colSize: "col-md-3")
+            @Html.FilterPickerDateFor(m => m.FechaHasta, "Fecha Hasta", colSize: "col-md-3")
+        </div>
+
+    </div>
+}
+
+@section GridColumns {
+
+    <th></th>
+    <th>Tipo</th>
+    <th>Fecha</th>
+    <th>Hora</th>
+    <th>Profesional</th>
+    <th>Paciente</th>
+    <th>Financiador</th>
+    <th>Estado</th>
+}
+
+@section Scripts {
+    <script src="/js/Views/Reportes/turnos.js?3661"></script>
+}

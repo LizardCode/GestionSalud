@@ -1,0 +1,35 @@
+﻿}.pac-container {
+    z-index: 10002;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.text-left {
+    text-align: left;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.asiento, .details {
+    font-size: 1.7em;
+}
+
+.table-controls {
+    padding: 0;
+    margin-bottom: 0;
+}
+
+.table-controls li {
+    list-style: none;
+    display: inline;
+}
+
+.table-controls li i {
+    cursor: pointer;
+    color: #515365;
+    font-size: 1.7em;
+}

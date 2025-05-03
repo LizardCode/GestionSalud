@@ -1,0 +1,53 @@
+﻿@model LizardCode.SalmaSalud.Application.Models.Plantillas.PlantillaViewModel
+@{
+    Layout = "~/Views/Shared/MaestroLayout.cshtml";
+
+    ViewBag.MainClass = "ABMPlantillasView";
+
+    ViewBag.Title = "Mantenimiento de Plantillas";
+    ViewBag.TitleNew = "Nueva Plantilla...";
+    ViewBag.TitleEdit = "Modificar Plantilla...";
+    ViewBag.TitleRemove = "Eliminar Plantilla...";
+    ViewBag.ItemMenu = "Plantillas";
+
+    ViewBag.ButtonNew = true;
+    ViewBag.ButtonEdit = true;
+    ViewBag.ButtonRemove = true;
+
+    ViewBag.AjaxGetAll = Url.Action("ObtenerTodos", "Plantillas");
+    ViewBag.AjaxGet = Url.Action("Obtener", "Plantillas");
+    ViewBag.AjaxAdd = Url.Action("Nuevo", "Plantillas");
+    ViewBag.AjaxUpdate = Url.Action("Modificar", "Plantillas");
+    ViewBag.AjaxDelete = Url.Action("Eliminar", "Plantillas");
+
+    ViewBag.Tabs = new string[] { "General" };
+
+    ViewBag.FormMultipart = true;
+}
+
+@section Styles {
+    <link href="/css/Views/Plantillas/index.css?3661" rel="stylesheet" />
+}
+
+@section GridColumns {
+
+    <th>ID</th>
+    <th>Tipo</th>
+    <th>Descripción</th>
+
+}
+
+@section CrudForm {
+
+    @Html.FormGroupTextBoxFor(m => m.IdPlantilla, title: "ID", editingDisabled: true, newVisible: false)
+    @Html.FormGroupDropDownListFor(m => m.IdTipoPlantilla, Model.MaestroTiposPlantilla, title: "Tipo", addValidator: true, editingDisabled: true)
+    @Html.FormGroupTextAreaFor(m => m.Descripcion, title: "Descripción", rows: 4, addValidator: true)
+
+    @Html.FormGroupFileFor(f=> f.FilePDF, title: "PDF", accept: "pdf");
+    @Html.FormGroupFileFor(f=> f.FileJSON, title: "JSON", accept: "json");
+
+}
+
+@section Scripts {
+    <script src="/js/Views/Plantillas/index.js?3661"></script>
+}

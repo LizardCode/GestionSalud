@@ -1,0 +1,46 @@
+﻿@model LizardCode.SalmaSalud.Application.Models.BalancePatrimonial.BalancePatrimonialViewModel
+@{
+    Layout = "~/Views/Shared/ReportLayout.cshtml";
+
+    ViewBag.MainClass = "ReportBalancePatrimonialView";
+
+    ViewBag.Title = "Balance Patrimonial";
+    ViewBag.ItemMenu = "Balance Patrimonial y de Resultado";
+
+    ViewBag.ButtonExcel = true;
+    ViewBag.ButtonPDF = true;
+    ViewBag.ButtonPrint = true;
+
+    ViewBag.AjaxGetAll = Url.Action("ObtenerTodos", "BalancePatrimonial");
+}
+
+@section Styles {
+    <link href="/css/Views/BalancePatrimonial/index.css?3661" rel="stylesheet" />
+}
+
+@section Filters {
+    <div class="col">
+
+        <div class="row">
+            @Html.FilterDropDownListFor(m => m.IdEjercicio, Model.MaestroEjercicios, "Ejercicio", colSize: "col-md-4")
+			@Html.FilterPickerDateFor(m => m.FechaHasta, "Fecha Hasta", colSize: "col-md-2")
+        </div>
+    
+    </div>
+}
+
+@section GridColumns {
+
+    <th>Item</th>
+    <th>Rubro</th>
+    <th>Código Integración</th>
+    <th>N° Cuenta</th>
+    <th>Descripción</th>
+	<th>Saldo</th>
+    <th>Total</th>
+
+}
+
+@section Scripts {
+    <script src="/js/Views/BalancePatrimonial/index.js?3661"></script>
+}

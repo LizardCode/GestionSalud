@@ -1,0 +1,161 @@
+﻿@model LizardCode.SalmaSalud.Application.Models.Login.LoginViewModel
+@{ 
+    Layout = null;
+}
+
+<!doctype html>
+<html lang="es" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="msapplication-TileColor" content="#0061da">
+    <meta name="theme-color" content="#1643a3">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+
+    <title>@GlobalSettings.TituloPestañaLogin</title>
+
+    <!--https://www.favicon-generator.org/-->
+    <link rel="apple-touch-icon" sizes="57x57" href="/img/@ViewBag.Domain/iconset/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/img/@ViewBag.Domain/iconset/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/img/@ViewBag.Domain/iconset/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/img/@ViewBag.Domain/iconset/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/img/@ViewBag.Domain/iconset/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/img/@ViewBag.Domain/iconset/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/img/@ViewBag.Domain/iconset/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/img/@ViewBag.Domain/iconset/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/@ViewBag.Domain/iconset/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/img/@ViewBag.Domain/iconset/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/@ViewBag.Domain/iconset/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/img/@ViewBag.Domain/iconset/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/@ViewBag.Domain/iconset/favicon-16x16.png">
+    <link rel="manifest" href="/img/@ViewBag.Domain/iconset/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/img/@ViewBag.Domain/iconset/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    <link rel="shortcut icon" href="/img/@ViewBag.Domain/iconset/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/img/@ViewBag.Domain/iconset/favicon.ico" type="image/x-icon">
+
+    <link href="https://fonts.googleapis.com/css?family=Quicksand:400,500,600,700&amp;display=swap" rel="stylesheet">
+
+    <link href="/lib/fontawesome/css/all.min.css" rel="stylesheet" />
+    <link href="/lib/bootstrap/bootstrap.min.css" rel="stylesheet" />
+    <link href="/lib/animate/animate.min.css" rel="stylesheet" />
+    <link href="/lib/noty/css/noty.css" rel="stylesheet" />
+    <link href="/lib/noty/css/themes/bootstrap-v4.css" rel="stylesheet" />
+    <link href="/css/Shared/plugins.css?3661" rel="stylesheet" />
+    <link href="/css/Shared/theme-checkbox-radio.css?3661" rel="stylesheet" />
+    <link href="/css/Shared/switches.css?3661" rel="stylesheet" />
+    <link href="/lib/bootstrap-select/bootstrap-select.min.css" rel="stylesheet">
+    <link href="/lib/select2/css/select2.css" rel="stylesheet" />
+
+    <link href="~/css/Brand/@ViewBag.Domain/style.css?3661" rel="stylesheet" />
+
+    <link href="/css/Views/Login/index.css?3661" rel="stylesheet" />
+
+</head>
+
+<body class="form">
+    <div class="form-container">
+        <div class="form-form">
+            <div class="form-form-wrap">
+                <div class="form-container">
+                    <div class="form-content">
+
+                        @* <img src="/img/brand/@ViewBag.Domain/logo_m.png" class="posicion-logo mb-5" /> *@
+                        
+                        <h5 class="mb-4 loginMessage"><b>Te damos la bienvenida a <br /> Salma Salud</b></h5>
+                       
+                        @using (Html.AjaxBeginForm(Url.Action("SignIn", "Login"), "LoginView"))
+                        {
+                            @Html.AntiForgeryToken();
+                            @Html.HiddenFor(m => m.Platform)
+                            @Html.HiddenFor(m => m.OS)
+                            @Html.HiddenFor(m => m.Browser)
+                            @Html.HiddenFor(m => m.Version)
+                            @Html.HiddenFor(m => m.Resolucion)
+
+                            <div class="form">
+
+                                <div id="username-field" class="field-wrapper input">
+                                    <i data-feather="user"></i>
+                                    <input id="User" name="User" type="text" class="form-control" placeholder="Usuario">
+                                </div>
+
+                                <div id="password-field" class="field-wrapper input mb-2">
+                                    <i data-feather="lock"></i>
+                                    <input id="Pass" name="Pass" type="password" class="form-control" placeholder="Contraseña">
+                                </div>
+
+                                <div class="g-recaptcha mb-2" data-sitekey="@Model.SiteKey" style="display:none;"></div>
+
+                                <div id="empresa-field" class="field-wrapper input mb-2 hidden">
+                                    @Html.DropDownListFor(m => m.IdEmpresa, Model.MaestroEmpresas)
+                                </div>
+
+                                <div id="new-password-field" class="field-wrapper set-pass input mb-2 hidden">
+                                    <i data-feather="lock"></i>
+                                    <input id="NewPass" name="NewPass" type="password" class="form-control" placeholder="Nueva Contraseña">
+                                </div>
+
+                                <div id="repeat-password-field" class="field-wrapper set-pass input mb-2 hidden">
+                                    <i data-feather="lock"></i>
+                                    <input id="RepeatPass" name="RepeatPass" type="password" class="form-control" placeholder="Repetir Contraseña">
+                                </div>
+
+                                <div class="text-center">
+                                    <div class="field-wrapper">
+                                        <button type="submit" class="btn btn-primary btn-dtc w-100 btSubmit" value="">Iniciar sesión</button>
+
+                                        <div class="separador">
+                                            <p style="font-size:14px;">o</p>
+                                        </div>
+
+                                        <button type="button" class="btn btn-outline-primary btn-outline-dtc w-100" onclick="location.href ='/portal-pacientes/login';">Ir a Portal Pacientes</button>
+                                    </div>
+                                </div>
+
+                            </div>
+                        }                 
+
+                    </div>                    
+                </div>
+            </div>
+        </div>
+        <div class="form-image">
+            <div class="l-image">
+            </div>
+        </div>
+    </div>
+
+    <script src="/lib/jquery/jquery-3.2.1.min.js"></script>
+    <script src="/lib/bootstrap/bootstrap.bundle.min.js"></script>
+    <script src="/lib/bootstrap-select/bootstrap-select.min.js"></script>
+    <script src="/lib/select2/js/select2.min.js"></script>
+    <script src="/lib/select2/js/select2_locale_es.js?3661"></script>
+    <script src="/lib/jquery-validation/jquery.validate.js"></script>
+    <script src="/lib/jquery-validation/jquery.validate.unobtrusive.min.js"></script>
+    <script src="/lib/jquery-validation/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="/lib/jquery-validation/additional-methods.min.js"></script>
+    <script src="/js/Helpers/select2.helper.js?3661"></script>
+    <script src="/lib/noty/js/noty.min.js"></script>
+    <script src="/lib/feather/feather.js"></script>
+
+    <script>
+        var RootPath = '@Context.Request.PathBase';
+    </script>
+
+    <script src="/js/Shared/enums.js?3661"></script>
+    <script src="/js/Shared/browser.js?3661"></script>
+    <script src="/js/Shared/utils.js?3661"></script>
+    <script src="/js/Helpers/ajax-action.js?3661"></script>
+
+    <script src="/js/Views/Login/index.js?3661"></script>
+
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+</body>
+</html>

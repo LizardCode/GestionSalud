@@ -1,0 +1,80 @@
+﻿@model LizardCode.SalmaSalud.Application.Models.PlanCuentas.PlanCuentasViewModel
+@{
+    Layout = "~/Views/Shared/BaseLayout.cshtml";
+
+    ViewBag.MainClass = "ABMPlanCuentasView";
+
+    ViewBag.Title = "Plan de Cuentas";
+    ViewBag.ItemMenu = "Plan de Cuentas";
+}
+
+@section Styles {
+    <link href="/css/Views/PlanCuentas/index.css?3661" rel="stylesheet" />
+    <link href="~/lib/treeview/custom-tree_view.css" rel="stylesheet" />
+}
+
+<div class="@ViewBag.MainClass main" data-mainclass="@ViewBag.MainClass">
+
+    <div class="row layout-top-spacing col-lg-12">
+        <div id="treeviewPlanCuentas" class="col-lg-6 layout-spacing">
+            <div class="statbox widget box box-shadow">
+                <div class="widget-content widget-content-area" style="max-height: 68vh; overflow: auto">
+                    <ul class="file-tree">
+                    @foreach (var rubro in Model.Rubros.Where(r => r.IdRubroPadre == default).ToList())
+                    {
+                        <li class="file-tree-folder">@Html.Raw(rubro.CodigoRubro) - @Html.Raw(rubro.Descripcion)
+                            @{ RenderRow(rubro.IdRubroContable); }
+                        </li>
+                    }
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div id="detalleCuenta" class="col-lg-6 layout-spacing">
+            <div class="statbox widget box box-shadow">
+                <div class="widget-content widget-content-area">
+                    @Html.FormGroupTextBoxFor(m => m.IdCuentaContable, title: "ID")
+                    @Html.FormGroupTextBoxFor(m => m.RubroContable, title: "Rubro Contable")
+                    @Html.FormGroupTextBoxFor(m => m.CodigoCuenta, title: "Código de Cuenta")
+                    @Html.FormGroupTextBoxFor(m => m.Descripcion, title: "Descripción")
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script src="~/lib/treeview/custom-jstree.js"></script>
+    <script src="/js/Helpers/ajax-action.js?3661"></script>
+    <script src="/js/Shared/enums.js?3661"></script>
+    <script src="/js/Views/PlanCuentas/index.js?3661"></script>
+}
+
+@{
+    void RenderRow(int? idRubro)
+    {
+        var rubros = Model.Rubros.Where(r => r.IdRubroPadre == idRubro).ToList();
+        if (rubros.Count == 0)
+            return;
+
+        <ul>
+        @foreach (var rubro in rubros)
+        {
+            <li class="file-tree-folder">@Html.Raw(@rubro.CodigoRubro) - @Html.Raw(@rubro.Descripcion)
+                @{ RenderRow(rubro.IdRubroContable); }
+                    <ul style="display: block;">
+                    @{ var cuentas = Model.Cuentas.Where(c => c.IdRubroContable == rubro.IdRubroContable).ToList(); }
+                    @foreach (var cuenta in cuentas)
+                    {
+                         <li class="nodo-cuenta" data-id="@cuenta.IdCuentaContable">@Html.Raw(@cuenta.CodigoCuenta) - @Html.Raw(@cuenta.Descripcion)</li>
+                    }
+                </ul>
+            </li>
+        }
+        </ul>
+
+        return;
+    }
+}

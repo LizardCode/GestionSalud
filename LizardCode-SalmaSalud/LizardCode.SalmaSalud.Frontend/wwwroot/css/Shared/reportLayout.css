@@ -1,0 +1,373 @@
+﻿.widget .widget-content.widget-content-area {
+    /*padding-top: 14px;*/
+}
+
+.toolbar.row {
+    margin-bottom: 14px;
+}
+
+.toolbar-actions {
+    text-align: right;
+    padding-right: 10px;
+}
+
+.toolbar-actions button {
+    height: 40px;
+    line-height: 15px;
+    min-width: 110px;
+    padding: 0 12px;
+}
+
+.toolbar-extended {
+    padding-left: 25px;
+}
+
+.toolbar-extended > label {
+    position: relative;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+
+.toolbar-extended > label > svg {
+    position: absolute;
+    top: 9px;
+    right: 8px;
+    width: 20px;
+    color: #d3d3d3;
+}
+
+.toolbar-extended button.btApplyFilters,
+.toolbar-extended button.btClearFilters {
+    display: none;
+}
+
+.toolbar-extended > label > input.form-control.form-control-sm {
+    padding: 4px 24px 4px 8px;
+    width: 100%;
+}
+
+.toolbar-advanced-filters {
+    display: none;
+}
+
+    .toolbar-advanced-filters .filters-fields-container {
+        margin: 0 0 10px 0;
+        padding: 10px 10px 12px 10px;
+        background-color: rgba(var(--primary-rgb), 0.15);
+        border: solid 1px #e0e0e0;
+        border-radius: 6px;
+    }
+
+.toolbar-advanced-filters .filters-fields-container .field.form-group {
+    margin-bottom: 8px;
+}
+
+.toolbar-advanced-filters .filters-fields-container .form-group > label.form-label {
+    margin: 0;
+    color: #525252;
+    font-weight: 500;
+}
+
+.toolbar-advanced-filters .filters-fields-container .form-group .controls input.form-control {
+    padding: 2px 6px 2px 6px;
+    height: auto;
+    border-color: #bebebe;
+    border-radius: 3px;
+}
+
+.toolbar-advanced-filters .filters-fields-container .form-group .controls .select2-container a.select2-choice {
+    height: 29px;
+    padding: 2px 6px 1px 6px;
+    border-color: #bebebe;
+    color: #3b3f5c;
+    background-color: white;
+    font-size: 15px;
+}
+
+.toolbar-advanced-filters .filters-fields-container .form-group .controls .select2-container .select2-choice .select2-arrow {
+    top: -4px;
+}
+
+.select2-drop.advanced-filters.select2-field {
+    border-color: #bebebe;
+}
+
+.select2-drop.advanced-filters.select2-field ul.select2-results > li.select2-highlighted {
+    background-color: var(--primary);
+}
+
+.select2-container .select2-choice {
+    height: 38px;
+    line-height: 24px;
+    border-radius: 3px;
+}
+
+.select2-container .select2-choice .select2-arrow b {
+    background-position-y: 6px;
+}
+
+.select2-dropdown-open .select2-choice .select2-arrow b {
+    background-position-y: 6px;
+}
+
+table.dataTable > tbody > tr[role=row] > td span.badge {
+    font-size: 12px;
+    font-family: var(--font-family-primary);
+}
+
+table.dataTable > thead > tr[role=row] > th {
+    background-color: #d0d9e9bd;
+}
+
+table.dataTable > tbody > tr[role=row],
+table.dataTable.table-striped > tbody > tr[role=row] {
+    cursor: pointer;
+}
+
+table.dataTable > tbody > tr.selected[role=row],
+table.dataTable.table-striped > tbody > tr.selected[role=row] {
+    background-color: var(--primary);
+}
+
+table.dataTable > tbody > tr.selected[role=row] > td,
+table.dataTable.table-striped > tbody tr.selected[role=row] > td,
+table.dataTable > tbody > tr[role=row]:hover > td,
+table.dataTable.table-striped > tbody > tr[role=row]:hover > td,
+table.dataTable > tbody > tr.selected[role=row]:hover > td,
+table.dataTable.table-striped > tbody > tr.selected[role=row]:hover > td,
+table.dataTable > tbody > tr.selected[role=row] > td > i.details,
+table.dataTable.table-striped > tbody > tr.selected[role=row] > td > i.details {
+    color: white;
+}
+
+table.dataTable > tbody > tr[role=row] > td > i.details,
+table.dataTable.table-striped > tbody > tr[role=row] > td > i.details {
+    font-size: 20px;
+    line-height: 0;
+    vertical-align: middle;
+    color: #2594ca;
+}
+
+table.dataTable > tbody > tr[role=row] > td > i.details.expanded:before,
+table.dataTable.table-striped > tbody tr[role=row] > td > i.details.expanded:before {
+    content: '\f010';
+}
+
+table.dataTable > tbody > tr.selected[role=row] > td,
+table.dataTable.table-striped > tbody tr.selected[role=row] > td,
+table.dataTable > tbody > tr[role=row]:hover > td,
+table.dataTable.table-striped > tbody > tr[role=row]:hover > td,
+table.dataTable > tbody > tr.selected[role=row]:hover > td,
+table.dataTable.table-striped > tbody > tr.selected[role=row]:hover > td,
+table.dataTable > tbody > tr.selected[role=row] > td > i.details,
+table.dataTable.table-striped > tbody > tr.selected[role=row] > td > i.details {
+    background-color: #00bfd7;
+    color: white;
+}
+
+table.dataTable > tbody > tr[role=row]:hover,
+table.dataTable > tbody > tr.selected[role=row]:hover,
+table.dataTable.table-striped > tbody > tr[role=row]:hover,
+table.dataTable.table-striped > tbody > tr.selected[role=row]:hover {
+    background-color: rgba(var(--primary-rgb), .80);
+}
+
+table.dataTable > tbody > tr[role=row]:active,
+table.dataTable > tbody > tr.selected[role=row]:active,
+table.dataTable.table-striped > tbody > tr[role=row]:active,
+table.dataTable.table-striped > tbody > tr.selected[role=row]:active {
+    background-color: var(--primary);
+}
+
+.modal .modal-dialog ul.nav.nav-tabs {
+    margin: 0;
+}
+
+.modal .modal-dialog ul.nav.nav-tabs > li.nav-item > a.nav-link > span {
+    display: none;
+    padding-left: 5px;
+}
+
+.modal .modal-dialog ul.nav.nav-tabs > li.nav-item.error > a.nav-link {
+    color: red;
+    font-weight: 400;
+}
+
+.modal .modal-dialog ul.nav.nav-tabs > li.nav-item.error > a.nav-link > span {
+    display: inline-block;
+}
+
+.modal .modal-dialog ul.nav.nav-tabs > li.nav-item {
+    margin-bottom: -1px;
+}
+
+.modal .modal-dialog ul.nav.nav-tabs > li.nav-item > a.nav-link {
+    font-size: 15px;
+    background: none;
+    border: 1px solid #eaeaea;
+    background-color: #f5f5f5;
+    color: #333333;
+    margin-right: 5px;
+    padding: 10px 20px;
+}
+
+.modal .modal-dialog ul.nav.nav-tabs > li.nav-item > a.nav-link.active {
+    color: #555555;
+    background-color: #fff;
+    border: 1px solid #eaeaea;
+    border-bottom-color: transparent;
+}
+
+.modal .modal-dialog ul.nav.nav-tabs > li.nav-item.error > a.nav-link.active,
+.modal .modal-dialog ul.nav.nav-tabs > li.nav-item.error > a.nav-link.active > span > i {
+    color: red;
+}
+
+.modal .modal-dialog div.tab-content {
+    padding: 15px;
+    border: 1px solid #eaeaea;
+    background-color: #ffffff;
+    border-top: 0px;
+}
+
+.modal .modal-dialog div.with-buttons button.btn i {
+    color: white;
+}
+
+.modal .modal-dialog ul.field-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border: solid 1px lightgray;
+}
+
+.modal .modal-dialog ul.field-list li {
+    user-select: none;
+    padding: 10px;
+}
+
+.modal .modal-dialog ul.field-list li.empty {
+    display: none;
+}
+
+.modal .modal-dialog ul.field-list li.empty.shown {
+    display: list-item;
+}
+
+.modal .modal-dialog ul.field-list li.template {
+    display: none;
+}
+
+.modal .modal-dialog ul.field-list li.item {
+    position: relative;
+}
+
+.modal .modal-dialog ul.field-list li.item span {
+    color: #3F51B5;
+}
+
+.modal .modal-dialog ul.field-list li.item span.strong {
+    color: #b90000;
+}
+
+.modal .modal-dialog ul.field-list li.item a {
+    display: none;
+    float: right;
+    color: #f53e3e;
+}
+
+.modal .modal-dialog ul.field-list li.item a:hover {
+    color: #c13232;
+}
+
+.modal .modal-dialog ul.field-list li.item:hover {
+    background-color: #f8f1f9;
+}
+
+.modal .modal-dialog ul.field-list li.item:hover a {
+    display: unset;
+}
+
+.modal .modal-dialog .row.with-buttons button {
+    margin-top: 35px;
+}
+
+.modal .modal-dialog form .form-control,
+.modal .modal-dialog form .dropdown-group-list button.dropdown-toggle {
+    padding: 6px 10px;
+    height: auto;
+}
+
+.modal .modal-dialog form input[type=text],
+.modal .modal-dialog form textarea {
+    text-transform: uppercase;
+}
+
+.modal .modal-dialog form input[type=text].lowercase,
+.modal .modal-dialog form textarea.lowercase {
+    text-transform: lowercase;
+}
+
+.modal .modal-dialog form input[type=text].capitalize,
+.modal .modal-dialog form textarea.capitalize {
+    text-transform: capitalize;
+}
+
+.modal .modal-dialog form input.form-control[readonly] {
+    color: #646464;
+}
+
+.modal .modal-dialog form .input-group > .input-group-prepend:first-child > .btn:not(:first-child) {
+    border-top-left-radius: 6px;
+    border-bottom-left-radius: 6px;
+}
+
+.modal .modal-dialog form .input-group .dropdown-menu {
+    background-color: #f8fdfc;
+}
+
+.modal .modal-dialog form .input-group > .input-group-prepend > button.dropdown-toggle[readonly] {
+    pointer-events: none;
+}
+
+.modal .modal-dialog form .input-group > .input-group-prepend > button.dropdown-toggle > i {
+    font-size: 10px;
+    padding-left: 2px;
+}
+
+.modal .modal-dialog form .input-group > .input-group-prepend > button.dropdown-toggle[readonly] > i {
+    display: none;
+}
+
+.modal .modal-dialog form .form-group > .controls span.fly-new {
+    position: absolute;
+    top: 2px;
+    right: 8px;
+    font-size: 22px;
+    color: #0095ff;
+    cursor: pointer;
+    z-index: 3;
+}
+
+.modal .modal-dialog form .form-group > .controls span.fly-new:hover {
+    color: #00a9ff;
+}
+
+.modal .modal-dialog form .form-group > .controls span.fly-new:active {
+    color: #0095ff;
+}
+
+div.tooltip.show {
+    opacity: 1;
+}
+
+div.tooltip > div.tooltip-inner {
+    background-color: white;
+    color: red;
+    border: solid 1px red;
+}
+
+div.tooltip > div.arrow::before {
+    border-top-color: red;
+}

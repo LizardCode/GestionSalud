@@ -1,0 +1,83 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+	<LangVersion>preview</LangVersion>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>LizardCode.SalmaSalud</RootNamespace>
+    <Version>1.1.366.1</Version>
+    <FileVersion>1.1.366.1</FileVersion>
+    <Configurations>Release;Debug</Configurations>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <ShouldCreateLogs>True</ShouldCreateLogs>
+    <AdvancedSettingsExpanded>True</AdvancedSettingsExpanded>
+    <UpdateAssemblyVersion>True</UpdateAssemblyVersion>
+    <UpdateAssemblyFileVersion>True</UpdateAssemblyFileVersion>
+    <UpdateAssemblyInfoVersion>False</UpdateAssemblyInfoVersion>
+    <AssemblyVersionSettings>None.IncrementOnDemand.None.None</AssemblyVersionSettings>
+    <UpdatePackageVersion>False</UpdatePackageVersion>
+    <AssemblyInfoVersionType>SettingsVersion</AssemblyInfoVersionType>
+    <InheritWinAppVersionFrom>None</InheritWinAppVersionFrom>
+    <AssemblyFileVersionSettings>None.IncrementOnDemand.DayOfYearStamp.IncrementOnDemand</AssemblyFileVersionSettings>
+    <PrimaryVersionType>AssemblyFileVersionAttribute</PrimaryVersionType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="NLog" Version="5.2.8" />
+    <PackageReference Include="NLog.Extensions.Logging" Version="5.3.8" />
+    <PackageReference Include="NLog.Web.AspNetCore" Version="5.3.8" />
+    <PackageReference Include="QRCoder" Version="1.4.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\LizardCode-Framework\Helpers\LizardCode.Framework.Helpers.Utilities\LizardCode.Framework.Helpers.Utilities.csproj" />
+    <ProjectReference Include="..\LizardCode.SalmaSalud.Infrastructure\LizardCode.SalmaSalud.Infrastructure.csproj" />
+    <ProjectReference Include="..\LizardCode.SalmaSalud.Application\LizardCode.SalmaSalud.Application.csproj" />
+    <ProjectReference Include="..\LizardCode.SalmaSalud.Domain\LizardCode.SalmaSalud.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="Views\Reportes\TurnosEstadisticas.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="if $(ConfigurationName) == Release (&#xD;&#xA;   $(SolutionDir)..\Dawa-Utilities\MVC-Versioning\StaticFilesVersionUpdater.exe $(ProjectDir)&#xD;&#xA;)" />
+  </Target>
+
+	<Target Name="RemoveSettingsFiles" AfterTargets="AfterPublish">
+		<Exec Command="@echo ### Eliminando archivos de configuracion..." EchoOff="true" />
+		<Delete Files="$(PublishUrl)\appsettings.json" />
+	</Target>
+
+	<Target Name="MoveFiles" AfterTargets="AfterPublish">
+		<ItemGroup>
+			<FilesToMove Include="$(PublishUrl)\**\*.*" />
+		</ItemGroup>
+		<Exec Command="@echo ### Creando carpeta para comprimir..." EchoOff="true" />
+		<Copy SourceFiles="@(FilesToMove)" DestinationFolder="$(PublishUrl)\zipfolder\dtc\%(RecursiveDir)" />
+	</Target>
+
+	<Target Name="InflateZip" AfterTargets="AfterPublish">
+		<Exec Command="@echo ### Comprimiendo..." EchoOff="true" />
+		<ZipDirectory SourceDirectory="$(PublishUrl)\zipfolder" DestinationFile="$(PublishUrl)..\dtc.zip" Overwrite="true" />
+	</Target>
+
+	<Target Name="RemoveOutput" AfterTargets="AfterPublish">
+		<Exec Command="@echo ### Eliminando carpeta '$(PublishUrl)'..." EchoOff="true" />
+		<Exec Command="@echo ##############################################################################" EchoOff="true" />
+		<RemoveDir Directories="$(PublishUrl)" />
+	</Target>
+
+	<ProjectExtensions>
+		<VisualStudio>
+			<UserProperties appsettings_1json__JsonSchema="" />
+		</VisualStudio>
+	</ProjectExtensions>
+	
+</Project>

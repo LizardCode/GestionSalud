@@ -1,0 +1,93 @@
+﻿@model LizardCode.SalmaSalud.Application.Models.Reportes.TurnosEstadisticasViewModel
+@{
+    Layout = "~/Views/Shared/ReportLayout.cshtml";
+
+    ViewBag.MainClass = "TurnosEstadisticasView";
+
+    ViewBag.Title = "Estadísticas Turnos";
+    ViewBag.ItemMenu = "Est. Turnos";
+    ViewBag.RemoveListadoDe = true;
+
+    ViewBag.ButtonExcel = false;
+    ViewBag.ButtonPDF = false;
+    ViewBag.ButtonPrint = false;
+
+    //ViewBag.AjaxGetAll = Url.Action("ObtenerTurnos", "Reportes");
+}
+
+@section Styles {
+    <link href="/lib/apex/apexcharts.css" rel="stylesheet">
+    <link href="/css/Views/Reportes/turnosEstadisticas.css?3661" rel="stylesheet" />
+}
+
+@section Filters {
+    <div class="col">
+
+        <div class="row">
+            @Html.FilterPickerDateFor(m => m.FechaDesde, "Fecha Desde", colSize: "col-md-3")
+            @Html.FilterPickerDateFor(m => m.FechaHasta, "Fecha Hasta", colSize: "col-md-3")
+            @Html.FilterDropDownListFor(m => m.IdProfesional, Model.MaestroProfesionales, "Profesional", colSize: "col-md-4")
+            @* @Html.FilterDropDownListFor(m => m.IdEspecialidad, Model.MaestroEspecialidades, "Especialidad", colSize: "col-md-3") *@
+        </div>
+
+    </div>
+}
+
+@section GridColumns {
+
+}
+
+@section CustomModals {
+    <div class="row">
+        <div class="col">
+            <h6 class="iInfoBusqueda">
+                <i class="fa fa-info-circle text-primary" aria-hidden="true"></i> <b class="bInfoBusqueda"></b>
+            </h6>
+        </div>
+    </div>
+    <div class="row">
+    @*         
+    <div class="col-xl-6 col-lg-6 col-12 layout-spacing">
+            <div class="widget widget-chart-two">
+                <div class="widget-heading">
+                    <h5 class="lblFilters">Turnos Atendidos por Especialidad</h5>
+                </div>
+                <div class="widget-content">
+                    <div id="chartEspecialidad" class="">
+                        <div class="text-center"><img alt="just a loader" src="/img/mini_loader.gif" width="75px;"></div>
+                    </div>
+                </div>
+            </div>
+    </div> 
+    *@
+        <div class="col-xl-6 col-lg-6 col-6 layout-spacing">
+            <div class="widget widget-chart-two">
+                <div class="widget-heading">
+                    <h5 class="lblFilters">Estado Previo Turnos Atendidos</h5>
+                </div>
+                <div class="widget-content">
+                    <div id="chartTurnos" class="">
+                        <div class="text-center"><img alt="just a loader" src="/img/mini_loader.gif" width="75px;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-6 col-lg-6 col-12 layout-spacing">
+            <div class="widget widget-chart-two">
+                <div class="widget-heading">
+                    <h5 class="lblFilters">Turnos Ausentes</h5>
+                </div>
+                <div class="widget-content">
+                    <div id="chartAusentes" class="">
+                        <div class="text-center"><img alt="just a loader" src="/img/mini_loader.gif" width="75px;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    <script src="/lib/apex/apexcharts.min.js"></script>
+    <script src="/js/Views/Reportes/turnosEstadisticas.js?3661"></script>
+}

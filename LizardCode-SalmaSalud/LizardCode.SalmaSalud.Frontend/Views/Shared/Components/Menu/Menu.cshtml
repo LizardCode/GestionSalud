@@ -1,0 +1,199 @@
+﻿@using LizardCode.Framework.Application.Common.Enums
+@model LizardCode.SalmaSalud.Application.Models.Menu.Menu
+@{
+    Layout = null;
+
+    var tipoUsuario = (TipoUsuario)ViewBag.UsuarioSesion.IdTipoUsuario;
+}
+
+<ul class="list-unstyled menu-categories" id="side-menu">
+    <li class="menu menu-heading">
+        <div class="first heading"><i data-feather="minus"></i> <span>@(tipoUsuario == TipoUsuario.Paciente ? "MENÚ" : "GESTIÓN DIARIA")</span></div>
+    </li>
+
+    @foreach (var item in Model.Items.Where(w => w.MainSection == true))
+    {
+        if (item.Tipo != TipoMenuItem.Item)
+        {
+            switch (item.Tipo)
+            {
+                case TipoMenuItem.Separador:
+                    <li class="separator" />
+                    break;
+                case TipoMenuItem.Espaciador:
+                    <li class="spacer" />
+                    break;
+            }
+        }
+        else if (item.SubMenu == null || item.SubMenu.Count == 0)
+        {
+            if (string.IsNullOrEmpty(item.Controller))
+            {
+                <li class="menu @OpenIf(item.Action)">
+                    <a href="@Url.Action("Index", item.Action)" class="dropdown-toggle">
+                        <div>
+                            <i data-feather="@item.Icono"></i> <span>@item.Texto</span>
+                        </div>
+                    </a>
+                </li>
+            }
+            else
+            {
+                <li class="menu @OpenIf(item.Action)">
+                    <a href="@Url.Action(item.Action, item.Controller)" class="dropdown-toggle">
+                        <div>
+                            <i data-feather="@item.Icono"></i> <span>@item.Texto</span>
+                        </div>
+                    </a>
+                </li>
+            }            
+        }
+        else if (item.SubMenu != null && item.SubMenu.Count > 0)
+        {
+            <li class="menu">
+                <a href="#@item.Codigo" data-toggle="collapse" aria-expanded="@OpenIfSubmenu(item, "true", "false")" class="dropdown-toggle">
+                    <div>
+                        <i data-feather="@item.Icono"></i> <span>@item.Texto</span>
+                    </div>
+                    <div>
+                        <i data-feather="chevron-right"></i>
+                    </div>
+                </a>
+                <ul class="collapse submenu list-unstyled @OpenIfSubmenu(item, "show")" id="@item.Codigo" data-parent="#side-menu">
+                    @foreach (var subitem in item.SubMenu)
+                    {
+                        switch (subitem.Tipo)
+                        {
+                            case TipoMenuItem.Separador:
+                                <li class="separator" />
+                                break;
+                            case TipoMenuItem.Espaciador:
+                                <li class="spacer" />
+                                break;
+                            default:          
+                                if (!string.IsNullOrEmpty(subitem.Controller))
+                                {
+                                    <li class="@OpenIf(subitem.Controller + "/" + subitem.Action)"><a href="@Url.Action(subitem.Action, subitem.Controller)"> @subitem.Texto </a></li>
+                                }
+                                else
+                                {
+                                    <li class="@OpenIf(subitem.Action)"><a href="@Url.Action("Index", subitem.Action)"> @subitem.Texto </a></li>
+                                }
+                                break;
+                        }
+                    }
+                </ul>
+            </li>
+        }
+    }
+
+    @if (Model.Items.Any(w => w.MainSection == false))
+    {
+        <li class="menu menu-heading">
+            <div class="first heading"><i data-feather="minus"></i> <span>OTRAS ACCIONES</span></div>
+        </li>
+    }
+
+    @foreach (var item in Model.Items.Where(w => w.MainSection == false))
+    {
+
+        if (item.Tipo != TipoMenuItem.Item)
+        {
+            switch (item.Tipo)
+            {
+                case TipoMenuItem.Separador:
+                    <li class="separator" />
+                    break;
+                case TipoMenuItem.Espaciador:
+                    <li class="spacer" />
+                    break;
+            }
+        }
+        else if (item.SubMenu == null || item.SubMenu.Count == 0)
+        {
+            <li class="menu @OpenIf(item.Action)">
+                <a href="@string.Format("/{0}", item.Action)" class="dropdown-toggle">
+                    <div>
+                        <i data-feather="@item.Icono"></i> <span>@item.Texto</span>
+                    </div>
+                </a>
+            </li>
+        }
+        else if (item.SubMenu != null && item.SubMenu.Count > 0)
+        {
+            <li class="menu">
+                <a href="#@item.Codigo" data-toggle="collapse" aria-expanded="@OpenIfSubmenu(item, "true", "false")" class="dropdown-toggle">
+                    <div>
+                        <i data-feather="@item.Icono"></i> <span>@item.Texto</span>
+                    </div>
+                    <div>
+                        <i data-feather="chevron-right"></i>
+                    </div>
+                </a>
+                <ul class="collapse submenu list-unstyled @OpenIfSubmenu(item, "show")" id="@item.Codigo" data-parent="#side-menu">
+                    @foreach (var subitem in item.SubMenu)
+                    {
+                        switch (subitem.Tipo)
+                        {
+                            case TipoMenuItem.Separador:
+                                <li class="separator" />
+                                break;
+                            case TipoMenuItem.Espaciador:
+                                <li class="spacer" />
+                                break;
+                            default:
+                                if (!string.IsNullOrEmpty(subitem.Controller))
+                                {
+                                    <li class="@OpenIf(subitem.Controller + "/" + subitem.Action)"><a href="@Url.Action(subitem.Action, subitem.Controller)"> @subitem.Texto </a></li>
+                                }
+                                else
+                                {
+                                    <li class="@OpenIf(subitem.Action)"><a href="@Url.Action("Index", subitem.Action)"> @subitem.Texto </a></li>
+                                }
+                                @* <li class="@OpenIf(subitem.Action)"><a href="/@subitem.Action"> @subitem.Texto </a></li> *@
+                                break;
+                        }
+                    }
+                </ul>
+            </li>
+        }
+    }
+</ul>
+
+@functions {
+    public string OpenIf(string action, string whenTrue = "active", string whenFalse = "")
+    {
+        try
+        {
+            if ((string)TempData["MenuItem"] == action)
+                return whenTrue;
+            else
+                return whenFalse;
+        }
+        catch
+        {
+            return whenFalse;
+        }
+    }
+
+    public string OpenIfSubmenu(LizardCode.SalmaSalud.Application.Models.Menu.ItemMenu item, string whenTrue = "active", string whenFalse = "")
+    {
+        try
+        {
+            var action = (string)TempData["MenuItem"];
+            if (action != null && item.SubMenu != null && item.SubMenu.Any(a => a.Action == action))
+                return whenTrue;
+            else
+            {                
+                if (action != null && item.SubMenu != null && item.SubMenu.Any(a => a.Controller + "/" + a.Action == action))
+                    return whenTrue;
+                else
+                    return whenFalse;
+            }
+        }
+        catch
+        {
+            return whenFalse;
+        }
+    }
+} 

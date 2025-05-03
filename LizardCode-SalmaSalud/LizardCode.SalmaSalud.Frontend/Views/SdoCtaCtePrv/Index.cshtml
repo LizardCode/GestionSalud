@@ -1,0 +1,130 @@
+﻿@using LizardCode.Framework.Application.Models.Repeater;
+@model LizardCode.SalmaSalud.Application.Models.SdoCtaCtePrv.SdoCtaCtePrvViewModel
+@{
+    Layout = "~/Views/Shared/MaestroLayout.cshtml";
+
+    ViewBag.MainClass = "ABMSdoCtaCtePrvView";
+
+    ViewBag.Title = "Mantenimiento de Saldo de Inicio de Proveedores";
+    ViewBag.TitleNew = "Nuevo Saldo de Inicio de Proveedores...";
+    ViewBag.TitleEdit = "Modificar Saldo de Inicio de Proveedores...";
+    ViewBag.TitleRemove = "Eliminar Saldo de Inicio de Proveedores...";
+    ViewBag.ItemMenu = "Saldo de Inicio de Proveedores";
+
+    ViewBag.ButtonNew = true;
+    ViewBag.ButtonEdit = true;
+    ViewBag.ButtonRemove = true;
+
+    ViewBag.AjaxGetAll = Url.Action("ObtenerTodos", "SdoCtaCtePrv");
+    ViewBag.AjaxGet = Url.Action("Obtener", "SdoCtaCtePrv");
+    ViewBag.AjaxAdd = Url.Action("Nuevo", "SdoCtaCtePrv");
+    ViewBag.AjaxUpdate = Url.Action("Modificar", "SdoCtaCtePrv");
+    ViewBag.AjaxDelete = Url.Action("Eliminar", "SdoCtaCtePrv");
+
+    ViewBag.Tabs = new string[] { "General" };
+}
+
+@section Styles {
+    <link href="/css/Views/SdoCtaCtePrv/index.css?3661" rel="stylesheet" />
+}
+
+@section Filters {
+    <div class="col">
+
+        <div class="row">
+            @Html.FilterPickerDateFor(m => m.FechaDesde, "Fecha Desde", value: string.Empty, colSize: "col-md-2")
+            @Html.FilterPickerDateFor(m => m.FechaHasta, "Fecha Hasta", value: string.Empty, colSize: "col-md-2")
+        </div>
+    </div>
+}
+
+@section GridColumns {
+
+    <th>ID</th>
+    <th>Desde</th>
+    <th>Hasta</th>
+    <th>Descripcion</th>
+    <th>Cant. Comprobantes</th>
+    <th>Total</th>
+}
+
+@section CrudForm {
+    <div class="col">
+        <div class="row">
+            <div class="col">
+                <h4>Validación de Fechas y Descripción</h4>
+            </div>
+        </div>
+        <div class="row">
+            @Html.HiddenFor(m => m.IdSaldoCtaCtePrv)
+            @Html.FormGroupPickerDateFor(m => m.FechaDesde, title: "Fecha Desde", colSize: "col-md-2", addValidator: true, editingDisabled: false)
+            @Html.FormGroupPickerDateFor(m => m.FechaHasta, title: "Fecha Hasta", colSize: "col-md-2", addValidator: true, editingDisabled: false)
+            @Html.FormGroupTextBoxFor(m => m.Descripcion, title: "Descripción", colSize: "col-md-8", addValidator: true)
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <button type="button" class="btn btn-primary btProcesarExcel" title="Importar Planilla XLS"><i class="fas fa-file-excel"></i> <span>Importar Planilla XLS</span></button>
+            </div>
+        </div>
+
+        <hr />
+
+        <div class="row mb-2">
+            <div class="col-md-4">
+                <h4>Carga de Comprobantes</h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                @await Component.InvokeAsync("Repeater", new RepeaterViewModel().SetItems(
+                Model.Items,
+                x => new(nameof(x.IdProveedor), Model.MaestroProveedores),
+                x => new(nameof(x.IdComprobante), Model.MaestroComprobantes),
+                x => new(nameof(x.IdAlicuota), Model.MaestroAlicuotas)
+            ))
+            </div>
+        </div>
+    </div>
+}
+
+@section CustomModals {
+
+    <!-- Modal - Procesar Excel -->
+    <div class="modal fade modalProcesarExcel" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog bounceInRight animated">
+            <div class="modal-content">
+                @using (Html.AjaxBeginForm(Url.Action("ProcesarExcel", "SdoCtaCtePrv"), "ABMSdoCtaCtePrvView", "ajaxProcesarExcelBegin", "ajaxProcesarExcelSuccess", "ajaxProcesarExcelFailure", multipart: true))
+                {
+                    <div class="modal-header">
+                        <h5 class="modal-title">Procesar Excel</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true" class="zmdi zmdi-close"></span>
+                        </button>
+                    </div>
+                    <div class="modal-body ProcesarExcelView">
+                        <div class="row">
+                            <div class="col">
+                                @Html.FormGroupFileFor(m => m.FileExcel, title: "Documento XLS", fieldCss: "filestyle", buttonText: "Cargar Documento XLS", icon: "fa-xls", accept: ".xls,.xlsx")
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col ml-4">
+                                <label id="lblFileExcel" style="display:none;">[NombreArchivo]</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" data-dismiss="modal" class="btn btn-default"><i class="fa fa-times"></i> Cancelar</button>
+                        <button type="submit" class="btn btn-warning btOkProcesarExcel" disabled><i class="fa fa-check"></i> Procesar</button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+}
+
+@section Scripts {
+    <script src="/js/Views/SdoCtaCtePrv/index.js?3661"></script>
+}

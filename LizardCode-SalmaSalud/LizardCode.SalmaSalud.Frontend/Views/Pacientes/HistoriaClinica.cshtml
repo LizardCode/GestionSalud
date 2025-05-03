@@ -1,0 +1,68 @@
+﻿@model LizardCode.SalmaSalud.Application.Models.Pacientes.HistoriaClinicaViewModel
+@{
+    Layout = null;
+}
+
+<link href="/css/Views/Pacientes/historiaClinica.css?3661" rel="stylesheet" />
+
+<div class="modal-header">
+    <h5 class="modal-title">Historia Clínica</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true" class="fa fa-times"></span>
+    </button>
+</div>
+<div class="modal-body historiasClinicasModalBody">
+    @Html.Hidden("HC_IdPaciente", Model.IdPaciente, new { @id = "HC_IdPaciente" })
+
+    <div class="row">
+        <div class="col-md-3 fechas">
+            <table class="@string.Format("table table-striped dt-view dataTable HC_dtEvoluciones HC_dtEvoluciones_{0}", Model.IdPaciente)" width="100%">
+                <thead>
+                    <tr>
+                        @*<th></th>*@
+                        <th>Fecha</th>
+                        <th>Especialidad</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-9 detalles">
+            @if (Model.ShowResumenPaciente)
+            { 
+                <div class="row">
+                    <div class="col">
+                        <div id="HC_resumenView">
+                            <div class="text-center"><img alt="just a loader" src="/img/mini_loader.gif" width="75px;"></div>
+                        </div>
+                    </div>
+                </div>
+            }
+            <div class="row resumen-view">
+                <div class="col">
+                    <div id="HC_evolucionView" class="hc-evolucion-view">
+                        <div class="text-center">[SELECCIONE UNA EVOLUCIÓN]</div>
+                    </div>
+                </div>
+            </div>
+                    
+        </div>
+    </div>
+</div>
+
+@*<div class="modal-footer">
+    <button type="button" data-dismiss="modal" class="btn btn-default"><i class="fa fa-times"></i> CERRAR</button>
+    <button type="button" class="btn btn-primary btSave"><i class="fa fa-check"></i> GUARDAR</button>
+</div>*@
+
+<script src="/js/Views/Pacientes/historiaClinica.js?3661"></script>
+@if (Model.ShowResumenPaciente)
+{ 
+    <script>
+        $.get('@Url.Action("ResumenView", "Pacientes")', { id: @Model.IdPaciente, showNombre: true, showButton: false }, function (content) {
+            $("#HC_resumenView").html(content);
+        });
+    </script>
+}

@@ -1,0 +1,93 @@
+﻿@model LizardCode.SalmaSalud.Application.Models.Clientes.ClienteViewModel
+@{
+    Layout = "~/Views/Shared/MaestroLayout.cshtml";
+
+    ViewBag.MainClass = "ABMClientesView";
+
+    ViewBag.Title = "Mantenimiento de Clientes";
+    ViewBag.TitleNew = "Nuevo cliente...";
+    ViewBag.TitleEdit = "Modificar cliente...";
+    ViewBag.TitleRemove = "Eliminar cliente...";
+    ViewBag.ItemMenu = "Clientes";
+
+    ViewBag.ButtonNew = true;//PermisosBusiness.Instance.VerificarPermisos(ModuloOperativo.Usuarios, Permiso.Alta);
+    ViewBag.ButtonEdit = true;//PermisosBusiness.Instance.VerificarPermisos(ModuloOperativo.Usuarios, Permiso.Modificacion);
+    ViewBag.ButtonRemove = true;//PermisosBusiness.Instance.VerificarPermisos(ModuloOperativo.Usuarios, Permiso.Baja);
+
+    ViewBag.AjaxGetAll = Url.Action("ObtenerTodos", "Clientes");
+    ViewBag.AjaxGet = Url.Action("Obtener", "Clientes");
+    ViewBag.AjaxAdd = Url.Action("Nuevo", "Clientes");
+    ViewBag.AjaxUpdate = Url.Action("Modificar", "Clientes");
+    ViewBag.AjaxDelete = Url.Action("Eliminar", "Clientes");
+
+    ViewBag.Tabs = new string[] { "General", "Dirección" };
+}
+
+@section Styles {
+    <link href="/css/Views/Clientes/index.css?3661" rel="stylesheet" />
+}
+
+@section Filters {
+
+    @Html.FilterTextBoxFor(m => m.FiltroCUIT, "C.U.I.T.", value: string.Empty, placeholder: "__-________-_")
+    @Html.FilterTextBoxFor(m => m.FiltroRazonSocial, "Razon Social", value: string.Empty)
+
+}
+
+@section GridColumns {
+
+    <th>ID</th>
+    <th>Razón Social</th>
+    <th>Tipo IVA</th>
+    <th>CUIT/DNI</th>
+    <th>Teléfono</th>
+    <th>Email</th>
+    <th>Localidad</th>
+    <th>Domicilio</th>
+
+}
+
+@section CrudForm {
+
+    @Html.FormGroupTextBoxFor(m => m.IdCliente, title: "ID", editingDisabled: true, newVisible: false)
+
+    @Html.FormGroupTextBoxFor(m => m.Documento, title: "Nro. Documento", addValidator: true)
+
+    @Html.FormGroupButtonGroupFor(m => m.CUIT, buttonCss: "btnCUIT", buttonText: "AFIP", title: "C.U.I.T.", addValidator: true, position: "append")
+
+    @Html.FormGroupTextBoxFor(m => m.RazonSocial, title: "Razón Social", addValidator: true)
+
+    @Html.FormGroupTextBoxFor(m => m.NombreFantasia, title: "Nombre de Fantasia", addValidator: false)
+
+    @Html.FormGroupDropDownListFor(m => m.IdTipoIVA, Model.MaestroTipoIVA, "Tipo de IVA", fieldCss: "select2-field tipoIVA", addValidator: true)
+
+    @Html.FormGroupTextBoxFor(m => m.NroIBr, title: "N° de Ingresos Brutos", addValidator: false)
+
+    @Html.FormGroupDropDownGroupFor(m => m.Telefono, "IdTipoTelefono", Model.MaestroTipoTelefono, title: "Teléfono", addValidator: true)
+
+    @Html.FormGroupTextBoxFor(m => m.Email, title: "Email", fieldCss: "form-control lowercase", addValidator: true)
+
+}
+
+@section CrudTab01 {
+
+    @Html.HiddenFor(m => m.Latitud)
+    @Html.HiddenFor(m => m.Longitud)
+
+    @Html.FormGroupTextBoxFor(m => m.Direccion, title: "Dirección", colSize: "col-md-8", autocomplete: false, addValidator: true)
+
+    @Html.FormGroupTextBoxFor(m => m.Piso, title: "Piso", colSize: "col-md-2")
+
+    @Html.FormGroupTextBoxFor(m => m.Departamento, title: "Depto.", colSize: "col-md-2")
+
+    @Html.FormGroupTextBoxFor(m => m.Provincia, title: "Provincia", colSize: "col-md-5")
+
+    @Html.FormGroupTextBoxFor(m => m.Localidad, title: "Localidad", colSize: "col-md-5")
+
+    @Html.FormGroupTextBoxFor(m => m.CodigoPostal, title: "Código Postal", colSize: "col-md-2")
+}
+
+@section Scripts {
+    <script src="/js/Views/Clientes/index.js?3661"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBAnt1IhTMCk1BVOjr_p4q8IxlicSEVGyw&libraries=places&callback=ABMClientesView.initAutocomplete"></script>
+}

@@ -1,0 +1,181 @@
+﻿@using LizardCode.Framework.Application.Models.MasterDetail
+@using LizardCode.Framework.Application.Models.Repeater;
+
+@model LizardCode.SalmaSalud.Application.Models.LiquidacionesProfesionales.LiquidacionProfesionalViewModel
+@{
+    Layout = "~/Views/Shared/MaestroLayout.cshtml";
+
+    ViewBag.MainClass = "ABMLiquidacionesProfesionalesView";
+
+    ViewBag.Title = "Mantenimiento de Liquidaciones a Profesionales";
+    ViewBag.TitleNew = "Nueva liquidación...";
+    ViewBag.TitleEdit = "Modificar liquidación...";
+    ViewBag.TitleRemove = "Eliminar liquidación...";
+    ViewBag.ItemMenu = "Liquidaciones a Profesionales";
+
+    ViewBag.ButtonNew = true;
+    ViewBag.ButtonEdit = false;
+    ViewBag.ButtonRemove = true;
+
+    ViewBag.AjaxGetAll = Url.Action("ObtenerTodos", "LiquidacionesProfesionales");
+    ViewBag.AjaxGet = Url.Action("Obtener", "LiquidacionesProfesionales");
+    ViewBag.AjaxAdd = Url.Action("Nuevo", "LiquidacionesProfesionales");
+    ViewBag.AjaxUpdate = Url.Action("Modificar", "LiquidacionesProfesionales");
+    ViewBag.AjaxDelete = Url.Action("Eliminar", "LiquidacionesProfesionales");
+
+    ViewBag.Tabs = new string[] { "Liquidacion" };
+}
+
+@section Styles {
+    <link href="/css/Views/LiquidacionesProfesionales/index.css?3661" rel="stylesheet" />
+    <style>
+        .row-flex {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .stick-to-bottom {
+            position: absolute;
+            bottom: -3rem;
+        }
+    </style>
+}
+
+@section Filters {
+    
+    @Html.FilterPickerDateFor(m => m.FechaFiltroDesde, "Fecha Desde", value: Model.FechaFiltroDesde.ToString("dd/MM/yyyy"), colSize: "col-md-2")
+    @Html.FilterPickerDateFor(m => m.FechaFiltroHasta, "Fecha Hasta", value: Model.FechaFiltroHasta.ToString("dd/MM/yyyy"), colSize: "col-md-2")
+    @Html.FilterDropDownListFor(m => m.IdProfesional, Model.MaestroProfesionales, "Profesional", colSize: "col-md-4")
+    @Html.FilterDropDownListFor(m => m.IdEstadoLiquidacionProfesional, Model.MaestroEstados, "Estado", colSize: "col-md-4")
+}
+
+@section GridColumns {
+
+    <th>ID</th>
+    <th>Fecha Carga</th>
+    <th>Desde</th>
+    <th>Hasta</th>
+    <th>Profesional</th>
+    <th>Estado</th>
+    <th>Total</th>
+    @* <th>Estado</th> *@
+    <th></th>
+
+}
+
+@section CrudForm {
+
+    <div class="col">
+        <div class="row">
+            @Html.FormGroupTextBoxFor(m => m.IdLiquidacionProfesional, title: "ID", colSize: "col-md-2", editingDisabled: true, newVisible: false)
+
+            @Html.FormGroupPickerDateFor(m => m.FechaDesde, title: "Fecha Desde", colSize: "col-md-2", addValidator: true, editingDisabled: false)
+
+            @Html.FormGroupPickerDateFor(m => m.FechaHasta, title: "Fecha Hasta", colSize: "col-md-2", addValidator: true, editingDisabled: false)
+
+            @Html.FormGroupDropDownListFor(m => m.IdInstitucion, Model.MaestroInstituciones, "Institución", fieldCss: "select2-field institucion", editingDisabled: true, addValidator: true, colSize: "col-md-4")
+
+            @Html.FormGroupDropDownListFor(m => m.IdProfesional, null, "Profesional", fieldCss: "select2-field profesional", editingDisabled: true, addValidator: true, colSize: "col-md-4")
+                
+            @Html.FormGroupTextAreaFor(m => m.Observaciones, title: "Observaciones", fieldCss: "form-control", addValidator: false, editingDisabled: false, rows: 2)
+        </div>
+
+
+        <div class="row">
+            <div class="col">
+                <button type="button" class="btn btn-primary mb-2 btnCargaItems">Cargar Prestaciones / Guardias</button>
+            </div>
+        </div>
+
+        <hr />
+
+        <div class="row">
+            <div class="col">
+                <h4>Prestaciones/Guardias a Liquidar</h4>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                @await Component.InvokeAsync("MasterDetail", new MasterDetailViewModel().SetItems(Model.Prestaciones, "Prestaciones"))
+            </div>
+        </div>
+
+        <div class="inv--total-amounts">
+            <div class="row mt-4">
+                <div class="col-sm-5 col-12 order-sm-0 order-1">
+                </div>
+                <div class="col-sm-7 col-12 order-sm-1 order-0">
+                    <div class="text-sm-right">
+                        <div class="row">
+                            @* 
+                            <div class="col-sm-8 col-7">
+                                <p class="">Sub Total: </p>
+                            </div>
+                            <div class="col-sm-4 col-5">
+                                <p class="subtotal">$ 0</p>
+                            </div> 
+                            *@                            
+                            <div class="col-sm-8 col-7 grand-total-title">
+                                <h4 class="">Total : </h4>
+                            </div>
+                            <div class="col-sm-4 col-5 grand-total-amount">
+                                <h4 class="total">$ 0</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section CustomModals {
+
+    @using (Html.BeginModal("Prestacion...", (string)ViewBag.MainClass, "modalMasterDetail"))
+    {                
+        <div class="row">
+            @Html.FormGroupTextBoxFor(m => m.Detalle.Descripcion, "Descripción", addValidator: true, editingDisabled: true)
+        </div>
+        <div class="row">
+            @Html.FormGroupInputGroupFor(m => m.Detalle.Valor, "Valor Prestación", icon: "$", addValidator: true, editingDisabled: true)
+            @Html.FormGroupInputGroupFor(m => m.Detalle.Fijo, "Valor Fijo", icon: "$", addValidator: true, editingDisabled: true)
+            @Html.FormGroupInputGroupFor(m => m.Detalle.Porcentaje, "Porcentaje", icon: "%", addValidator: true, editingDisabled: true)
+            @Html.FormGroupInputGroupFor(m => m.Detalle.ValorPorcentaje, "Valor Porcentaje", icon: "$", addValidator: true, editingDisabled: true)
+        </div>
+        <div class="row">
+            @Html.FormGroupInputGroupFor(m => m.Detalle.Total, "Total", icon: "$", addValidator: true)
+        </div>
+    }
+}
+@section TemplateTables {
+
+    <div class="templateDetalle table-responsive" style="display:none;">
+        <div class="row table-detalle-botones mb-2">
+            <div class="col">
+                <button type="button" class="btn btn-primary btnExcelDetalle"><i class="fas fa-file-excel"></i> Excel</button>
+            </div>
+        </div>
+
+        <table class="table table-bordered mb-4" role="grid">
+            <thead>
+                <tr>
+                    <th>Descripcion</th>
+                    <th>Valor</th>
+                    <th>Valor Fijo</th>
+                    <th>Porcentaje</th>
+                    <th>Valor Prc.</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+
+}
+
+@section Scripts {
+
+    <script src="/js/Views/LiquidacionesProfesionales/index.js?3661"></script>
+}

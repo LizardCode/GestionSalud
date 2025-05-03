@@ -1,0 +1,101 @@
+﻿@using LizardCode.Framework.Application.Models.Repeater;
+
+@model LizardCode.SalmaSalud.Application.Models.CargosBanco.CargosBancoViewModel
+@{
+    Layout = "~/Views/Shared/MaestroLayout.cshtml";
+
+    ViewBag.MainClass = "ABMCargosBancoView";
+
+    ViewBag.Title = "Mantenimiento de Cargos Bancarios";
+    ViewBag.TitleNew = "Nuevo Cargo Bancario...";
+    ViewBag.TitleEdit = "Modificar Cargo Bancario...";
+    ViewBag.TitleRemove = "Eliminar Cargo Bancario...";
+    ViewBag.ItemMenu = "Cargos Bancario";
+
+    ViewBag.ButtonNew = true;
+    ViewBag.ButtonEdit = true;
+    ViewBag.ButtonRemove = true;
+
+    ViewBag.AjaxGetAll = Url.Action("ObtenerTodos", "CargosBanco");
+    ViewBag.AjaxGet = Url.Action("Obtener", "CargosBanco");
+    ViewBag.AjaxAdd = Url.Action("Nuevo", "CargosBanco");
+    ViewBag.AjaxUpdate = Url.Action("Modificar", "CargosBanco");
+    ViewBag.AjaxDelete = Url.Action("Eliminar", "CargosBanco");
+
+    ViewBag.Tabs = new string[] { "General" };
+}
+
+@section Styles {
+    <link href="/css/Views/CargosBanco/index.css?3661" rel="stylesheet" />
+}
+
+@section Filters {
+    <div class="col">
+
+        <div class="row">
+            @Html.FilterDropDownListFor(m => m.IdEjercicio, Model.MaestroEjercicios, "Ejercicio", colSize: "col-md-4")
+            @Html.FilterTextBoxFor(m => m.Descripcion, "Descripción", colSize: "col-md-4")
+        </div>
+
+        <div class="row">
+            @Html.FilterTextBoxFor(m => m.FechaDesde, "Fecha Desde", value: string.Empty, colSize: "col-md-2")
+            @Html.FilterTextBoxFor(m => m.FechaHasta, "Fecha Hasta", value: string.Empty, colSize: "col-md-2")
+        </div>
+    
+    </div>
+}
+
+@section GridColumns {
+
+    <th>ID</th>
+    <th>Fecha</th>
+    <th>Fecha Real</th>
+    <th>Descripción</th>
+    <th>Banco</th>
+    <th>Total</th>
+    <th></th>
+}
+
+@section CrudForm {
+
+    <div class="col">
+        <div class="row">
+            <div class="col">
+                <h4>Datos del Cargo Bancario</h4>
+            </div>
+        </div>
+        <div class="row">
+            @Html.HiddenFor(m => m.IdCargoBanco)
+            @Html.FormGroupDropDownListFor(m => m.IdEjercicio, Model.MaestroEjercicios, "Ejercicio", colSize: "col-md-3", addValidator:true)
+            @Html.FormGroupInputGroupFor(m => m.Fecha, title: "Fecha", icon: "<i class='fa fa-calendar'></i>", colSize: "col-md-3", addValidator: true, editingDisabled: false)
+            @Html.FormGroupInputGroupFor(m => m.FechaReal, title: "Fecha Real del Cargo", icon: "<i class='fa fa-calendar'></i>", colSize: "col-md-3", addValidator: true, editingDisabled: false)
+            @Html.FormGroupDropDownListFor(m => m.IdBanco, Model.MaestroBancos, "Banco", colSize: "col-md-3", addValidator:true)
+        </div>
+        <div class="row">
+            @Html.FormGroupTextBoxFor(m => m.Descripcion, title: "Descripción", addValidator: true, editingDisabled: false)
+        </div>
+        
+        <hr />
+
+        <div class="row">
+            <div class="col">
+                <h4>Carga de Items</h4>
+            </div>
+        </div>
+            
+        <div class="row">
+            <div class="col">
+                @await Component.InvokeAsync("Repeater", new RepeaterViewModel().SetItems(
+                    Model.Items,
+                    x => new(nameof(x.IdCuentaContable), Model.MaestroCuentasContables),
+                    x => new(nameof(x.IdAlicuota), Model.MaestroAlicuotas)
+                ))
+            </div>
+        </div>
+    </div>
+
+}
+
+@section Scripts {
+    <script src="/js/Views/CargosBanco/index.js?3661"></script>
+}

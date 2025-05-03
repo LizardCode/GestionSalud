@@ -1,0 +1,31 @@
+﻿.ABMUsuariosView .modal.modalNew table.dataTable tbody > tr,
+.ABMUsuariosView .modal.modalEdit table.dataTable tbody > tr,
+.ABMUsuariosView .modal.modalNew table.dataTable tbody > tr > td,
+.ABMUsuariosView .modal.modalEdit table.dataTable tbody > tr > td {
+    cursor: inherit;
+}
+
+.ABMUsuariosView table.dataTable thead th label.custom-control {
+    margin: 0;
+    cursor: pointer;
+}
+
+.ABMUsuariosView table.dataTable tbody td label.custom-control {
+    width: 15px;
+    margin: 0 auto;
+    padding: 0;
+    cursor: pointer;
+}
+
+.ABMUsuariosView table.dataTable tbody td label.custom-control span.custom-control-label:before {
+    top: 1px;
+}
+
+.ABMUsuariosView table.dataTable tbody td label.custom-control span.custom-control-label:after {
+    top: 1px;
+}
+
+.ABMUsuariosView table.dataTable thead th label.custom-control span.custom-control-label:hover:after,
+.ABMUsuariosView table.dataTable tbody td label.custom-control span.custom-control-label:hover:after {
+    border: solid 1px var(--primary);
+}

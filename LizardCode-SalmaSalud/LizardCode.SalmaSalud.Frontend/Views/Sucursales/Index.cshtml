@@ -1,0 +1,58 @@
+﻿@model LizardCode.SalmaSalud.Application.Models.Sucursales.SucursalesViewModel
+@{
+    Layout = "~/Views/Shared/MaestroLayout.cshtml";
+
+    ViewBag.MainClass = "ABMSucursalesView";
+
+    ViewBag.Title = "Mantenimiento de Sucursales";
+    ViewBag.TitleNew = "Nueva Sucursal...";
+    ViewBag.TitleEdit = "Modificar Sucursal...";
+    ViewBag.TitleRemove = "Eliminar Sucursal...";
+    ViewBag.ItemMenu = "Sucursales";
+
+    ViewBag.ButtonNew = true;
+    ViewBag.ButtonEdit = true;
+    ViewBag.ButtonRemove = true;
+
+    ViewBag.AjaxGetAll = Url.Action("ObtenerTodos", "Sucursales");
+    ViewBag.AjaxGet = Url.Action("Obtener", "Sucursales");
+    ViewBag.AjaxAdd = Url.Action("Nuevo", "Sucursales");
+    ViewBag.AjaxUpdate = Url.Action("Modificar", "Sucursales");
+    ViewBag.AjaxDelete = Url.Action("Eliminar", "Sucursales");
+
+    ViewBag.Tabs = new string[] { "General" };
+}
+
+@section Styles {
+    <link href="/css/Views/Sucursales/index.css?3661" rel="stylesheet" />
+}
+
+@section GridColumns {
+
+    <th>ID</th>
+    <th>Descripción</th>
+    <th>Código</th>
+    <th>Exenta</th>
+    <th>WebServise</th>
+    <th>Numeración</th>
+
+}
+
+@section CrudForm {
+
+    @Html.FormGroupTextBoxFor(m => m.IdSucursal, title: "ID", editingDisabled: true, newVisible: false)
+
+    @Html.FormGroupTextBoxFor(m => m.Descripcion, title: "Descripción", addValidator: true)
+
+    @Html.FormGroupTextBoxFor(m => m.CodigoSucursal, title: "Código de Sucursal", addValidator: true)
+
+    @Html.FormGroupDropDownListFor(m => m.Exenta, Model.MaestroCommonBool, "Exenta", colSize: "col-md-6", addValidator: true)
+
+    @Html.FormGroupDropDownListFor(m => m.Webservice, Model.MaestroCommonBool, "Utiliza Webservice AFIP", colSize: "col-md-6", addValidator: true)
+
+}
+
+
+@section Scripts {
+    <script src="/js/Views/Sucursales/index.js?3661"></script>
+}

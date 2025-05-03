@@ -1,0 +1,120 @@
+﻿@using LizardCode.Framework.Application.Models.Repeater
+@model LizardCode.SalmaSalud.Application.Models.Prestaciones.PrestacionViewModel
+@{
+    Layout = "~/Views/Shared/MaestroLayout.cshtml";
+
+    ViewBag.MainClass = "ABMPrestacionesView";
+
+    ViewBag.Title = "Mantenimiento de Prestaciones";
+    ViewBag.TitleNew = "Nueva Prestacion...";
+    ViewBag.TitleEdit = "Modificar Prestacion...";
+    ViewBag.TitleRemove = "Eliminar Prestacion...";
+    ViewBag.ItemMenu = "Prestaciones";
+
+    ViewBag.ButtonNew = true;
+    ViewBag.ButtonEdit = true;
+    ViewBag.ButtonRemove = true;
+
+    ViewBag.AjaxGetAll = Url.Action("ObtenerTodos", "Prestaciones");
+    ViewBag.AjaxGet = Url.Action("Obtener", "Prestaciones");
+    ViewBag.AjaxAdd = Url.Action("Nuevo", "Prestaciones");
+    ViewBag.AjaxUpdate = Url.Action("Modificar", "Prestaciones");
+    ViewBag.AjaxDelete = Url.Action("Eliminar", "Prestaciones");
+
+    ViewBag.Tabs = new string[] { "General", "Valores por Profesional" };
+}
+
+@section Styles {
+    <link href="/css/Views/Prestaciones/index.css?3661" rel="stylesheet" />
+}
+
+@section ToolbarButtons {
+
+    <button type="button" class="btn btn-success btImportar" title="Importar Planilla Excel"><i class="fas fa-upload"></i> <span>Importar XLS</span></button>
+}
+
+@section GridColumns {
+
+    <th>Codigo</th>
+    <th>Descripcion</th>
+    <th>Valor</th>
+
+}
+
+@section CrudForm {
+
+    @Html.FormGroupTextBoxFor(m => m.IdPrestacion, title: "ID", editingDisabled: true, newVisible: false)
+
+    @Html.FormGroupTextBoxFor(m => m.Codigo, title: "Nomenclador", addValidator: true, autocomplete: false, colSize: "col-md-4", editingDisabled: true)
+
+    @Html.FormGroupTextBoxFor(m => m.Descripcion, title: "Descripcion", addValidator: true, autocomplete: false, colSize: "col-md-8")
+
+    @Html.FormGroupInputGroupFor(m => m.Valor, "Valor", icon: "$", addValidator: true, colSize: "col-md-4")
+
+    @Html.FormGroupInputGroupFor(m => m.ValorFijo, "Fijo Prof.", icon: "$", addValidator: true, colSize: "col-md-4")
+
+    @Html.FormGroupInputGroupFor(m => m.Porcentaje, "Porc. Prof.", icon: "%", addValidator: true, colSize: "col-md-4")
+
+}
+
+@section CrudTab01 {
+
+    <div class="col">
+        <div class="row">
+            <div class="col">
+                <h4>Valores por Profesional (Excepciones)</h4>
+            </div>
+        </div>
+
+        <div class="row dvProfesionales">
+            <div class="col">
+                @await Component.InvokeAsync("Repeater", new RepeaterViewModel().SetItems(
+                         Model.Profesionales,
+                         "Profesionales",
+                         x => new(nameof(x.IdProfesional), Model.MaestroProfesionales)
+                         ))
+            </div>
+        </div>
+    </div>
+}
+
+@*@section CustomModals {
+
+    <!-- Modal - Procesar Excel -->
+    <div class="modal fade modalImportarExcel" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog bounceInRight animated">
+            <div class="modal-content">
+                @using (Html.AjaxBeginForm(Url.Action("ImportarPrestacionesExcel", "Prestaciones"), "ABMPrestacionesView", "ajaxProcesarExcelBegin", "ajaxProcesarExcelSuccess", "ajaxProcesarExcelFailure", multipart: true))
+                {
+                    <div class="modal-header">
+                        <h5 class="modal-title">Procesar Excel</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true" class="zmdi zmdi-close"></span>
+                        </button>
+                    </div>
+                    <div class="modal-body ProcesarExcelView">                    
+                            <div class="row">
+                                <div class="col">
+                                    @Html.FormGroupFileFor(m => m.FileExcel, title: "Documento XLS", fieldCss: "filestyle", buttonText: "Cargar Documento XLS", icon: "fa-xls", accept: ".xls,.xlsx")
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col ml-4">
+                                    <label id="lblFileExcel" style="display:none;">[NombreArchivo]</label>
+                                </div>
+                            </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" data-dismiss="modal" class="btn btn-default"><i class="fa fa-times"></i> Cancelar</button>
+                        <button type="submit" class="btn btn-warning btOkProcesarExcel" disabled><i class="fa fa-check"></i> Importar</button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+}*@
+
+@section Scripts {
+    <script src="/js/Views/Prestaciones/index.js?3661"></script>
+    <script src="/js/Shared/modals.js?3661"></script>
+}

@@ -1,0 +1,48 @@
+﻿.pac-container {
+    z-index: 10002;
+}
+
+.table-controls {
+    padding: 0;
+    margin-bottom: 0;
+}
+
+.table-controls li {
+    list-style: none;
+    display: inline;
+}
+
+.table-controls li i {
+    cursor: pointer;
+    margin: 0;
+    vertical-align: middle;
+    cursor: pointer;
+    color: #515365;
+    width: 28px;
+    height: 28px;
+}
+
+.numeracion {
+    width: 50%;
+    margin: auto;
+}
+
+.table-hover:not(.table-dark) tbody tr:hover .table-controls li i {
+    color: #191e3a;
+}
+
+.table-hover:not(.table-dark) tbody tr:hover td:first-child {
+    color: #4361ee !important;
+}
+
+.table-hover:not(.table-dark) tbody tr:hover .table-controls li i {
+    color: #191e3a;
+}
+
+.table-hover:not(.table-dark) tbody tr:hover td:first-child {
+    color: #4361ee !important;
+}
+
+.details {
+    font-size: 1.7em;
+}

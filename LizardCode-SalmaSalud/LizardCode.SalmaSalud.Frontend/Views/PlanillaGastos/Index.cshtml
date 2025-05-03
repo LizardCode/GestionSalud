@@ -1,0 +1,150 @@
+﻿@using LizardCode.Framework.Application.Models.Repeater;
+
+@model LizardCode.SalmaSalud.Application.Models.PlanillaGastos.PlanillaGastosViewModel
+@{
+    Layout = "~/Views/Shared/MaestroLayout.cshtml";
+
+    ViewBag.MainClass = "ABMPlanillaGastosView";
+
+    ViewBag.Title = "Mantenimiento de Planilla de Gastos";
+    ViewBag.TitleNew = "Nueva Planilla de Gastos...";
+    ViewBag.TitleEdit = "Modificar Planilla de Gastos...";
+    ViewBag.TitleRemove = "Eliminar Planilla de Gastos...";
+    ViewBag.ItemMenu = "Planilla de Gastos";
+
+    ViewBag.ButtonNew = true;
+    ViewBag.ButtonEdit = true;
+    ViewBag.ButtonRemove = true;
+
+    ViewBag.AjaxGetAll = Url.Action("ObtenerTodos", "PlanillaGastos");
+    ViewBag.AjaxGet = Url.Action("Obtener", "PlanillaGastos");
+    ViewBag.AjaxAdd = Url.Action("Nuevo", "PlanillaGastos");
+    ViewBag.AjaxUpdate = Url.Action("Modificar", "PlanillaGastos");
+    ViewBag.AjaxDelete = Url.Action("Eliminar", "PlanillaGastos");
+
+    ViewBag.Tabs = new string[] { "General" };
+}
+
+@section Styles {
+    <link href="/css/Views/PlanillaGastos/index.css?3661" rel="stylesheet" />
+}
+
+@section Filters {
+    <div class="col">
+
+        <div class="row">
+            @Html.FilterTextBoxFor(m => m.FiltroDescripcion, "Descripción", colSize: "col-md-4")
+        </div>
+
+        <div class="row">
+            @Html.FilterPickerDateFor(m => m.FiltroFechaDesde, "Fecha Desde", value: string.Empty, colSize: "col-md-2")
+            @Html.FilterPickerDateFor(m => m.FiltroFechaHasta, "Fecha Hasta", value: string.Empty, colSize: "col-md-2")
+        </div>
+        <div class="row">
+            @Html.FilterDropDownListFor(m => m.FiltroIdEstadoPlanillaGastos, Model.MaestroEstadoPlanilla, "Estado", colSize: "col-md-4")
+            @Html.FilterTextBoxFor(m => m.FiltroIdPlanillaGastos, "Número Planilla", colSize: "col-md-4")
+        </div>
+    
+    </div>
+}
+
+@section GridColumns {
+
+    <th>ID</th>
+    <th>Fecha</th>
+    <th>Descripción</th>
+    <th>Total</th>
+    <th>Estado</th>
+    <th></th>
+}
+
+@section CrudForm {
+
+    <div class="col">
+        <div class="row">
+            <div class="col">
+                <h4>Datos de la Panilla de Gastos</h4>
+            </div>
+        </div>
+        <div class="row">
+            @Html.HiddenFor(m => m.IdPlanillaGastos)
+            @Html.FormGroupDropDownListFor(m => m.IdEjercicio, Model.MaestroEjercicios, "Ejercicio", colSize: "col-md-3", addValidator:true, editingDisabled: false)
+            @Html.FormGroupPickerDateFor(m => m.Fecha, title: "Fecha", colSize: "col-md-2", addValidator: true, editingDisabled: false)
+            @Html.FormGroupTextBoxFor(m => m.Descripcion, title: "Descripción", addValidator: true, colSize: "col-md-4", editingDisabled: false)
+            @Html.FormGroupDropDownListFor(m => m.IdMoneda, Model.MaestroMonedas, "Moneda Planilla", colSize: "col-md-3", addValidator:true, editingDisabled: true)
+        </div>
+        <div class="row">
+            @Html.FormGroupDropDownListFor(m => m.IdCuentaContable, Model.MaestroCuentasContables, "Cuenta Contable de Gasto", colSize: "col-md-4", addValidator:true, editingDisabled: false)
+            @Html.FormGroupInputGroupFor(m => m.ImporteTotal, "Importe Total Planilla", icon: "$", addValidator: true, colSize: "col-md-3", editingDisabled: true)
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <button type="button" class="btn btn-primary btProcesarExcel" title="Importar Planilla XLS"><i class="fas fa-file-excel"></i> <span>Importar Planilla XLS</span></button>
+            </div>
+        </div>
+
+        <hr />
+
+        <div class="row">
+            <div class="col">
+                <h4>Carga de Items de Gastos</h4>
+            </div>
+        </div>
+            
+        <div class="row">
+            <div class="col">
+                @await Component.InvokeAsync("Repeater", new RepeaterViewModel().SetItems(
+                    Model.Items,
+                    x => new(nameof(x.IdComprobante), Model.MaestroComprobantes),
+                    x => new(nameof(x.IdAlicuota), Model.MaestroAlicuotas),
+                    x => new(nameof(x.IdAlicuota2), Model.MaestroAlicuotas),
+                    x => new(nameof(x.IdCuentaContablePercepcion), Model.MaestroCuentasPercepcion),
+                    x => new(nameof(x.IdCuentaContablePercepcion2), Model.MaestroCuentasPercepcion)
+                ))
+            </div>
+        </div>
+    </div>
+
+}
+
+@section CustomModals {
+
+    <!-- Modal - Procesar Excel -->
+    <div class="modal fade modalProcesarExcel" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog bounceInRight animated">
+            <div class="modal-content">
+                @using (Html.AjaxBeginForm(Url.Action("ProcesarExcel", "PlanillaGastos"), "ABMPlanillaGastosView", "ajaxProcesarExcelBegin", "ajaxProcesarExcelSuccess", "ajaxProcesarExcelFailure", multipart: true))
+                {
+                    <div class="modal-header">
+                        <h5 class="modal-title">Procesar Excel</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true" class="zmdi zmdi-close"></span>
+                        </button>
+                    </div>
+                    <div class="modal-body ProcesarExcelView">
+                        <div class="row">
+                            <div class="col">
+                                @Html.FormGroupFileFor(m => m.FileExcel, title: "Documento XLS", fieldCss: "filestyle", buttonText: "Cargar Documento XLS", icon: "fa-xls", accept: ".xls,.xlsx")
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col ml-4">
+                                <label id="lblFileExcel" style="display:none;">[NombreArchivo]</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" data-dismiss="modal" class="btn btn-default"><i class="fa fa-times"></i> Cancelar</button>
+                        <button type="submit" class="btn btn-warning btOkProcesarExcel" disabled><i class="fa fa-check"></i> Procesar</button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+}
+
+@section Scripts {
+    <script src="/js/Views/PlanillaGastos/index.js?3661"></script>
+}

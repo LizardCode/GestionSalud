@@ -1,0 +1,53 @@
+﻿@model LizardCode.SalmaSalud.Application.Models.CondicionVentasCompras.CondicionVentasComprasViewModel
+@{
+    Layout = "~/Views/Shared/MaestroLayout.cshtml";
+
+    ViewBag.MainClass = "ABMCondicionVentasComprasView";
+
+    ViewBag.Title = "Mantenimiento de Condiciones de Ventas y Compras";
+    ViewBag.TitleNew = "Nueva Condición...";
+    ViewBag.TitleEdit = "Modificar Condición...";
+    ViewBag.TitleRemove = "Eliminar Condición...";
+    ViewBag.ItemMenu = "Condición de Ventas/Compras";
+
+    ViewBag.ButtonNew = true;
+    ViewBag.ButtonEdit = true;
+    ViewBag.ButtonRemove = true;
+
+    ViewBag.AjaxGetAll = Url.Action("ObtenerTodos", "CondicionVentasCompras");
+    ViewBag.AjaxGet = Url.Action("Obtener", "CondicionVentasCompras");
+    ViewBag.AjaxAdd = Url.Action("Nuevo", "CondicionVentasCompras");
+    ViewBag.AjaxUpdate = Url.Action("Modificar", "CondicionVentasCompras");
+    ViewBag.AjaxDelete = Url.Action("Eliminar", "CondicionVentasCompras");
+
+    ViewBag.Tabs = new string[] { "General" };
+}
+
+@section Styles {
+    <link href="/css/Views/CondicionVentasCompras/index.css?3661" rel="stylesheet" />
+}
+
+@section GridColumns {
+
+    <th>ID</th>
+    <th>Descripción</th>
+    <th>Días</th>
+    <th>Tipo</th>
+
+}
+
+@section CrudForm {
+
+    @Html.FormGroupTextBoxFor(m => m.IdCondicion, title: "ID", editingDisabled: true, newVisible: false)
+
+    @Html.FormGroupDropDownListFor(m => m.IdTipoCondicion, Model.MaestroTipoCondicion, "Tipo de Condición", addValidator: true)
+
+    @Html.FormGroupTextBoxFor(m => m.Descripcion, title: "Descripción", addValidator: true)
+
+    @Html.FormGroupTextBoxFor(m => m.Dias, title: "Días", addValidator: true)
+
+}
+
+@section Scripts {
+    <script src="/js/Views/CondicionVentasCompras/index.js?3661"></script>
+}

@@ -1,0 +1,56 @@
+﻿@model LizardCode.SalmaSalud.Application.Models.BalanceSumSdo.BalanceSumSdosViewModel
+@{
+    Layout = "~/Views/Shared/ReportLayout.cshtml";
+
+    ViewBag.MainClass = "ReportBalanceSumSdoView";
+
+    ViewBag.Title = "Balance de Sumas y Saldos";
+    ViewBag.ItemMenu = "Balance de Sumas y Saldos";
+
+    ViewBag.ButtonExcel = true;
+    ViewBag.ButtonPDF = true;
+    ViewBag.ButtonPrint = true;
+
+    ViewBag.AjaxGetAll = Url.Action("ObtenerTodos", "BalanceSumSdo");
+}
+
+@section Styles {
+    <link href="/css/Views/BalanceSumSdo/index.css?3661" rel="stylesheet" />
+}
+
+@section Filters {
+    <div class="col">
+
+        <div class="row">
+            @Html.FilterDropDownListFor(m => m.IdEjercicio, Model.MaestroEjercicios, "Ejercicio", colSize: "col-md-4")
+        </div>
+
+        <div class="row">
+            @Html.FilterPickerDateFor(m => m.FechaDesde, "Fecha Desde", colSize: "col-md-2")
+            @Html.FilterPickerDateFor(m => m.FechaHasta, "Fecha Hasta", colSize: "col-md-2")
+        </div>
+
+		<div class="row">
+            @Html.FilterDropDownListFor(m => m.IdCuentaDesde, Model.MaestroCuentas, "Cuenta Desde", colSize: "col-md-4")
+            @Html.FilterDropDownListFor(m => m.IdCuentaHasta, Model.MaestroCuentas, "Cuenta Hasta", colSize: "col-md-4")
+        </div>
+    
+    </div>
+}
+
+@section GridColumns {
+
+    <th>Item</th>
+    <th>N° Cuenta</th>
+    <th>Cod.Integración</th>
+    <th>Descripción</th>
+	<th>Debe</th>
+    <th>Haber</th>
+    <th>Deudor</th>
+    <th>Acredor</th>
+
+}
+
+@section Scripts {
+    <script src="/js/Views/BalanceSumSdo/index.js?3661"></script>
+}

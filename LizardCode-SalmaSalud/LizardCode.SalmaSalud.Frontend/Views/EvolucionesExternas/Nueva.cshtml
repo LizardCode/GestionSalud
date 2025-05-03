@@ -1,0 +1,408 @@
+﻿@using LizardCode.Framework.Application.Models.Repeater;
+@using LizardCode.Framework.Application.Models.MasterDetail;
+@model LizardCode.SalmaSalud.Application.Models.Evoluciones.EvolucionExternaViewModel;
+
+@{
+    Layout = "~/Views/Shared/BaseLayout.cshtml";
+
+    ViewBag.Title = "";
+    ViewBag.AjaxNuevo = Url.Action("Nuevo", "EvolucionesExternas");
+    ViewBag.MainClass = "ABMEvolucionesView";
+}
+
+@section Styles {
+    <link href="/lib/datatables/DataTables-1.10.20/css/dataTables.bootstrap4.min.css" rel="stylesheet" />
+    <link href="/lib/datatables/Buttons-1.6.1/css/buttons.bootstrap4.min.css" rel="stylesheet" />
+    <link href="/lib/select2/css/select2.css" rel="stylesheet" />
+    <link href="/lib/flatpickr/flatpickr.css" rel="stylesheet" type="text/css">
+    <link href="/lib/flatpickr/custom-flatpickr.css" rel="stylesheet" type="text/css">
+    <link href="/lib/datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet" />
+    <link href="/lib/timepicker/css/bootstrap-timepicker.min.css" rel="stylesheet" />
+    <link href="/css/Shared/dt-global_style.css?3661" rel="stylesheet" />
+
+    <link href="/css/Shared/repeater.css?3661" rel="stylesheet" />
+    <link href="/css/Shared/masterDetail.css?3661" rel="stylesheet" />
+    <link href="/css/Shared/maestroLayout.css?3661" rel="stylesheet" />
+    <link href="/css/Shared/modal.css?3661" rel="stylesheet" />
+
+    <link href="/css/Views/EvolucionesExternas/nueva.css?3661" rel="stylesheet" />
+    <link href="@Url.Content("~/lib/file-upload-with-preview/file-upload-with-preview.min.css")" rel="stylesheet" type="text/css" />
+}
+
+<div class="@ViewBag.MainClass" data-mainclass="@ViewBag.MainClass">
+
+    <div class="row mt-4">
+        <div class="col">
+            <div class="">
+                <div class="card-header p-2">
+                    <a href="##" onClick="history.go(-1); return false;">
+                        <h7 class="card-title"><i class="fa fa-arrow-left"></i> Volver</h7>
+                    </a>
+                    @* <h3 class="card-title mt-2 ml-2"> NUEVO TURNO - <b>@string.Format("{0}, {1}, {2}.", @Model.Profesional, @Model.Especialidad, @Model.Fecha)</b></h3> *@
+                    @* <h7 class="card-title text-primary mt-2 ml-2"> Paso 3/3 - Completá los datos del Paciente</h7> *@
+                    <hr />
+                </div>
+                @using (Html.AjaxBeginForm((string)ViewBag.AjaxNuevo, (string)ViewBag.MainClass, begin: "ajaxNuevaEvolucionBegin", success: "ajaxNuevaEvolucionSuccess", failure: "ajaxNuevaEvolucionFailure", css: "frmNuevaEvolucion", multipart: true))
+                {
+                    @* <div id="resumenView">
+                        <div class="text-center"><img alt="just a loader" src="/img/mini_loader.gif" width="75px;"></div>
+                    </div> *@
+
+                    @*<hr />*@
+                    <div class="statbox widget box box-shadow  p-4 bg-white mb-5">
+                    <div class="tab-wrapper mt-2">
+                        
+                            
+                       
+                        <ul class="nav nav-pills nav-justified" role="tablist">
+                            
+                            <li class="nav-item " style="font-weight: normal!important">
+                                <a class="nav-link active" href="#new-tab-00" aria-controls="new-tab-00" data-toggle="tab" role="tab">
+                                    Paciente
+                                    @* <span> <i class="fas fa-times"></i></span> *@
+                                </a>
+                            </li>
+                            <li class="nav-item " style="font-weight: normal!important">
+                                <a class="nav-link" href="#new-tab-000" aria-controls="new-tab-000" data-toggle="tab" role="tab">
+                                    Diagnóstico
+                                    @* <span> <i class="fas fa-times"></i></span> *@
+                                </a>
+                            </li>
+                            <li class="nav-item " style="font-weight: normal!important">
+                                <a class="nav-link" href="#new-tab-04" aria-controls="new-tab-04" data-toggle="tab" role="tab">
+                                    Prestaciones
+                                    @* <span> <i class="fas fa-times"></i></span> *@
+                                </a>
+                            </li>
+
+                            <li class="nav-item " style="font-weight: normal!important">
+                                <a class="nav-link" href="#new-tab-01" aria-controls="new-tab-01" data-toggle="tab" role="tab">
+                                    Odontograma
+                                </a>
+                            </li>
+                            @*
+                            <li class="nav-item " style="font-weight: normal!important">
+                                <a class="nav-link" href="#new-tab-02" aria-controls="new-tab-02" data-toggle="tab" role="tab">
+                                    Recetas
+                                </a>
+                            </li>
+                            <li class="nav-item " style="font-weight: normal!important">
+                                <a class="nav-link" href="#new-tab-05" aria-controls="new-tab-05" data-toggle="tab" role="tab">
+                                    Órdenes
+                                </a>
+                            </li>
+                            *@
+                            <li class="nav-item " style="font-weight: normal!important">
+                                <a class="nav-link" href="#new-tab-03" aria-controls="new-tab-03" data-toggle="tab" role="tab">
+                                    Imágenes
+                                </a>
+                            </li> 
+                        </ul>
+                        <hr>
+                        <div class="tab-content mt-3 ml-2">
+                            <div class="tab-pane tab-00 validate active" id="new-tab-00" role="tabpanel">
+
+
+                                <div class="col">
+                                    <div class="row">
+                                        @Html.HiddenFor(m => m.IdPaciente, new { @class = "hdnIdPaciente" })
+
+                                        @Html.FormGroupTextBoxFor(m => m.Documento, fieldCss: "form-control pacienteDocumento", title: "", placeholder: "Documento", addValidator: true, colSize: "col-md-3")
+
+                                        <div class="col-md-1 dvSearchButton">
+                                            <span type="button" class="btn btn-info btnBusqueda mt-4" title="BUSCAR" data-width-class="modal-70" data-ajax-action="/Pacientes/BusquedaView" data-toggle="tooltip" data-placement="top" title="BUSCAR"><i class="fa fa-search"></i></span>
+                                        </div>
+
+                                        @Html.FormGroupTextBoxFor(m => m.Nombre, title: "", placeholder: "Nombre Completo", addValidator: true, colSize: "col-md-8")
+                                    </div>
+                                </div>
+
+                                <div class="col">
+                                    <div class="row">
+                                        @Html.FormGroupTextBoxFor(m => m.Telefono, title: "", placeholder: "Teléfono Móvil", addValidator: true, colSize: "col-md-3")
+
+                                        @Html.FormGroupTextBoxFor(m => m.Email, title: "", placeholder: "Email", fieldCss: "form-control lowercase", addValidator: true, colSize: "col-md-4")
+
+                                        <div class="col-md-2 mt-2 text-uppercase text-right" style="padding-top: 10px;">fecha nacimiento</div>
+
+                                        @Html.FormGroupPickerDateFor(m => m.FechaNacimiento, title: "", placeholder: "Fecha Nacimiento", colSize: "col-md-3", addValidator: true, editingDisabled: false)
+
+                                        @Html.FormGroupTextBoxFor(m => m.Nacionalidad, title: "", placeholder: "Nacionalidad", colSize: "col-md-2", addValidator: true)
+                                    </div>
+                                </div>
+
+                                <div class="col">
+                                    <div class="row">
+                                        @Html.FormGroupCheckboxFor(m => m.SinCobertura, title: "Sin Cobertura", colSize: "col-md-3 mt-4")
+
+                                        @Html.FormGroupDropDownListFor(m => m.IdFinanciador, Model.MaestroFinanciadores, title: "", placeholder: "Financiador", fieldCss: "select2-field validate financiador", addValidator: true, colSize: "col-md-3")
+
+                                        @Html.FormGroupDropDownListFor(m => m.IdFinanciadorPlan, null, title: "", placeholder: "Plan", fieldCss: "select2-field validate financiadorPlan", addValidator: true, colSize: "col-md-3")
+
+                                        @Html.FormGroupTextBoxFor(m => m.FinanciadorNro, title: "", placeholder: "Nro. Afiliado/Socio", addValidator: true, fieldCss: "form-control financiadorNro", colSize: "col-md-3")
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane tab-000 validate" id="new-tab-000" role="tabpanel">
+                                <div class="row">
+                                    <div class="col-md-2 pt-4">
+                                            <h5>Fecha atención</h5>
+                                    </div>
+                                    @Html.FormGroupPickerDateFor(m => m.Fecha, title: "", placeholder: "Fecha Atencion", colSize: "col-md-3", addValidator: true, editingDisabled: false)
+                                </div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="row pl-2">
+                                            <div class="col pl-0">
+                                                <h5>Diagnóstico</h5>
+                                            </div>
+                                        </div>
+                                        <div class="row p-2">
+                                            <textarea class="form-control" cols="1" data-val="true" data-val-required="Obligatorio" id="Diagnostico" name="Diagnostico" rows="8"></textarea>
+                                            <span class="field-validation-valid" data-valmsg-for="Diagnostico" data-valmsg-replace="true"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="row pl-2">
+                                            <div class="col pl-0">
+                                                <h5>Observaciones</h5>
+                                            </div>
+                                        </div>
+                                        <div class="row p-2">
+                                            <textarea class="form-control" cols="1" id="Observaciones" name="Observaciones" rows="8"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane tab-01 validate" id="new-tab-01" role="tabpanel">
+                                <div class="row">
+                                    <div class="dvOdontograma"></div>
+                                </div>
+                                <div class="hiddensZonas">
+                                </div>
+                            </div>
+                            <div class="tab-pane tab-02 validate" id="new-tab-02" role="tabpanel">
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="dvRecetas">
+                                            @await Component.InvokeAsync("MasterDetail", new MasterDetailViewModel().SetItems(
+                                        Model.Recetas,
+                                        "Recetas",
+                                        x => new(nameof(x.IdVademecum), Model.MaestroVademecum, nameof(x.Descripcion))
+                                        ))
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane tab-03 validate" id="new-tab-03" role="tabpanel">
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="custom-file-container" data-upload-id="imagenesUploader">
+                                            <label style="display:none;">SUBIR IMÁGENES <a href="javascript:void(0)" class="custom-file-container__image-clear" title="LIMPIAR IMÁGENES">X</a></label>
+                                            <label class="custom-file-container__custom-file">
+                                                <input type="file" class="custom-file-container__custom-file__custom-file-input" multiple name="Imagenes" accept="image/jpeg, image/gif, image/png">
+                                                <input type="hidden" name="MAX_FILE_SIZE" value="5242880" />
+                                                <span class="custom-file-container__custom-file__custom-file-control"></span>
+                                            </label>
+                                            <div class="custom-file-container__image-preview">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane tab-04 validate" id="new-tab-04" role="tabpanel">
+                                <div class="row w-100">
+                                    <div class="col">
+
+
+                                        <div class="row row-flex">
+                                                <div class="col-md-6">
+                                                    <div class=" alert alert-light-info p-4">
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <h5>Prestaciones Financiador</h5>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col dvPrestaciones">
+                                                        @await Component.InvokeAsync("Repeater", new RepeaterViewModel().SetItems(
+                                                    Model.Prestaciones,
+                                                    "Prestaciones",
+                                                    x => new(nameof(x.IdPrestacion), Model.MaestroPrestaciones)
+                                                    ))
+                                                    </div>
+                                                </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                    <div class=" alert alert-light-success p-4">
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <h5>Otras Prestaciones</h5>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col dvOtrasPrestaciones">
+                                                        @await Component.InvokeAsync("Repeater", new RepeaterViewModel().SetItems(
+                                                    Model.OtrasPrestaciones,
+                                                    "OtrasPrestaciones",
+                                                    x => new(nameof(x.IdOtraPrestacion), Model.MaestroOtrasPrestaciones)
+                                                    ))
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            </div>
+                                        </div>
+                                        <hr class="mb-2">
+                                        <div class="inv--total-amounts">
+                                            <div class="row mt-4">
+                                                <div class="col-sm-4 col-12 order-sm-0 order-1">
+                                                    <div class="text-sm-right">
+                                                        <div class="row">
+                                                            @* <div class="col-sm-8 col-7">
+                                                                <p class="">Total Prestaciones: </p>
+                                                            </div>
+                                                            <div class="col-sm-4 col-5">
+                                                                <p class="totalPrestaciones">$ 0</p>
+                                                            </div> *@
+                                                            <div class="col-sm-8 col-7">
+                                                                <p class="">Total Co-Pagos: </p>
+                                                            </div>
+                                                            <div class="col-sm-4 col-5">
+                                                                <p class="totalCoPagos">$ 0</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-7 col-12 order-sm-1 order-0">
+                                                    <div class="text-sm-right">
+                                                        <div class="row">
+                                                            @* <div class="col-sm-8 col-7">
+                                                                <p class="">Total Otras Prestaciones: </p>
+                                                            </div>
+                                                            <div class="col-sm-2 col-5">
+                                                                <p class="totalOtrasPrestaciones">$ 0</p>
+                                                            </div> *@
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane tab-05 validate" id="new-tab-05" role="tabpanel">
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="dvOrdenes">
+                                            @await Component.InvokeAsync("MasterDetail", new MasterDetailViewModel().SetItems(
+                                        Model.Ordenes,
+                                        "Ordenes")
+                                        )
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                   
+                    </div>
+                    @Html.HiddenFor(m => m.IdTurno, new { @class = "hdnIdTurno"})
+                    @Html.HiddenFor(m => m.IdPaciente, new { @class = "hdnIdPaciente"})
+                    @Html.HiddenFor(m => m.Presupuestos, new { @class = "hdnPresupuestos"})
+                }
+              
+                <div class="card-footer text-right">
+                    @* <button type="button" class="btn btn-warning btSave"><i class="fa fa-check"></i> GUARDAR</button>     *@
+                    @* <button type="button" class="btn btn-secondary btHistoriaClinica"><i class="fa fa-list"></i> HISTORIA CLÍNICA</button> *@
+                    @* <button type="button" data-dismiss="modal" class="btn btn-default"><i class="fa fa-times"></i> CERRAR</button> *@
+                    <button type="button" class="btn btn-primary btSave"><i class="fa fa-check"></i> GUARDAR</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@using (Html.BeginModal("Recetas...", "ABMEvolucionesView", "modalMasterDetail", dialogClass: "modal-50"))
+{
+    <div class="row">
+        <div class="form-group field col-md-12">
+            <label class="form-label" for="Medicamento">Medicamento</label>
+            <div class="controls">
+                @Html.HiddenFor(m => m.Receta.IdVademecum)
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        @Html.FormGroupTextBoxFor(m => m.Receta.Cantidad, "Cantidad", colSize: "col-md-4", addValidator: true)
+        @Html.FormGroupTextBoxFor(m => m.Receta.Dosis, "Dosis", colSize: "col-md-4", addValidator: true)
+        @Html.FormGroupTextBoxFor(m => m.Receta.Frecuencia, "Frecuencia", colSize: "col-md-4", addValidator: true)
+        @Html.FormGroupCheckboxFor(m => m.Receta.NoSustituir, title: "No Sustituir")
+    </div>
+    <div class="row">
+        @Html.FormGroupTextAreaFor(m => m.Receta.Indicaciones, "Indicaciones", rows: 5)
+    </div>
+}
+
+@using (Html.BeginModal("Ordenes...", "ABMEvolucionesView", "modalMasterDetailOrdenes"))
+{
+    <div class="row">
+        @Html.FormGroupTextAreaFor(m => m.Orden.Descripcion, "Descripción", rows: 2)
+    </div>
+    <div class="row">
+        @Html.FormGroupTextAreaFor(m => m.Orden.Indicaciones, "Indicaciones", rows: 5)
+    </div>
+}
+
+@section Scripts {
+    <script src="/lib/datepicker/js/bootstrap-datepicker.min.js"></script>
+    <script src="/lib/datepicker/js/bootstrap-datepicker.es.min.js"></script>
+    <script src="/lib/timepicker/js/bootstrap-timepicker.js"></script>
+    <script src="/lib/datatables/DataTables-1.10.20/js/jquery.dataTables.min.js"></script>
+    <script src="/lib/datatables/DataTables-1.10.20/js/dataTables.bootstrap4.min.js"></script>
+    <script src="/lib/datatables/DateTime-1.10.x/datetime-moment.js"></script>
+    <script src="/lib/datatables/Buttons-1.6.1/js/dataTables.buttons.min.js"></script>
+    <script src="/lib/datatables/Buttons-1.6.1/js/buttons.bootstrap4.min.js"></script>
+    <script src="/lib/datatables/Select-1.3.1/js/dataTables.select.min.js"></script>
+    <script src="/lib/datatables/Select-1.3.1/js/select.bootstrap4.min.js"></script>
+    <script src="/lib/select2/js/select2.min.js"></script>
+    <script src="/lib/select2/js/select2_locale_es.js?3661"></script>
+    <script src="/lib/accounting/accounting.min.js"></script>
+    <script src="/lib/autonumeric/autoNumeric.min.js"></script>
+    <script src="/lib/jquery-alphanum/jquery.alphanum.js"></script>
+    <script src="/lib/cleave/cleave.min.js"></script>
+    <script src="/lib/cleave/cleave.jquery.js"></script>
+    <script src="/lib/cleave/cleave-phone.ar.js"></script>
+    <script src="/lib/flatpickr/flatpickr.js"></script>
+    <script src="/lib/flatpickr/es.js"></script>
+
+    <script src="/js/Helpers/dataTables.helper.js?3661"></script>
+    <script src="/js/Helpers/select2.helper.js?3661"></script>
+    <script src="/js/Helpers/formData.helper.js?3661"></script>
+    <script src="/js/Helpers/ajax-action.js?3661"></script>
+    <script src="/js/Helpers/constraints.helper.js?3661"></script>
+    <script src="/js/Helpers/accounting.helper.js"></script>
+    <script src="/js/Helpers/dropdown-group-list.helper.js?3661"></script>
+    <script src="/js/Helpers/repeater.helper.js?3661"></script>
+    <script src="/js/Helpers/masterDetail.helper.js?3661"></script>
+    <script src="/js/Helpers/parseDynamicContent.helper.js?3661"></script>
+
+    <script src="/js/Shared/enums.js?3661"></script>
+    <script src="/js/Shared/modals.js?3661"></script>
+
+    <script src="/js/Views/EvolucionesExternas/nueva.js?3661"></script>
+    <script src="/lib/file-upload-with-preview/file-upload-with-preview.min.js"></script>
+    <script>
+        var imagenesUploader = new FileUploadWithPreview('imagenesUploader');
+
+        // $.get('@Url.Action("ResumenView", "Pacientes")', { id: @Model.IdPaciente, showNombre: true, showButton: true, forzarParticular: @(Model.ForzarParticular ? "true" : "false") }, function (content) {
+        //     $("#resumenView").html(content);
+        // });
+
+        $.get('@Url.Action("OdontogramaView", "Evoluciones")', { id: @Model.IdEvolucion, idPaciente: @Model.IdPaciente }, function (content) {
+            $(".dvOdontograma").html(content);
+        });
+    </script>
+}

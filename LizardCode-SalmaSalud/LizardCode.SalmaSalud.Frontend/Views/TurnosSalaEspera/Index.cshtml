@@ -1,0 +1,97 @@
+﻿@model LizardCode.SalmaSalud.Application.Models.Turnos.TurnoSalaEsperaViewModel
+@{
+    Layout = "~/Views/Shared/MaestroLayout.cshtml";
+
+    ViewBag.MainClass = "TurnosView";
+
+    ViewBag.Title = "Sala de Espera";
+    ViewBag.TitleNew = "...";
+    ViewBag.TitleEdit = "...";
+    ViewBag.TitleRemove = "...";
+    ViewBag.ItemMenu = "Sala de Espera";
+    ViewBag.RemoveListadoDe = true;
+
+    ViewBag.ButtonNew = false;//PermisosBusiness.Instance.VerificarPermisos(ModuloOperativo.Usuarios, Permiso.Alta);
+    ViewBag.ButtonEdit = false;//PermisosBusiness.Instance.VerificarPermisos(ModuloOperativo.Usuarios, Permiso.Modificacion);
+    ViewBag.ButtonRemove = false;//PermisosBusiness.Instance.VerificarPermisos(ModuloOperativo.Usuarios, Permiso.Baja);
+
+    ViewBag.AjaxGetAll = Url.Action("ObtenerTodos", "TurnosSalaEspera");
+}
+
+@section Styles {
+    <link href="/css/Views/Turnos/index.css?3661" rel="stylesheet" />
+}
+
+@section ToolbarButtons {
+
+    <button type="button" class="btn btn-secondary btHistoriaClinicaTb" title="Historia Clínica" disabled><i class="fa fa-search"></i> VER HISTORIA CLÍNICA</button>
+    <button type="button" class="btn btn-warning btSobreTurno" title="Dar Sobre-Turno" style="display:none;"><i class="fas fa-calendar"></i> <span>NUEVO SOBRE-TURNO</span></button>
+}
+
+@section Filters {
+    
+    <div class="col">
+        <div class="row">
+            @Html.FilterDropDownListFor(m => m.IdEspecialidad, Model.MaestroEspecialidades, "Especialidad", colSize: "col-md-4")
+            @Html.FilterDropDownListFor(m => m.IdProfesional, Model.MaestroProfesionales, "Profesional", colSize: "col-md-4")
+        </div>
+    </div>
+}
+
+@section GridColumns {
+
+    <th>Tipo</th>
+    <th>Espera</th>
+    <th>Turno</th>
+    <th>Profesional</th>
+    <th>Paciente</th>
+    <th>Cobertura</th>
+    <th>Acciones</th>
+    <th></th>
+    <th></th>
+
+}
+
+@section CrudForm {
+
+}
+
+@section CustomModals {
+
+    @using (Html.BeginModal("Recetas...", "ABMEvolucionesView", "modalMasterDetail", dialogClass: "modal-50"))
+    {
+        <div class="row">
+            <div class="form-group field col-md-12">
+                <label class="form-label" for="Medicamento">Medicamento</label>
+                <div class="controls">
+                    @Html.HiddenFor(m => m.Receta.IdVademecum)
+                </div>
+            </div>            
+        </div>
+        <div class="row">
+            @Html.FormGroupTextBoxFor(m => m.Receta.Cantidad, "Cantidad", colSize: "col-md-4", addValidator: true)
+            @Html.FormGroupTextBoxFor(m => m.Receta.Dosis, "Dosis", colSize: "col-md-4", addValidator: true)
+            @Html.FormGroupTextBoxFor(m => m.Receta.Frecuencia, "Frecuencia", colSize: "col-md-4", addValidator: true)
+            @Html.FormGroupCheckboxFor(m => m.Receta.NoSustituir, title: "No Sustituir")
+        </div>
+        <div class="row">
+            @Html.FormGroupTextAreaFor(m => m.Receta.Indicaciones, "Indicaciones", rows: 5)
+        </div>
+    }
+
+    @using (Html.BeginModal("Ordenes...", "ABMEvolucionesView", "modalMasterDetailOrdenes"))
+    {
+        <div class="row">
+            @Html.FormGroupTextAreaFor(m => m.Orden.Descripcion, "Descripción", rows: 2)
+        </div>
+        <div class="row">
+            @Html.FormGroupTextAreaFor(m => m.Orden.Indicaciones, "Indicaciones", rows: 5)
+        </div>
+    }
+}
+
+@section Scripts {
+
+    <script src="/js/Shared/modals.js?3661"></script>
+    <script src="/js/Views/TurnosSalaEspera/index.js?3661"></script>
+}

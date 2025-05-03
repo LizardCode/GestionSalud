@@ -1,0 +1,134 @@
+﻿@using LizardCode.Framework.Application.Models.Repeater;
+
+@model LizardCode.SalmaSalud.Application.Models.PedidosLaboratorios.PedidoLaboratorioViewModel
+@{
+    Layout = "~/Views/Shared/MaestroLayout.cshtml";
+
+    ViewBag.MainClass = "ABMPedidosLaboratoriosView";
+
+    ViewBag.Title = "Mantenimiento de Pedidos a Laboratorios";
+    ViewBag.TitleNew = "Nuevo presupuesto...";
+    ViewBag.TitleEdit = "Modificar presupuesto...";
+    ViewBag.TitleRemove = "Eliminar presupuesto...";
+    ViewBag.ItemMenu = "Pedidos a Laboratorios";
+
+    ViewBag.ButtonNew = true;
+    ViewBag.ButtonEdit = false;
+    ViewBag.ButtonRemove = true;
+
+    ViewBag.AjaxGetAll = Url.Action("ObtenerTodos", "PedidosLaboratorios");
+    ViewBag.AjaxGet = Url.Action("Obtener", "PedidosLaboratorios");
+    ViewBag.AjaxAdd = Url.Action("Nuevo", "PedidosLaboratorios");
+    // ViewBag.AjaxUpdate = Url.Action("Modificar", "Pedidos a Laboratorios");
+    ViewBag.AjaxDelete = Url.Action("Eliminar", "PedidosLaboratorios");
+
+    ViewBag.Tabs = new string[] { "Pedido" };
+}
+
+@section Styles {
+    <link href="/css/Views/PedidosLaboratorios/index.css?3661" rel="stylesheet" />
+    <style>
+        .row-flex {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .stick-to-bottom {
+            position: absolute;
+            bottom: -3rem;
+        }
+    </style>
+}
+
+@section Filters {
+
+    <div class="col">
+
+        <div class="row">
+            @Html.FilterPickerDateFor(m => m.FiltroFechaDesde, "Fecha Pedido Desde", value: string.Empty, colSize: "col-md-2")
+            @Html.FilterPickerDateFor(m => m.FiltroFechaHasta, "Fecha Pedido Hasta", value: string.Empty, colSize: "col-md-2")
+            @Html.FilterTextBoxFor(m => m.IdPresupuesto, "ID Presup", value: string.Empty, colSize: "col-md-2")
+        </div>
+        <div class="row">
+            @Html.FilterDropDownListFor(m => m.IdPacienteFilter, Model.MaestroPacientes, "Paciente", colSize: "col-md-4")
+            @Html.FilterDropDownListFor(m => m.IdLaboratorioFilter, Model.MaestroLaboratorios, "Laboratorio", colSize: "col-md-4")
+            @Html.FilterDropDownListFor(m => m.IdEstadoPedidoLaboratorio, Model.MaestroEstados, "Estado", colSize: "col-md-4")
+        </div>
+    </div>
+
+}
+
+@section GridColumns {
+
+    <th>ID</th>
+    <th>Fecha</th>
+    <th>ID Presup.</th>
+    <th>Paciente</th>
+    <th>Documento</th>
+    <th>Laboratorio</th>
+    <th>Total</th>
+    <th>Estado</th>
+    <th></th>
+
+}
+
+@section CrudForm {
+
+    @Html.FormGroupTextBoxFor(m => m.IdPedidoLaboratorio, title: "ID", colSize: "col-md-2", editingDisabled: true, newVisible: false)
+
+    @Html.FormGroupDropDownListFor(m => m.IdPresupuesto, Model.MaestroPresupuestos, "Presupuesto", fieldCss: "select2-field presupuesto", editingDisabled: true, addValidator: true, colSize: "col-md-12")
+
+    <div class="p-2 w-100 resumenView">
+        @* <div class="text-center"><img alt="just a loader" src="/img/mini_loader.gif" width="75px;"></div> *@
+    </div>
+
+    @Html.FormGroupDropDownListFor(m => m.IdLaboratorio, Model.MaestroLaboratorios, "Laboratorio", fieldCss: "select2-field laboratorio", editingDisabled: true, addValidator: true, colSize: "col-md-12")
+
+    <div class="row ml-2 w-100">
+        <div class="col">
+
+            <div class="row row-flex">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col">
+                            <h4>Servicios del Laboratorio</h4>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col dvServicios">
+                            @await Component.InvokeAsync("Repeater", new RepeaterViewModel().SetItems(
+                            Model.Servicios,
+                            "Servicios",
+                                     x => new(nameof(x.IdLaboratorioServicio), Model.MaestroServicios)
+                            ))
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="inv--total-amounts">
+                <div class="row mt-4">
+                    <div class="col-sm-12 col-12 order-sm-1 order-0">
+                        <div class="text-sm-right">
+                            <div class="row">
+                                <div class="col-sm-8 col-7">
+                                    <p class="">Total Servicios: </p>
+                                </div>
+                                <div class="col-sm-2 col-5">
+                                    <p class="totalServicios">$ 0</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @Html.FormGroupTextAreaFor(m => m.Observaciones, title: "Observaciones",  fieldCss: "form-control", addValidator: false, editingDisabled: false)
+}
+
+@section Scripts {
+
+    <script src="/js/Views/PedidosLaboratorios/index.js?3661"></script>
+}

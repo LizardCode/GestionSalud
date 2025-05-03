@@ -1,0 +1,101 @@
+﻿@using LizardCode.Framework.Application.Models.Repeater;
+
+@model LizardCode.SalmaSalud.Application.Models.SubdiarioIVACompras.SubdiarioIVAComprasViewModel
+@{
+    Layout = "~/Views/Shared/ReportLayout.cshtml";
+
+    ViewBag.MainClass = "ReportSubdiarioIVAComprasView";
+
+    ViewBag.Title = "Subdiario de IVA Compras";
+    ViewBag.ItemMenu = "Subdiario IVA";
+
+    ViewBag.ButtonExcel = true;
+    ViewBag.ButtonPDF = true;
+    ViewBag.ButtonPrint = true;
+
+    ViewBag.AjaxGetAll = Url.Action("ObtenerTodos", "SubdiarioIVACompras");
+}
+
+@section Styles {
+    <link href="/css/Views/SubdiarioIVACompras/index.css?3661" rel="stylesheet" />
+}
+
+@section ToolbarButtons {
+    <button type="button" class="btn btn-primary btDownloadCitiCompras" title="Download Citi Compras"><i class="fa fa-download"></i> <span>CITI Compras</span></button>
+    <button type="button" class="btn btn-primary btDownloadCitiComprasAli" title="Download Citi Compras Alícuotas"><i class="fa fa-download"></i> <span>CITI Alicuotas</span></button>
+    <button type="button" class="btn btn-primary btTotalesAlicuotas" title="Detalle de Totales por Alícuota"><i class="fa fa-badge-dollar"></i> <span>Totales por Alícuotas</span></button>
+}
+
+@section Filters {
+    <div class="col">
+
+        <div class="row">
+            @Html.FilterPickerDateFor(m => m.FechaDesde, "Fecha Desde", colSize: "col-md-2")
+            @Html.FilterPickerDateFor(m => m.FechaHasta, "Fecha Hasta", colSize: "col-md-2")
+            @Html.FilterDropDownListFor(m => m.IdProveedor, Model.MaestroProveedores, "Proveedor", colSize: "col-md-4")
+        </div>
+    
+    </div>
+}
+
+@section GridColumns {
+
+    <th>ID</th>
+    <th>Fecha</th>
+	<th>Tipo</th>
+	<th>Sucursal</th>
+	<th>Número</th>
+	<th>Proveedor</th>
+	<th>CUIT</th>
+	<th>Tipo IVA</th>
+	<th>Neto Gravado</th>
+    <th>No Gravado</th>
+	<th>Alicuota</th>
+	<th>Importe Alícuota</th>
+	<th>Total</th>
+    <th>Percepción IVA</th>
+    <th>Percepcion IIBB</th>
+
+}
+
+@section CustomModals {
+
+    <div class="modal fade modalDetalleAlicuotas" role="dialog" aria-hidden="true">
+        <div class="modal-dialog bounceInRight animated">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Detalle de Totales por Alicuota...</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true" class="zmdi zmdi-close"></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <button type="button" class="btn btn-primary btExcelAlicuotas" title="Excel"><i class="fa fa-file-excel"></i> <span>Excel</span></button>
+                    <div class="table-responsive">
+                        <table class="table table-bordered mb-4 tableDetailAlicuotas">
+                            <thead>
+                                <tr>
+                                    <th>Alícuota</th>
+                                    <th>Neto Gravado</th>
+                                    <th>No Gravado</th>
+                                    <th>Importe Alícuota</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" data-dismiss="modal" class="btn btn-default"><i class="fa fa-times"></i> Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+
+@section Scripts {
+    <script src="/js/Views/SubdiarioIVACompras/index.js?3661"></script>
+}

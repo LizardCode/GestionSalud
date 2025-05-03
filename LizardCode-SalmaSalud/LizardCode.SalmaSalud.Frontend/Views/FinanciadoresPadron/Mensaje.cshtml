@@ -1,0 +1,114 @@
+﻿@using System.Text.RegularExpressions
+@model LizardCode.SalmaSalud.Application.Models.FinanciadoresPadron.MensajeViewModel
+@{
+    Layout = null;
+}
+
+<div class="modal-header">
+    <h5 class="modal-title">Validación de afiliado</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true" class="fa fa-times"></span>
+    </button>
+</div>
+<div class="modal-body">
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+
+                    @Html.HiddenFor(m => m.MensajePadronFinanciadorNro, new { @class = "hdnPadronFinanciadorNro" })
+
+                    @if (Model.MensajeForzarParticular)
+                    {
+                        <div class="col">
+                            <div class="alert alert-warning text-center aNew" role="alert">
+                                <h8>
+                                    <i class="fa fa-info-circle"></i>
+                                    El paciente no fue encontrado en el padrón de afiliados del financiador. ¿Como desea continuar?
+                                </h8>
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="row">
+
+                                @Html.FormGroupCheckboxFor(m => m.MensajeForzarParticular, title: string.Format("Recepcionar paciente como PARTICULAR", Model.MensajePacienteFinanciadorNro), colSize: "col-md-12 mt-2")
+
+                                @Html.FormGroupCheckboxFor(m => m.MensajeForzarPadron, title: "Recepcionar paciente como AFILIADO y agregar al padrón", colSize: "col-md-12 mt-2")
+                            </div>
+                        </div>
+                    }
+
+                    @if (!string.IsNullOrEmpty(Model.MensajePadronFinanciadorNro) && Model.MensajePacienteFinanciadorNro != Model.MensajePadronFinanciadorNro)
+                    {
+                        <div class="col cFinanciadorNro">
+                            <div class="alert alert-warning text-center aNew" role="alert">
+                                <h8>
+                                    <i class="fa fa-info-circle"></i>
+                                    @string.Format("El Nro. de Afiliado del paciente en el PADRÓN difiere del ingresado en el SISTEMA. ¿Como desea continuar?", Model.MensajePadronFinanciadorNro, Model.MensajePacienteFinanciadorNro)
+                                </h8>
+                            </div>
+                            <div class="row">
+                                @Html.FormGroupCheckboxFor(m => m.UsaPadronFinanciadorNro, title: string.Format("Usa Nro. Afiliado de Paciente EN PADRÓN: {0}", Model.MensajePadronFinanciadorNro), colSize: "col-md-12 mt-2")
+
+                                @Html.FormGroupCheckboxFor(m => m.UsaPacienteFinanciadorNro, title: string.Format("Usa Nro. Afiliado de Paciente EN SISTEMA: {0}", Model.MensajePacienteFinanciadorNro), colSize: "col-md-12 mt-2")
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal-footer">
+    <button type="button" data-dismiss="modal" class="btn btn-default"><i class="fa fa-times"></i> CANCELAR</button>
+    <button type="button" class="btn btn-info btMensajeSave"><i class="fa fa-check"></i> CONTINUAR</button>
+</div>
+
+
+<script>
+    $('.btMensajeSave').unbind().on('click', function () {
+
+        VALIDACION_FORZAR_PARTICULAR = $('#MensajeForzarParticular').is(':checked');
+        VALIDACION_FORZAR_PADRON = $('#MensajeForzarPadron').is(':checked');
+
+        if ($('#UsaPadronFinanciadorNro').is(':checked')) {
+            VALIDACION_FINANCIADOR_NRO = $('.hdnPadronFinanciadorNro').val();
+        }
+
+        $('.validacionPadronView').modal('hide');
+        VALIDACION_CONTINUAR = true;
+    });
+
+    $('#MensajeForzarParticular').unbind().on('change', function () {
+        
+        var checked = $(this).is(':checked');
+
+        $('#MensajeForzarPadron').prop('checked', !checked);
+    });
+
+    $('#MensajeForzarPadron').unbind().on('change', function () {
+
+        var checked = $(this).is(':checked');
+
+        $('#MensajeForzarParticular').prop('checked', !checked);
+    });
+
+    $('#UsaPadronFinanciadorNro').unbind().on('change', function () {
+
+        var checked = $(this).is(':checked');
+
+        $('#UsaPacienteFinanciadorNro').prop('checked', !checked);
+    });
+
+    $('#UsaPacienteFinanciadorNro').unbind().on('change', function () {
+
+        var checked = $(this).is(':checked');
+
+        $('#UsaPadronFinanciadorNro').prop('checked', !checked);
+    });
+
+    //# sourceURL=mensaje.js
+    
+</script>

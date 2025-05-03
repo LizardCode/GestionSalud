@@ -1,0 +1,301 @@
+﻿@using LizardCode.Framework.Application.Models.MasterDetail
+@using LizardCode.Framework.Application.Models.Repeater;
+@using LizardCode.SalmaSalud.Application.Models.Recibos
+
+@model RecibosViewModel
+@{
+    Layout = "~/Views/Shared/MaestroLayout.cshtml";
+
+    ViewBag.MainClass = "ABMRecibosView";
+
+    ViewBag.Title = "Mantenimiento de Recibos";
+    ViewBag.TitleNew = "Nuevo Recibo...";
+    ViewBag.TitleEdit = "Modificar Recibo...";
+    ViewBag.TitleRemove = "Eliminar Recibo...";
+    ViewBag.ItemMenu = "Recibos";
+
+    ViewBag.ButtonNew = true;
+    ViewBag.ButtonEdit = true;
+    ViewBag.ButtonRemove = true;
+
+    ViewBag.AjaxGetAll = Url.Action("ObtenerTodos", "Recibos");
+    ViewBag.AjaxGet = Url.Action("Obtener", "Recibos");
+    ViewBag.AjaxAdd = Url.Action("Nuevo", "Recibos");
+    ViewBag.AjaxUpdate = Url.Action("Modificar", "Recibos");
+    ViewBag.AjaxDelete = Url.Action("Eliminar", "Recibos");
+
+    ViewBag.AjaxAddImputaciones = Url.Action("AddImputaciones", "Recibos");
+
+    ViewBag.Tabs = new string[] { "General" };
+}
+
+@section Styles {
+    <link href="/css/Views/Recibos/index.css?3661" rel="stylesheet" />
+}
+
+
+@section ToolbarButtons {
+
+    <button type="button" class="btn btn-primary btImprimir" title="Exportar resultados" data-ajax-action="/Recibos/Imprimir/"><i class="fas fa-print"></i> <span>Imprimir</span></button>
+    <button type="button" class="btn btn-secondary btImputaciones" title="Imputar Comprobantes" disabled><i class="far fa-ballot-check"></i> <span>Imputaciones</span></button>
+
+}
+
+
+@section Filters {
+    <div class="col">
+
+        <div class="row">
+            @Html.FilterDropDownListFor(m => m.IdCliente, Model.MaestroClientes, "Cliente", colSize: "col-md-4")
+            @Html.FilterDropDownListFor(m => m.IdEstadoRecibo, Model.MaestroEstadoRecibos, "Estado Recibo", colSize: "col-md-4")
+            @Html.FilterTextBoxFor(m => m.NumeroRecibo, "Número de Recibo", value: string.Empty, colSize: "col-md-2")
+        </div>
+
+        <div class="row">
+            @Html.FilterPickerDateFor(m => m.FechaDesde, "Fecha Desde", value: string.Empty, colSize: "col-md-2")
+            @Html.FilterPickerDateFor(m => m.FechaHasta, "Fecha Hasta", value: string.Empty, colSize: "col-md-2")
+        </div>
+    
+    </div>
+}
+
+@section GridColumns {
+
+    <th>ID</th>
+    <th>Fecha</th>
+    <th>Tipo</th>
+    <th>Cliente</th>
+    <th>Descripción</th>
+    <th>Moneda</th>
+    <th>Total</th>
+    <th>Estado</th>
+    <th></th>
+}
+
+@section CrudForm {
+
+    <div class="col">
+        <div class="row">
+            <div class="col">
+                <h4>Datos del Recibo</h4>
+            </div>
+        </div>
+        <div class="row">
+            @Html.HiddenFor(m => m.IdRecibo)
+            @Html.FormGroupDropDownListFor(m => m.IdEjercicio, Model.MaestroEjercicios, "Ejercicio", colSize: "col-md-2", addValidator:true, editingDisabled: true)
+            @Html.FormGroupPickerDateFor(m => m.Fecha, title: "Fecha", colSize: "col-md-2", addValidator: true, editingDisabled: false)
+            @Html.FormGroupDropDownListFor(m => m.IdTipoRecibo, Model.MaestroTipoRecibo, "Tipo de Recibo", colSize: "col-md-2", addValidator:true, editingDisabled: true)
+            @Html.FormGroupDropDownListFor(m => m.IdMoneda, Model.MaestroMonedas, "Moneda", colSize: "col-md-2", addValidator:true, editingDisabled: true)
+            @Html.HiddenFor(m => m.Moneda)
+            @Html.FormGroupDropDownListFor(m => m.IdMonedaCobro, Model.MaestroMonedas, "Moneda Cobro", colSize: "col-md-2", addValidator:true, editingDisabled: true)
+            @Html.HiddenFor(m => m.MonedaCobro)
+            @Html.FormGroupInputGroupFor(m => m.Cotizacion, "Cotización", icon: "$", addValidator: true, colSize: "col-md-2", editingDisabled: true)            
+        </div>
+        <div class="row">
+            @Html.FormGroupDropDownListFor(m => m.IdCliente, Model.MaestroClientes, "Cliente", colSize: "col-md-4", addValidator:true, editingDisabled: true)
+            @Html.FormGroupTextBoxFor(m => m.Descripcion, title: "Descripción", addValidator: true, colSize: "col-md-6", editingDisabled: false)
+            @Html.FormGroupInputGroupFor(m => m.Total, "Total", icon: "$", addValidator: true, colSize: "col-md-2", editingDisabled: true)
+        </div>
+        
+        <hr />
+            
+        <div class="row">
+            <div class="col">
+                <div class="row">
+                    <div class="col">
+                        <h4>Forma de Cobro</h4>
+                    </div>
+                </div>
+                <div class="dvItems">
+                    @await Component.InvokeAsync("MasterDetail", new MasterDetailViewModel().SetItems(
+                        Model.Items,
+                        "Items",
+                        x => new(nameof(x.IdBancoTranferencia), Model.MaestroBancos, nameof(x.BancoTranferencia))
+                    ))
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="row">
+                    <div class="col">
+                        <h4>Anticipos</h4>
+                    </div>
+                </div>
+                <div class="dvAnticipos">
+                    @await Component.InvokeAsync("Repeater", new RepeaterViewModel().SetItems(
+                        Model.Anticipos,
+                        "Anticipos"
+                    ))
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <button type="button" class="btn btn-primary mb-4 mr-2 btn-sm btnCargaAnticipos">Cargar Anticipos</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <hr />
+
+        <div class="row">
+            <div class="col col-md-6">
+                <div class="row">
+                    <div class="col">
+                        <h4>Retenciones</h4>
+                    </div>
+                </div>
+                <div class="dvRetenciones">
+                    @await Component.InvokeAsync("MasterDetail", new MasterDetailViewModel().SetItems(
+                        Model.Retenciones,
+                        "Retenciones",
+                        x => new(nameof(x.IdCategoria), Model.MaestroCategoriasRetencion, nameof(x.Categoria))
+                    ))
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+
+@section CustomModals {
+
+    @using (Html.BeginModal("Detalle de Cobro...", (string)ViewBag.MainClass, "modalMasterItems"))
+    {
+        <div class="col">
+            <div class="row">
+                @Html.FormGroupDropDownListFor(m => m.Detalle.IdTipoCobro, Model.MaestroTipoCobro, "Tipo de Cobro", addValidator: true)
+                @Html.HiddenFor(m => m.Detalle.Descripcion)
+            </div>
+
+            <div class="row dvTipoCobro dvCheque hide"> <!-- Cheque -->
+                @Html.FormGroupPickerDateFor(m => m.Detalle.FechaEmision, "Fecha de Emisión", addValidator: true)
+                @Html.FormGroupPickerDateFor(m => m.Detalle.FechaVto, "Fecha de Vto.", addValidator: true)
+                @Html.FormGroupTextBoxFor(m => m.Detalle.BancoCheque, "Banco", addValidator: true)
+                @Html.FormGroupInputGroupFor(m => m.Detalle.NroCheque, "Nro. de Cheque", icon: "#", addValidator: true, placeholder: "__________")
+
+                <div class="col-md-12">
+                    <div class="row">
+                        @Html.FormGroupTextBoxFor(m => m.Detalle.FirmanteCheque, "Firmante", addValidator: true, colSize: "col-md-6")
+                        @Html.FormGroupTextBoxFor(m => m.Detalle.CUITFirmante, "C.U.I.T.", addValidator: true, colSize: "col-md-6", placeholder: "__-________-_")
+                    </div>
+                    <div class="row">
+                        @Html.FormGroupTextBoxFor(m => m.Detalle.Endosante1Cheque, "Endosante 1", addValidator: true, colSize: "col-md-6")
+                        @Html.FormGroupTextBoxFor(m => m.Detalle.CUITEndosante1, "C.U.I.T.", addValidator: true, colSize: "col-md-6", placeholder: "__-________-_")
+                    </div>
+                    <div class="row">
+                        @Html.FormGroupTextBoxFor(m => m.Detalle.Endosante2Cheque, "Endosante 2", addValidator: true, colSize: "col-md-6")
+                        @Html.FormGroupTextBoxFor(m => m.Detalle.CUITEndosante2, "C.U.I.T.", addValidator: true, colSize: "col-md-6", placeholder: "__-________-_")
+                    </div>
+                    <div class="row">
+                        @Html.FormGroupTextBoxFor(m => m.Detalle.Endosante3Cheque, "Endosante 3", addValidator: true, colSize: "col-md-6")
+                        @Html.FormGroupTextBoxFor(m => m.Detalle.CUITEndosante3, "C.U.I.T.", addValidator: true, colSize: "col-md-6", placeholder: "__-________-_")
+                    </div>
+                </div>
+            </div>
+
+            <div class="row dvTipoCobro dvTransferencia hide"> <!-- Transferencia -->
+                @Html.FormGroupInputGroupFor(m => m.Detalle.NroTransferencia, "Nro. de Transferencia", icon: "#", addValidator: false, placeholder: "__________")
+                @Html.FormGroupDropDownListFor(m => m.Detalle.IdBancoTranferencia, Model.MaestroBancos, "Banco", addValidator:true)
+                @Html.FormGroupTextBoxFor(m => m.Detalle.BancoOrigen, "Banco Origen", addValidator: false)
+                @Html.FormGroupPickerDateFor(m => m.Detalle.FechaTransferencia, "Fecha de Transferencia", addValidator: true)
+            </div>
+
+            <div class="row dvTipoCobro dvDocumento hide"> <!-- Documento -->
+                @Html.FormGroupPickerDateFor(m => m.Detalle.FechaDocumento, "Fecha de Emisión", addValidator: true)
+                @Html.FormGroupPickerDateFor(m => m.Detalle.FechaVtoDocumento, "Fecha de Vto.", addValidator: true)
+                @Html.FormGroupInputGroupFor(m => m.Detalle.NroDocumento, "Nro. de Documento", icon: "#", addValidator: true, placeholder: "__________")
+                <div class="row col-md-12">
+                    @Html.FormGroupTextBoxFor(m => m.Detalle.FirmanteDocumento, "Firmante", colSize: "col-md-6", addValidator: true)
+                    @Html.FormGroupTextBoxFor(m => m.Detalle.CUITFirmanteDocumento, "C.U.I.T.", colSize: "col-md-6", addValidator: true, placeholder: "__-________-_")
+                </div>
+            </div>
+
+            <div class="row dvTipoCobro dvImporte hide">
+                @Html.FormGroupInputGroupFor(m => m.Detalle.Importe, "Importe", icon: "$", addValidator: true)
+            </div>
+
+        </div>
+    }
+
+    @using (Html.BeginModal("Item de Retención...", (string)ViewBag.MainClass, "modalMasterRetenciones"))
+    {
+        <div class="col">
+            <div class="row">
+                @Html.FormGroupDropDownListFor(m => m.Retencion.IdCategoria, Model.MaestroCategoriasRetencion, "Categoría", addValidator: true)
+                @Html.FormGroupDropDownListFor(m => m.Retencion.IdCuentaContable, Model.MaestroCuentasContables, "Cuenta Contable", addValidator: true)
+                @Html.FormGroupPickerDateFor(m => m.Retencion.Fecha, "Fecha de Retención", addValidator: true)
+                @Html.FormGroupInputGroupFor(m => m.Retencion.NroRetencion, "Nro. de Retención", icon: "#", addValidator: false, placeholder: "__________")
+                @Html.FormGroupInputGroupFor(m => m.Retencion.BaseImponible, "Base Imponible", icon: "$", addValidator: false)
+                @Html.FormGroupInputGroupFor(m => m.Retencion.Importe, "Importe", icon: "$", addValidator: true)
+            </div>
+        </div>
+    }
+    
+    @using (Html.BeginModal("Imputación de Facturas Pendientes de Cobro", (string)ViewBag.MainClass, "modalImputaciones", (string)ViewBag.AjaxAddImputaciones))
+    {
+        <div class="row">
+            <div class="col">
+                <div class="inv--total-amounts">
+                    <div class="row mt-4">
+                        <div class="col-sm-5 col-12 order-sm-0 order-1">
+                        </div>
+                        <div class="col-sm-7 col-12 order-sm-1 order-0">
+                            <div class="text-sm-right">
+                                <div class="row">
+                                    <div class="col-sm-9 col-7">
+                                        <h5>Importe Recibo: </h5>
+                                    </div>
+                                    <div class="col-sm-3 col-5">
+                                        <h5 class="importeRecibo">$ 0</h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <br />
+
+        @Html.HiddenFor(m => m.IdRecibo)
+        <div class="row">
+            <div class="col dvImputaciones">
+                @await Component.InvokeAsync("Repeater", new RepeaterViewModel().SetItems(
+                    Model.Imputaciones,
+                    "Imputaciones"
+                ))
+            </div>
+        </div>
+
+        <div class="inv--total-amounts">
+            <div class="row mt-4">
+                <div class="col-sm-5 col-12 order-sm-0 order-1">
+                </div>
+                <div class="col-sm-7 col-12 order-sm-1 order-0">
+                    <div class="text-sm-right">
+                        <div class="row">
+                            <div class="col-sm-8 col-7 grand-total-title">
+                            </div>
+                            <div class="col-sm-4 col-5">
+                                @Html.FormGroupInputGroupFor(m => m.Redondeo, "Redondeo", icon: "$", addValidator: true)
+                            </div>
+                            <div class="col-sm-9 col-7 grand-total-title">
+                                <h4>Importe Comprobantes: </h4>
+                            </div>
+                            <div class="col-sm-3 col-5 grand-total-amount">
+                                <h5 class="ImporteComprobantes">$ 0</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    }
+
+}
+
+@section Scripts {
+    <script src="/js/Views/Recibos/index.js?3661"></script>
+}

@@ -1,0 +1,120 @@
+﻿@model Template.Application.Models.Usuarios.UsuarioViewModel
+@{
+    Layout = "~/Views/Shared/MaestroLayout.cshtml";
+
+    ViewBag.MainClass = "ABMUsersView";
+
+    ViewBag.Title = "Mantenimiento de Usuarios";
+    ViewBag.TitleNew = "Nuevo usuario...";
+    ViewBag.TitleEdit = "Modificar usuario...";
+    ViewBag.TitleRemove = "Eliminar usuario...";
+    ViewBag.TitleBlankPassword = "Blanquear contraseña...";
+    ViewBag.ItemMenu = "Usuarios";
+
+    ViewBag.ButtonNew = true;//PermisosBusiness.Instance.VerificarPermisos(ModuloOperativo.Usuarios, Permiso.Alta);
+    ViewBag.ButtonEdit = true;//PermisosBusiness.Instance.VerificarPermisos(ModuloOperativo.Usuarios, Permiso.Modificacion);
+    ViewBag.ButtonRemove = true;//PermisosBusiness.Instance.VerificarPermisos(ModuloOperativo.Usuarios, Permiso.Baja);
+
+    ViewBag.AjaxGetAll = Url.Action("ObtenerTodos", "Usuarios");
+    ViewBag.AjaxGet = Url.Action("Obtener", "Usuarios");
+    ViewBag.AjaxAdd = Url.Action("Nuevo", "Usuarios");
+    ViewBag.AjaxUpdate = Url.Action("Modificar", "Usuarios");
+    ViewBag.AjaxDelete = Url.Action("Eliminar", "Usuarios");
+
+    //ViewBag.PermisosAjaxGetAll = Url.Action("ObtenerPorUsuario", "Permisos");
+
+    ViewBag.Tabs = new string[] { "General" };
+}
+
+@section Styles {
+    <link href="/css/Views/Usuarios/index.css?911" rel="stylesheet" />
+}
+
+@section ToolbarButtons {
+    @if (ViewBag.ButtonEdit)
+    {
+        <button type="button" class="btn btn-secondary btBlank" title="Realizar blanqueo de contraseña" disabled><i class="fas fa-lock-open-alt"></i> <span>Blanqueo</span></button>
+    }
+}
+
+@section Filters {
+
+    @Html.FilterTextBoxFor(m => m.IdUsuario, "Id", value: string.Empty)
+
+    @Html.FilterDropDownListFor(m => m.IdTipoUsuario, Model.MaestroTipoUsuarios, "Tipo usuario")
+
+    @Html.FilterTextBoxFor(m => m.Login, "Login")
+
+    @Html.FilterTextBoxFor(m => m.Nombre, "Nombre")
+
+    @Html.FilterTextBoxFor(m => m.Email, "Email")
+
+}
+
+@section GridColumns {
+
+    <th>ID</th>
+    <th>Login</th>
+    <th>Nombre</th>
+    <th>Email</th>
+    <th>Admin</th>
+    <th>(Admin)</th>
+
+}
+
+@section CrudForm {
+
+    @Html.FormGroupTextBoxFor(m => m.IdUsuario, title: "ID", editingDisabled: true, newVisible: false)
+
+    @Html.FormGroupDropDownListFor(m => m.IdTipoUsuario, Model.MaestroTipoUsuarios, "Tipo", addValidator: true)
+
+    @Html.FormGroupTextBoxFor(m => m.Login, title: "Login", addValidator: true, editingDisabled: true)
+
+    @Html.FormGroupTextBoxFor(m => m.Nombre, title: "Nombre", addValidator: true)
+
+    @Html.FormGroupTextBoxFor(m => m.Email, title: "Email",  fieldCss: "form-control lowercase", addValidator: true)
+
+}
+
+@section CustomModals {
+
+    <!-- Modal - Blanqueo de clave -->
+    <div class="modal fade modalBlankPassword" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog bounceInRight animated">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">@ViewBag.TitleBlankPassword</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true" class="zmdi zmdi-close"></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="row">
+                        <div class="col-md-2">
+                            <i class="fa fa-exclamation-triangle fa-2x icon-square icon-warning inviewport animated animated-delay-250ms animated-duration-1400ms visible bounceIn"></i>
+                        </div>
+                        <div class="col-md-10">
+                            <p>
+                                El blanqueo no puede revertirse
+                                <br />
+                                ¿Desea continuar?
+                            </p>
+
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" data-dismiss="modal" class="btn btn-default"><i class="fa fa-times"></i> Cancelar</button>
+                    <button type="button" class="btn btn-warning btOk"><i class="fa fa-check"></i> Si</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+
+@section Scripts {
+    <script src="/js/Views/Usuarios/index.js?911"></script>
+}

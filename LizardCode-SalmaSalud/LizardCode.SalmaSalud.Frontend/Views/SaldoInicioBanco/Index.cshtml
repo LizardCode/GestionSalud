@@ -1,0 +1,190 @@
+﻿@using LizardCode.Framework.Application.Models.MasterDetail
+@using LizardCode.SalmaSalud.Application.Models.SaldoInicioBanco
+
+@model SaldoInicioBancoViewModel
+@{
+    Layout = "~/Views/Shared/MaestroLayout.cshtml";
+
+    ViewBag.MainClass = "ABMSaldoInicioBancoView";
+
+    ViewBag.Title = "Mantenimiento de Saldo Inicio de Banco";
+    ViewBag.TitleNew = "Nueva Saldo Inicio...";
+    ViewBag.TitleEdit = "Modificar Saldo Inicio Banco...";
+    ViewBag.TitleRemove = "Eliminar Saldo Inicio Banco...";
+    ViewBag.ItemMenu = "Saldo Inicio de Banco";
+
+    ViewBag.ButtonNew = true;
+    ViewBag.ButtonEdit = false;
+    ViewBag.ButtonRemove = true;
+
+    ViewBag.AjaxGetAll = Url.Action("ObtenerTodos", "SaldoInicioBanco");
+    ViewBag.AjaxGet = Url.Action("Obtener", "SaldoInicioBanco");
+    ViewBag.AjaxAdd = Url.Action("Nuevo", "SaldoInicioBanco");
+    ViewBag.AjaxDelete = Url.Action("Eliminar", "SaldoInicioBanco");
+
+    ViewBag.Tabs = new string[] { "General" };
+}
+
+@section Styles {
+    <link href="/css/Views/SaldoInicioBanco/index.css?3661" rel="stylesheet" />
+}
+
+@section GridColumns {
+
+    <th>ID</th>
+    <th>Fecha</th>
+    <th>Descripción</th>
+    <th></th>
+}
+
+@section CrudForm {
+
+    <div class="col">
+        <div class="row">
+            <div class="col">
+                <h4>Datos del Saldo Inicio de Bancos</h4>
+            </div>
+        </div>
+        <div class="row">
+            @Html.HiddenFor(m => m.IdSaldoInicioBanco)
+            @Html.FormGroupPickerDateFor(m => m.Fecha, title: "Fecha", colSize: "col-md-2", addValidator: true, editingDisabled: false)
+            @Html.FormGroupTextBoxFor(m => m.Descripcion, title: "Descripción", addValidator: true, colSize: "col-md-6", editingDisabled: false)
+        </div>
+        
+        <hr />
+
+        <div class="row">
+            <div class="col col-md-4">
+                <h4>Cheques</h4>
+            </div>
+            <div class="col col-md-4">
+                <h4>Anticipos de Clientes</h4>
+            </div>
+            <div class="col col-md-4">
+                <h4>Anticipos de Proveedores</h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col col-md-4">
+                <div class="dvItemsCheques">
+                    @await Component.InvokeAsync("MasterDetail", new MasterDetailViewModel().SetItems(
+                        Model.Cheques,
+                        "Cheques",
+                        x => new(nameof(x.IdBancoChequeComun), Model.MaestroBancos, nameof(x.BancoChequeComun)),
+                        x => new(nameof(x.IdBancoChequeDiferido), Model.MaestroBancos, nameof(x.BancoChequeDiferido)),
+                        x => new(nameof(x.IdBancoEChequeComun), Model.MaestroBancos, nameof(x.BancoEChequeComun)),
+                        x => new(nameof(x.IdBancoEChequeDiferido), Model.MaestroBancos, nameof(x.BancoEChequeDiferido))
+                    ))
+                </div>
+            </div>
+
+            <div class="col col-md-4">
+                <div class="dvItemsAnticiposClientes">
+                    @await Component.InvokeAsync("MasterDetail", new MasterDetailViewModel().SetItems(
+                        Model.AnticiposClientes,
+                        "AnticiposClientes",
+                        x => new(nameof(x.IdCliente), Model.MaestroClientes, nameof(x.Cliente)),
+                        x => new(nameof(x.IdMoneda), Model.MaestroMonedas, nameof(x.Moneda))
+                        ))
+                </div>
+            </div>
+
+            <div class="col col-md-4">
+                <div class="dvItemsAnticiposProveedores">
+                    @await Component.InvokeAsync("MasterDetail", new MasterDetailViewModel().SetItems(
+                    Model.AnticiposProveedores,
+                    "AnticiposProveedores",
+                    x => new(nameof(x.IdProveedor), Model.MaestroProveedores, nameof(x.Proveedor)),
+                    x => new(nameof(x.IdMoneda), Model.MaestroMonedas, nameof(x.Moneda))
+                    ))
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+
+@section CustomModals {    
+
+    @using (Html.BeginModal("Item de Cheques de Saldo Inicio...", (string)ViewBag.MainClass, "modalItemsCheques"))
+    {
+        <div class="col">
+
+            <div class="row">
+                @Html.FormGroupDropDownListFor(m => m.Cheque.IdTipoCheque, Model.MaestroTipoCheques, "Tipo de Cheque", addValidator: true)
+                @Html.HiddenFor(m => m.Cheque.Descripcion)
+            </div>
+
+            <div class="row dvTipoSdoInicio dvChequeComun hide"> <!-- Cheque Comun -->
+                @Html.FormGroupDropDownListFor(m => m.Cheque.IdBancoChequeComun, Model.MaestroBancos, "Banco", addValidator: true)
+                @Html.FormGroupInputGroupFor(m => m.Cheque.NumeroChequeComun, "Nro. de Cheque", icon: "<i class='far fa-money-check-alt'></i>", addValidator: true, placeholder: "__________")
+                @Html.FormGroupPickerDateFor(m => m.Cheque.FechaChequeComun, "Fecha de Emisión", addValidator: true)
+            </div>
+
+            <div class="row dvTipoSdoInicio dvChequeDiferido hide"> <!-- Cheque Diferido -->
+                @Html.FormGroupDropDownListFor(m => m.Cheque.IdBancoChequeDiferido, Model.MaestroBancos, "Banco", addValidator: true)
+                @Html.FormGroupInputGroupFor(m => m.Cheque.NumeroChequeDiferido, "Nro. de Cheque", icon: "<i class='far fa-money-check-alt'></i>", addValidator: true, placeholder: "__________")
+                @Html.FormGroupPickerDateFor(m => m.Cheque.FechaChequeDiferido, "Fecha de Emisión", addValidator: true)
+                @Html.FormGroupPickerDateFor(m => m.Cheque.FechaDiferidoChequeDiferido, "Fecha Diferida", addValidator: true)
+            </div>
+
+            <div class="row dvTipoSdoInicio dvEChequeComun hide"> <!-- E-Cheque Comun -->
+            @Html.FormGroupDropDownListFor(m => m.Cheque.IdBancoEChequeComun, Model.MaestroBancos, "Banco", addValidator: true)
+                @Html.FormGroupInputGroupFor(m => m.Cheque.NumeroEChequeComun, "Nro. de E-Cheque", icon: "<i class='far fa-money-check-alt'></i>", addValidator: true, placeholder: "__________")
+                @Html.FormGroupPickerDateFor(m => m.Cheque.FechaEChequeComun, "Fecha de Emisión", addValidator: true)
+            </div>
+
+            <div class="row dvTipoSdoInicio dvEChequeDiferido hide"> <!-- E-Cheque Diferido -->
+                @Html.FormGroupDropDownListFor(m => m.Cheque.IdBancoEChequeDiferido, Model.MaestroBancos, "Banco", addValidator: true)
+                @Html.FormGroupInputGroupFor(m => m.Cheque.NumeroEChequeDiferido, "Nro. de E-Cheque", icon: "<i class='far fa-money-check-alt'></i>", addValidator: true, placeholder: "__________")
+                @Html.FormGroupPickerDateFor(m => m.Cheque.FechaEChequeDiferido, "Fecha de Emisión", addValidator: true)
+                @Html.FormGroupPickerDateFor(m => m.Cheque.FechaDiferidoEChequeDiferido, "Fecha Diferida", addValidator: true)
+            </div>
+
+            <div class="row dvTipoSdoInicio dvChequeTerceros hide"> <!-- Cheque Terceros -->
+                @Html.FormGroupTextBoxFor(m => m.Cheque.BancoChequeTerceros, "Banco", addValidator: true)
+                @Html.FormGroupInputGroupFor(m => m.Cheque.NumeroChequeTerceros, "Nro. de Cheque", icon: "<i class='far fa-money-check-alt'></i>", addValidator: true, placeholder: "__________")
+                @Html.FormGroupPickerDateFor(m => m.Cheque.FechaChequeTerceros, "Fecha de Emisión", addValidator: true)
+                @Html.FormGroupPickerDateFor(m => m.Cheque.FechaDiferidoChequeTerceros, "Fecha Diferida", addValidator: true)
+            </div>
+
+            <div class="row dvTipoSdoInicio dvImporte hide">
+                @Html.FormGroupInputGroupFor(m => m.Cheque.Importe, "Importe", icon: "$", addValidator: true)
+            </div>
+
+        </div>
+    }
+
+    @using (Html.BeginModal("Item Anticipos de Clientes Salo Inicio...", (string)ViewBag.MainClass, "modalItemsAnticiposClientes"))
+    {
+        <div class="col">
+            <div class="row">
+                @Html.FormGroupPickerDateFor(m => m.AnticipoCliente.Fecha, "Fecha", addValidator: true)
+                @Html.FormGroupDropDownListFor(m => m.AnticipoCliente.IdCliente, Model.MaestroClientes, "Cliente", addValidator: true)
+                @Html.FormGroupTextBoxFor(m => m.AnticipoCliente.Descripcion, "Descripción", addValidator: true)
+                @Html.FormGroupDropDownListFor(m => m.AnticipoCliente.IdMoneda, Model.MaestroMonedas, "Moneda", addValidator: true)
+                @Html.FormGroupInputGroupFor(m => m.AnticipoCliente.Cotizacion, "Cotización", icon: "$", addValidator: true)
+                @Html.FormGroupInputGroupFor(m => m.AnticipoCliente.Importe, "Importe", icon: "$", addValidator: true)
+            </div>
+        </div>
+    }
+
+    @using (Html.BeginModal("Item Anticipos de Proveedores Salo Inicio...", (string)ViewBag.MainClass, "modalItemsAnticiposProveedores"))
+    {
+        <div class="col">
+            <div class="row">
+                @Html.FormGroupPickerDateFor(m => m.AnticipoProveedor.Fecha, "Fecha", addValidator: true)
+                @Html.FormGroupDropDownListFor(m => m.AnticipoProveedor.IdProveedor, Model.MaestroProveedores, "Proveedor", addValidator: true)
+                @Html.FormGroupTextBoxFor(m => m.AnticipoProveedor.Descripcion, "Descripción", addValidator: true)
+                @Html.FormGroupDropDownListFor(m => m.AnticipoProveedor.IdMoneda, Model.MaestroMonedas, "Moneda", addValidator: true)
+                @Html.FormGroupInputGroupFor(m => m.AnticipoProveedor.Cotizacion, "Cotización", icon: "$", addValidator: true)
+                @Html.FormGroupInputGroupFor(m => m.AnticipoProveedor.Importe, "Importe", icon: "$", addValidator: true)
+            </div>
+        </div>
+    }
+
+}
+
+@section Scripts {
+    <script src="/js/Views/SaldoInicioBanco/index.js?3661"></script>
+}

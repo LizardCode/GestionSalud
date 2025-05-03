@@ -1,0 +1,411 @@
+{
+  "MergeWith": "~/wwwroot/template/pdf/receta.pdf",
+  "PageSize": {
+    "Width": 300,
+    "Height": 220
+  },
+  "GlobalFont": {
+    "Name": "Helvetica",
+    "Size": 9.0
+  },
+  "GlobalColor": "Black",
+  "Margins": {
+    "Left": -15.0,
+    "Right": 0.0,
+    "Top": 78.0,
+    "Bottom": 20.0
+  },
+  "MultiPage": false,
+
+  "Elements": [
+
+    {
+      "Type": "Paragraph",
+      "Align": "Center",
+      "Position": {
+        "X": 30.0,
+        "Y": 100.0
+      },
+      "Width": 360.0,
+      "Text": [ "[@PROFESIONAL_01]" ],
+      "Font": {
+        "Name": "Helvetica",
+        "Size": 12.0
+      },
+      "LineSpacing": 2.0,
+      "SpacingBefore": 60.0
+    },
+
+    {
+      "Type": "Paragraph",
+      "Align": "Center",
+      "Position": {
+        "X": 30.0,
+        "Y": 120.0
+      },
+      "Width": 360.0,
+      "Text": [ "[@MATRICULAS_01]" ],
+      "Font": {
+        "Name": "Helvetica",
+        "Size": 10.0
+      },
+      "LineSpacing": 2.0,
+      "SpacingBefore": 60.0
+    },
+
+    {
+      "Type": "Paragraph",
+      "Align": "Center",
+      "Position": {
+        "X": 430.0,
+        "Y": 100.0
+      },
+      "Width": 360.0,
+      "Text": [ "[@PROFESIONAL_02]" ],
+      "Font": {
+        "Name": "Helvetica",
+        "Size": 12.0
+      },
+      "LineSpacing": 2.0,
+      "SpacingBefore": 60.0
+    },
+
+    {
+      "Type": "Paragraph",
+      "Align": "Center",
+      "Position": {
+        "X": 430.0,
+        "Y": 120.0
+      },
+      "Width": 360.0,
+      "Text": [ "[@MATRICULAS_02]" ],
+      "Font": {
+        "Name": "Helvetica",
+        "Size": 10.0
+      },
+      "LineSpacing": 2.0,
+      "SpacingBefore": 60.0
+    },
+
+    {
+      "Type": "Text",
+      "Align": "Left",
+      "Position": {
+        "X": 92.0,
+        "Y": 151.0
+      },
+      "Width": 50.0,
+      "Text": [ "[@PACIENTE_01]" ],
+      "Font": {
+        "Name": "Helvetica",
+        "Size": 9.0
+      },
+      "LineSpacing": 2.0,
+      "SpacingBefore": 60.0
+    },
+
+    {
+      "Type": "Paragraph",
+      "Align": "Left",
+      "Position": {
+        "X": 92.0,
+        "Y": 163.0
+      },
+      "Width": 280.0,
+      "Text": [ "[@FINANCIADOR_01]" ],
+      "Font": {
+        "Name": "Helvetica",
+        "Size": 9.0
+      },
+      "LineSpacing": 2.0,
+      "SpacingBefore": 60.0
+    },
+
+    {
+      "Type": "Text",
+      "Align": "Left",
+      "Position": {
+        "X": 355.0,
+        "Y": 151.0
+      },
+      "Width": 50.0,
+      "Text": [ "[@DOCUMENTO_01]" ],
+      "Font": {
+        "Name": "Helvetica",
+        "Size": 9.0
+      },
+      "LineSpacing": 2.0,
+      "SpacingBefore": 60.0
+    },
+
+    {
+      "Type": "Text",
+      "Align": "Left",
+      "Position": {
+        "X": 92.0,
+        "Y": 178.0
+      },
+      "Width": 50.0,
+      "Text": [ "[@NRO_AFILIADO_01]" ],
+      "Font": {
+        "Name": "Helvetica",
+        "Size": 9.0
+      },
+      "LineSpacing": 2.0,
+      "SpacingBefore": 60.0
+    },
+
+    {
+      "Type": "Text",
+      "Align": "Left",
+      "Position": {
+        "X": 355.0,
+        "Y": 196.0
+      },
+      "Width": 50.0,
+      "Text": [ "[@FECHA_01]" ],
+      "Font": {
+        "Name": "Helvetica",
+        "Size": 9.0
+      },
+      "LineSpacing": 2.0,
+      "SpacingBefore": 60.0
+    },
+
+    {
+      "Type": "Text",
+      "Align": "Left",
+      "Position": {
+        "X": 492.0,
+        "Y": 151.0
+      },
+      "Width": 50.0,
+      "Text": [ "[@PACIENTE_02]" ],
+      "Font": {
+        "Name": "Helvetica",
+        "Size": 9.0
+      },
+      "LineSpacing": 2.0,
+      "SpacingBefore": 60.0
+    },
+
+    {
+      "Type": "Paragraph",
+      "Align": "Left",
+      "Position": {
+        "X": 492.0,
+        "Y": 163.0
+      },
+      "Width": 280.0,
+      "Text": [ "[@FINANCIADOR_02]" ],
+      "Font": {
+        "Name": "Helvetica",
+        "Size": 9.0
+      },
+      "LineSpacing": 2.0,
+      "SpacingBefore": 60.0
+    },
+
+    {
+      "Type": "Text",
+      "Align": "Left",
+      "Position": {
+        "X": 755.0,
+        "Y": 151.0
+      },
+      "Width": 50.0,
+      "Text": [ "[@DOCUMENTO_02]" ],
+      "Font": {
+        "Name": "Helvetica",
+        "Size": 9.0
+      },
+      "LineSpacing": 2.0,
+      "SpacingBefore": 60.0
+    },
+
+    {
+      "Type": "Text",
+      "Align": "Left",
+      "Position": {
+        "X": 492.0,
+        "Y": 178.0
+      },
+      "Width": 50.0,
+      "Text": [ "[@NRO_AFILIADO_02]" ],
+      "Font": {
+        "Name": "Helvetica",
+        "Size": 9.0
+      },
+      "LineSpacing": 2.0,
+      "SpacingBefore": 60.0
+    },
+
+    {
+      "Type": "Text",
+      "Align": "Left",
+      "Position": {
+        "X": 755.0,
+        "Y": 196.0
+      },
+      "Width": 50.0,
+      "Text": [ "[@FECHA_02]" ],
+      "Font": {
+        "Name": "Helvetica",
+        "Size": 9.0
+      },
+      "LineSpacing": 2.0,
+      "SpacingBefore": 60.0
+    },
+
+    {
+      "Type": "Paragraph",
+      "Align": "Left",
+      "Position": {
+        "X": 30.0,
+        "Y": 232.0
+      },
+      "Width": 360.0,
+      "Text": [ "[@DESCRIPCION]" ],
+      "Font": {
+        "Name": "Helvetica",
+        "Size": 9.0
+      },
+      "LineSpacing": 2.0,
+      "SpacingBefore": 60.0
+    },
+
+    {
+      "Type": "Paragraph",
+      "Align": "Left",
+      "Position": {
+        "X": 430.0,
+        "Y": 222.0
+      },
+      "Width": 360.0,
+      "Text": [ "[@INDICACIONES]" ],
+      "Font": {
+        "Name": "Helvetica",
+        "Size": 9.0
+      },
+      "LineSpacing": 2.0,
+      "SpacingBefore": 60.0
+    },
+
+    {
+      "Type": "Paragraph",
+      "Align": "Left",
+      "Position": {
+        "X": 30.0,
+        "Y": 295.0
+      },
+      "Width": 360.0,
+      "Text": [ "[@DIAGNOSTICO]" ],
+      "Font": {
+        "Name": "Helvetica",
+        "Size": 9.0
+      },
+      "LineSpacing": 2.0,
+      "SpacingBefore": 60.0
+    },
+
+    {
+      "Type": "Paragraph",
+      "Width": 250.0,
+      "Align": "Left",
+      "Position": {
+        "X": 30.0,
+        "Y": 498.0
+      },
+      "Text": [ "[@EMPRESA_DIRECCION_01]" ],
+      "Font": {
+        "Name": "Helvetica",
+        "Size": 8.0
+      },
+      "LineSpacing": 2.0,
+      "SpacingBefore": 60.0
+    },
+
+    {
+      "Type": "Text",
+      "Align": "Left",
+      "Position": {
+        "X": 30,
+        "Y": 510.0
+      },
+      "Text": [ "[@EMPRESA_CP_01]" ],
+      "Font": {
+        "Name": "Helvetica",
+        "Size": 8.0
+      },
+      "LineSpacing": 2.0,
+      "SpacingBefore": 60.0
+    },
+
+    {
+      "Type": "Text",
+      "Align": "Left",
+      "Position": {
+        "X": 30.0,
+        "Y": 520.0
+      },
+      "Width": 50.0,
+      "Text": [ "[@CONTACTO_01]" ],
+      "Font": {
+        "Name": "Helvetica",
+        "Size": 8.0
+      },
+      "LineSpacing": 2.0,
+      "SpacingBefore": 60.0
+    },
+
+    {
+      "Type": "Paragraph",
+      "Width": 250.0,
+      "Align": "Left",
+      "Position": {
+        "X": 430.0,
+        "Y": 498.0
+      },
+      "Text": [ "[@EMPRESA_DIRECCION_02]" ],
+      "Font": {
+        "Name": "Helvetica",
+        "Size": 8.0
+      },
+      "LineSpacing": 2.0,
+      "SpacingBefore": 60.0
+    },
+
+    {
+      "Type": "Text",
+      "Align": "Left",
+      "Position": {
+        "X": 430,
+        "Y": 510.0
+      },
+      "Text": [ "[@EMPRESA_CP_02]" ],
+      "Font": {
+        "Name": "Helvetica",
+        "Size": 8.0
+      },
+      "LineSpacing": 2.0,
+      "SpacingBefore": 60.0
+    },
+
+    {
+      "Type": "Text",
+      "Align": "Left",
+      "Position": {
+        "X": 430.0,
+        "Y": 520.0
+      },
+      "Width": 50.0,
+      "Text": [ "[@CONTACTO_02]" ],
+      "Font": {
+        "Name": "Helvetica",
+        "Size": 8.0
+      },
+      "LineSpacing": 2.0,
+      "SpacingBefore": 60.0
+    }
+  ]
+}

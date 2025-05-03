@@ -1,0 +1,63 @@
+﻿.pac-container {
+    z-index: 10002;
+}
+
+.table-controls {
+    padding: 0;
+    margin-bottom: 0;
+}
+
+.table-controls li {
+    list-style: none;
+    display: inline;
+}
+
+.table-controls li i {
+    cursor: pointer;
+    margin: 0;
+    vertical-align: middle;
+    cursor: pointer;
+    color: #515365;
+    width: 28px;
+    height: 28px;
+}
+
+.table-hover:not(.table-dark) tbody tr:hover .table-controls li i {
+    color: #191e3a;
+}
+
+.table-hover:not(.table-dark) tbody tr:hover td:first-child {
+    color: #4361ee !important;
+}
+
+.crt, .csr {
+    font-size: 1.9em;
+}
+
+.red {
+    color: red;
+}
+
+.green {
+    color: forestgreen;
+}
+
+.yellow {
+    color: rgb(229, 227, 119);
+}
+
+.imgRecetaLogo-delete-icon {
+    background-color: #df3535;
+    border: 0px solid;
+    color: #fff;
+    cursor: pointer;
+    height: 20px;
+    line-height: 20px;
+    position: absolute;
+    font-size: 10px;
+    /* top: -9.5px; */
+    text-align: center;
+    width: 20px;
+    border-radius: 50%;
+    /* right: 20%; */
+}

@@ -1,0 +1,53 @@
+﻿@model LizardCode.SalmaSalud.Application.Models.Monedas.MonedasViewModel
+@{
+    Layout = "~/Views/Shared/MaestroLayout.cshtml";
+
+    ViewBag.MainClass = "ABMMonedasView";
+
+    ViewBag.Title = "Mantenimiento de Monedas";
+    ViewBag.TitleNew = "Nuevo Moneda...";
+    ViewBag.TitleEdit = "Modificar Moneda...";
+    ViewBag.TitleRemove = "Eliminar Moneda...";
+    ViewBag.ItemMenu = "Monedas";
+
+    ViewBag.ButtonNew = true;
+    ViewBag.ButtonEdit = true;
+    ViewBag.ButtonRemove = true;
+
+    ViewBag.AjaxGetAll = Url.Action("ObtenerTodos", "Monedas");
+    ViewBag.AjaxGet = Url.Action("Obtener", "Monedas");
+    ViewBag.AjaxAdd = Url.Action("Nuevo", "Monedas");
+    ViewBag.AjaxUpdate = Url.Action("Modificar", "Monedas");
+    ViewBag.AjaxDelete = Url.Action("Eliminar", "Monedas");
+
+    ViewBag.Tabs = new string[] { "General" };
+}
+
+@section Styles {
+    <link href="/css/Views/Monedas/index.css?3661" rel="stylesheet" />
+}
+
+@section GridColumns {
+
+    <th>ID</th>
+    <th>Descripción</th>
+    <th>Símbolo</th>
+    <th>Código</th>
+
+}
+
+@section CrudForm {
+
+    @Html.FormGroupTextBoxFor(m => m.IdMoneda, title: "ID", editingDisabled: true, newVisible: false)
+
+    @Html.FormGroupTextBoxFor(m => m.Descripcion, title: "Descripción", addValidator: true)
+
+    @Html.FormGroupTextBoxFor(m => m.Simbolo, title: "Símbolo", addValidator: true)
+
+    @Html.FormGroupTextBoxFor(m => m.Codigo, title: "Código AFIP", addValidator: false)
+
+}
+
+@section Scripts {
+    <script src="/js/Views/Monedas/index.js?3661"></script>
+}

@@ -1,0 +1,54 @@
+﻿@model LizardCode.SalmaSalud.Application.Models.Feriados.FeriadoViewModel
+@{
+    Layout = "~/Views/Shared/MaestroLayout.cshtml";
+
+    ViewBag.MainClass = "ABMFeriadosView";
+
+    ViewBag.Title = "Mantenimiento de Feriados";
+    ViewBag.TitleNew = "Nuevo Feriado...";
+    ViewBag.TitleEdit = "Modificar Feriado...";
+    ViewBag.TitleRemove = "Eliminar Feriado...";
+    ViewBag.ItemMenu = "Feriados";
+
+    ViewBag.ButtonNew = true;
+    ViewBag.ButtonEdit = true;
+    ViewBag.ButtonRemove = true;
+
+    ViewBag.AjaxGetAll = Url.Action("ObtenerTodos", "Feriados");
+    ViewBag.AjaxGet = Url.Action("Obtener", "Feriados");
+    ViewBag.AjaxAdd = Url.Action("Nuevo", "Feriados");
+    ViewBag.AjaxUpdate = Url.Action("Modificar", "Feriados");
+    ViewBag.AjaxDelete = Url.Action("Eliminar", "Feriados");
+
+    ViewBag.Tabs = new string[] { "General" };
+}
+
+@section Styles {
+    <link href="/css/Views/Feriados/index.css?3661" rel="stylesheet" />
+}
+
+@section GridColumns {
+
+    <th>Fecha</th>
+    <th>Tipo</th>
+    <th>Nombre</th>
+
+}
+
+@section CrudForm {
+
+    @Html.FormGroupTextBoxFor(m => m.IdFeriado, title: "ID", editingDisabled: true, newVisible: false)
+
+    @Html.FormGroupDropDownListFor(m => m.IdTipoFeriado, Model.MaestroTiposFeriado, "Tipo", fieldCss: "select2-field financiador", addValidator: true)
+
+    @Html.FormGroupPickerDateFor(m => m.Fecha, title: "Fecha", colSize: "col-md-4", addValidator: true, format: "{0:dd/MM/yyyy}")
+
+    @Html.FormGroupTextBoxFor(m => m.Nombre, title: "Nombre", addValidator: true, autocomplete: false, colSize: "col-md-8")
+
+    @Html.FormGroupTextAreaFor(m => m.Descripcion, title: "Descripción")
+
+}
+
+@section Scripts {
+    <script src="/js/Views/Feriados/index.js?3661"></script>
+}

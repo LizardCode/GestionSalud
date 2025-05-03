@@ -1,0 +1,52 @@
+﻿@model LizardCode.SalmaSalud.Application.Models.Consultorios.ConsultorioViewModel
+@{
+    Layout = "~/Views/Shared/MaestroLayout.cshtml";
+
+    ViewBag.MainClass = "ABMConsultoriosView";
+
+    ViewBag.Title = "Mantenimiento de Consultorios";
+    ViewBag.TitleNew = "Nuevo Consultorio...";
+    ViewBag.TitleEdit = "Modificar Consultorio...";
+    ViewBag.TitleRemove = "Eliminar Consultorio...";
+    ViewBag.ItemMenu = "Consultorios";
+
+    ViewBag.ButtonNew = true;
+    ViewBag.ButtonEdit = true;
+    ViewBag.ButtonRemove = true;
+
+    ViewBag.AjaxGetAll = Url.Action("ObtenerTodos", "Consultorios");
+    ViewBag.AjaxGet = Url.Action("Obtener", "Consultorios");
+    ViewBag.AjaxAdd = Url.Action("Nuevo", "Consultorios");
+    ViewBag.AjaxUpdate = Url.Action("Modificar", "Consultorios");
+    ViewBag.AjaxDelete = Url.Action("Eliminar", "Consultorios");
+
+    ViewBag.Tabs = new string[] { "General" };
+}
+
+@section Styles {
+    <link href="/css/Views/Consultorios/index.css?3661" rel="stylesheet" />
+}
+
+@section GridColumns {
+
+    <th>Consultorio</th>
+    <th>Edificio</th>
+    <th>Piso</th>
+
+}
+
+@section CrudForm {
+
+    @Html.FormGroupTextBoxFor(m => m.IdConsultorio, title: "ID", editingDisabled: true, newVisible: false)
+
+    @Html.FormGroupTextBoxFor(m => m.Descripcion, title: "Descripción", addValidator: true, autocomplete: false, colSize: "col-md-4")
+    
+    @Html.FormGroupTextBoxFor(m => m.Edificio, title: "Edificio", addValidator: true, autocomplete: false, colSize: "col-md-4")
+
+    @Html.FormGroupTextBoxFor(m => m.Piso, title: "Piso", addValidator: true, autocomplete: false, colSize: "col-md-4")
+
+}
+
+@section Scripts {
+    <script src="/js/Views/Consultorios/index.js?3661"></script>
+}

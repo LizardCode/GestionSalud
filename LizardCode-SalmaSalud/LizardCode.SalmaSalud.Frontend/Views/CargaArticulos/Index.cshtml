@@ -1,0 +1,205 @@
+﻿@using LizardCode.Framework.Application.Models.MasterDetail
+
+@model LizardCode.SalmaSalud.Application.Models.CargaArticulos.CargaArticulosViewModel
+@{
+    Layout = "~/Views/Shared/MaestroLayout.cshtml";
+
+    ViewBag.MainClass = "ABMCargaArticulosView";
+
+    ViewBag.Title = "Carga Manual de Articulos de Compras";
+    ViewBag.TitleNew = "Nuevo Comprobante de Compra...";
+    ViewBag.TitleEdit = "Modificar Comprobante de Compra...";
+    ViewBag.TitleRemove = "Eliminar Comprobante de Compra...";
+    ViewBag.ItemMenu = "Comprobantes";
+
+    ViewBag.ButtonNew = true;
+    ViewBag.ButtonEdit = false;
+    ViewBag.ButtonRemove = true;
+
+    ViewBag.AjaxGetAll = Url.Action("ObtenerTodos", "CargaArticulos");
+    ViewBag.AjaxGet = Url.Action("Obtener", "CargaArticulos");
+    ViewBag.AjaxAdd = Url.Action("Nuevo", "CargaArticulos");
+    ViewBag.AjaxDelete = Url.Action("Eliminar", "CargaArticulos");
+
+    ViewBag.Tabs = new string[] { "General" };
+}
+
+@section Styles {
+    <link href="/css/Views/CargaArticulos/index.css?3661" rel="stylesheet" />
+}
+
+@section Filters {
+    <div class="col">
+
+        <div class="row">
+            @Html.FilterDropDownListFor(m => m.IdEjercicio, Model.MaestroEjercicios, "Ejercicio", colSize: "col-md-4")
+            @Html.FilterDropDownListFor(m => m.IdProveedor, Model.MaestroProveedores, "Proveedor", colSize: "col-md-4")
+            @Html.FilterDropDownListFor(m => m.IdCentroCosto, Model.MaestroCentroCostos, "Centro de Costos", colSize: "col-md-4")
+        </div>
+
+        <div class="row">
+            @Html.FilterPickerDateFor(m => m.FechaDesde, "Fecha Desde", value: string.Empty, colSize: "col-md-2")
+            @Html.FilterPickerDateFor(m => m.FechaHasta, "Fecha Hasta", value: string.Empty, colSize: "col-md-2")
+        </div>
+    
+    </div>
+}
+
+@section GridColumns {
+
+    <th>ID</th>
+    <th>Comprobante</th>
+    <th>Sucursal</th>
+    <th>Nro</th>
+    <th>Número</th>
+    <th>Fecha</th>
+    <th>Proveedor</th>
+    <th>Moneda</th>
+    <th>Sub-Total</th>
+    <th>Total</th>
+    <th>Estado</th>
+    <th>CAE</th>
+    <th>Vto</th>
+    <th></th>
+}
+
+@section CrudForm {
+
+    <div class="col">
+        <div class="row">
+            <div class="col">
+                <h4>Datos del Comprobante</h4>
+            </div>
+        </div>
+        <div class="row">
+            @Html.HiddenFor(m => m.IdComprobanteCompra)
+            @Html.FormGroupDropDownListFor(m => m.IdEjercicio, Model.MaestroEjercicios, "Ejercicio", colSize: "col-md-4", addValidator:true)
+            @Html.FormGroupPickerDateFor(m => m.FechaReal, title: "Fecha Real", colSize: "col-md-2", addValidator: true, editingDisabled: false)
+            @Html.FormGroupPickerDateFor(m => m.Fecha, title: "Fecha Contable", colSize: "col-md-2", addValidator: true, editingDisabled: false)
+            @Html.FormGroupDropDownListFor(m => m.IdCondicion, Model.MaestroCondicion, "Condición de Compra", colSize: "col-md-3", addValidator:false)
+            @Html.FormGroupPickerDateFor(m => m.Vto, title: "Vencimiento", colSize: "col-md-2", editingDisabled: false, addValidator: false)            
+            @Html.FormGroupDropDownListFor(m => m.IdMonedaComprobante, Model.MaestroMonedas, "Moneda Comprobante", colSize: "col-md-2", addValidator:true, editingDisabled: true)
+            @Html.HiddenFor(m => m.Moneda)
+            @Html.FormGroupInputGroupFor(m => m.Cotizacion, "Cotización", icon: "$", addValidator: true, colSize: "col-md-2", editingDisabled: true)
+        </div>
+
+        <div class="row">
+            @Html.FormGroupDropDownListFor(m => m.IdProveedor, Model.MaestroProveedores, "Proveedor", colSize: "col-md-3", addValidator:true, editingDisabled: true)
+            @Html.FormGroupDropDownListFor(m => m.IdCentroCosto, Model.MaestroCentroCostos, "Centro de Costos", colSize: "col-md-3")
+            @Html.FormGroupDropDownListFor(m => m.IdComprobante, Model.MaestroComprobantes, "Tipo de Comprobante", colSize: "col-md-2", addValidator:true, editingDisabled: true)
+            @Html.FormGroupTextBoxFor(m => m.NumeroComprobante, title: "N° Comprobante", addValidator: true, colSize: "col-md-2", editingDisabled: true, placeholder: "00000-00000000")
+        </div>
+        <div class="row">
+            @Html.FormGroupTextBoxFor(m => m.CAE, title: "C.A.E.", addValidator: true, colSize: "col-md-2", editingDisabled: false)
+            @Html.FormGroupPickerDateFor(m => m.VenciminetoCAE, title: "Vencimineto C.A.E.", colSize: "col-md-2", addValidator: true, editingDisabled: false)
+        </div>
+        
+        <hr />
+
+        <div class="row">
+            <div class="col">
+                <h4>Items del Comprobante</h4>
+            </div>
+        </div>
+            
+        <div class="row">
+            <div class="col dvItems">
+                @await Component.InvokeAsync("MasterDetail", new MasterDetailViewModel().SetItems(
+                    Model.Items,
+                    "Items",
+                    x => new(nameof(x.IdArticulo), Model.MaestroArticulos, nameof(x.Articulo))
+                ))
+            </div>
+        </div>
+
+        <div class="inv--total-amounts">
+            <div class="row mt-4">
+                <div class="col-sm-5 col-12 order-sm-0 order-1">
+                    <div class="row">
+                        <div class="col">
+                            <h5>Percepciones</h5>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col dvPercepciones">
+                            @await Component.InvokeAsync("MasterDetail", new MasterDetailViewModel().SetItems(
+                                Model.ListaPercepciones,
+                                "ListaPercepciones",
+                                x => new(nameof(x.IdCuentaContable), Model.MaestroCuentasPercepciones, nameof(x.CuentaContable))
+                            ))
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-7 col-12 order-sm-1 order-0">
+                    <div class="text-sm-right">
+                        <div class="row">
+                            <div class="col-sm-8 col-7">
+                                <p class="">Sub Total: </p>
+                            </div>
+                            <div class="col-sm-4 col-5">
+                                <p class="subtotal">$ 0</p>
+                            </div>
+                            @foreach (var alicuota in Model.MaestroAlicuotas)
+                            {
+                                <div class="impuestos col-sm-8 col-7 hide">
+                                    <p class="text_iva_@alicuota.Value">I.V.A. @alicuota.Text%: </p>
+                                </div>
+                                <div class="impuestos col-sm-4 col-5 hide">
+                                    <p class="iva_@alicuota.Value">$ 0</p>
+                                </div>
+                            }
+                            <div class="col-sm-8 col-7">
+                                <p class="">Percepciones: </p>
+                            </div>
+                            <div class="col-sm-4 col-5">
+                                <p class="percepciones">$ 0</p>
+                            </div>
+                            <div class="col-sm-8 col-7 grand-total-title">
+                                <h4 class="">Total : </h4>
+                            </div>
+                            <div class="col-sm-4 col-5 grand-total-amount">
+                                <h4 class="total">$ 0</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+
+@section CustomModals {
+
+    @using (Html.BeginModal("Item Comprobante...", (string)ViewBag.MainClass, "modalMasterDetailItems"))
+    {
+        <div class="row">
+            @Html.FormGroupDropDownListFor(m => m.Detalle.IdArticulo, Model.MaestroArticulos, "Articulo", addValidator: true)
+        </div>
+
+        <div class="row">
+            @Html.FormGroupTextAreaFor(m => m.Detalle.Descripcion, "Descripción", addValidator: true, rows: 5)
+        </div>
+        <div class="row">
+            @Html.FormGroupInputGroupFor(m => m.Detalle.PrecioUnitario, "Precio", icon: "$", addValidator: true, colSize: "col-md-6")
+            @Html.FormGroupInputGroupFor(m => m.Detalle.Cantidad, "Cantidad", icon: "#", addValidator: true, colSize: "col-md-6")
+        </div>
+        <div class="row">
+            @Html.FormGroupDropDownListFor(m => m.Detalle.IdAlicuota, Model.MaestroAlicuotas , "Alicuota", addValidator: true, colSize: "col-md-6")
+            @Html.FormGroupInputGroupFor(m => m.Detalle.Importe, "Importe", icon: "$", addValidator: true, colSize: "col-md-6")
+        </div>
+    }
+
+    @using (Html.BeginModal("Item Percepcion...", (string)ViewBag.MainClass, "modalMasterDetailPercep"))
+    {
+        <div class="row">
+            @Html.FormGroupDropDownListFor(m => m.Percepcion.IdCuentaContable, Model.MaestroCuentasPercepciones, "Cuenta Contable", addValidator: true)
+            @Html.FormGroupInputGroupFor(m => m.Detalle.Importe, "Importe", icon: "$", addValidator: true, colSize: "col-md-6")
+        </div>
+    }
+
+}
+
+@section Scripts {
+    <script src="/js/Views/CargaArticulos/index.js?3661"></script>
+}

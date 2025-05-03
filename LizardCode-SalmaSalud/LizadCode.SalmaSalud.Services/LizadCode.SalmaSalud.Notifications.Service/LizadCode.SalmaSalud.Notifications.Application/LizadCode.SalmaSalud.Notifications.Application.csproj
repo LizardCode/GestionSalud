@@ -1,0 +1,45 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Enums\**" />
+    <Compile Remove="Extensions\**" />
+    <EmbeddedResource Remove="Enums\**" />
+    <EmbeddedResource Remove="Extensions\**" />
+    <None Remove="Enums\**" />
+    <None Remove="Extensions\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.0.123" />
+    <PackageReference Include="Dapper-QueryBuilder" Version="1.2.9" />
+    <PackageReference Include="Dapper.Contrib" Version="2.0.78" />
+    <PackageReference Include="Mapster" Version="7.3.0" />
+    <PackageReference Include="Mapster.DependencyInjection" Version="1.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.3" />
+    <PackageReference Include="NLog" Version="5.1.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Dawa-Framework\ApiBase\Dawa.Framework.Aplication\Dawa.Framework.Application.csproj" />
+    <ProjectReference Include="..\..\..\..\Dawa-Framework\ApiBase\Dawa.Framework.Infrastructure\Dawa.Framework.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\..\..\Dawa-Framework\Dapper\Dapper.DataTables\Dapper.DataTables.csproj" />
+    <ProjectReference Include="..\..\..\..\Dawa-Framework\Helpers\Dawa.Framework.Helpers.ChatApi\Dawa.Framework.Helpers.ChatApi.csproj" />
+    <ProjectReference Include="..\..\..\..\Dawa-Framework\Helpers\Dawa.Framework.Helpers.Utilities\Dawa.Framework.Helpers.Utilities.csproj" />
+    <ProjectReference Include="..\LizadCode.SalmaSalud.Notifications.Domain\LizadCode.SalmaSalud.Notifications.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Helpers\" />
+    <Folder Include="Interfaces\Services\" />
+    <Folder Include="Model\" />
+  </ItemGroup>
+
+</Project>

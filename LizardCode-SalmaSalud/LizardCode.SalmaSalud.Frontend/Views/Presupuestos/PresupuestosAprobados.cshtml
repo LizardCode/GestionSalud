@@ -1,0 +1,74 @@
+﻿@model LizardCode.SalmaSalud.Application.Models.Presupuestos.PresupuestoAprobadoViewModel
+@{
+    Layout = null;
+
+    ViewBag.MainClass = "PresupuestosAprobadosView";
+}
+
+<div class="modal-header">
+    <h5 class="modal-title">Presupuestos APROBADOS</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true" class="fa fa-times"></span>
+    </button>
+</div>
+<div class="modal-body">
+    <input type="hidden" id="hdPresupuestosAprobadosCantidad" value="@Model.Presupuestos.Count" />
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col">
+                            <table class="table table-striped dt-view dataTable dtPresupuestosAprobados" width="100%">
+                                <thead>
+                                    <tr>
+                                        <th style="text-align:center;">
+                                            <label class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input chkSeleccionarPresupuestoAll" id="chkSeleccionarPresupuestoAll">
+                                                <span class="custom-control-label"></span>
+                                            </label>
+                                        </th>
+                                        <th>ID</th>
+                                        <th>Fecha</th>
+                                        <th>CoPagos</th>
+                                        <th>Prest.</th>
+                                        <th>Total</th>
+                                        <th style="text-align:center;"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var presupuesto in Model.Presupuestos)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <label class="custom-control custom-checkbox">
+                                                    <input type="checkbox" class="custom-control-input chkSeleccionarPresupuesto" data-id-presupuesto="@presupuesto.IdPresupuesto">
+                                                    <span class="custom-control-label"></span>
+                                                </label>
+                                            </td>
+                                            <td>@presupuesto.IdPresupuesto</td>
+                                            <td>@presupuesto.Fecha.ToString("dd/MM/yyyy")</td>
+                                            <td style="text-align:left;">@presupuesto.TotalCoPagos.ToCurrency()</td>
+                                            <td style="text-align:left;">@presupuesto.TotalPrestaciones.ToCurrency()</td>
+                                            <td style="text-align:left;">@presupuesto.Total.ToCurrency()</td>
+                                            <td style="text-align:center;">
+                                                <span class="btn badge badge-primary verDetallePresupuestos" alt="Detalle" data-id-presupuesto="@presupuesto.IdPresupuesto" ><i class="fas fa-plus"></i></span>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal-footer">
+    <button type="button" data-dismiss="modal" class="btn btn-default"><i class="fa fa-times"></i> CERRAR</button>
+    <button type="button" class="btn btn-primary btPresupuestosAprobadosSeleccionar"><i class="fa fa-check"></i> SELECCIONAR</button>
+</div>
+
+<script src="/js/Views/Presupuestos/presupuestosAprobados.js?3661"></script>

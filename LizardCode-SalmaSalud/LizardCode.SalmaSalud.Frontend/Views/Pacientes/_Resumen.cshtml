@@ -1,0 +1,65 @@
+﻿@model LizardCode.SalmaSalud.Application.Models.Pacientes.ResumenViewModel
+@{
+    Layout = null;
+}
+
+@Html.HiddenFor(m => m.IdPaciente, new { @class = "hdnResumenIdPaciente"})
+<div class="alert alert-odonto" role="alert" style="">
+    <div class="row">
+        @if (Model.ShowNombre)
+        {
+            <div class="col-md-8">
+                Paciente: <b>@string.Format("{0}", Model.Paciente)</b>
+            </div>
+        }
+        @if (!string.IsNullOrEmpty(Model.PacienteUltimaAtencion))
+        {
+            <div class="col-md-4">
+                Ult. Atención: <b>@string.Format("{0}", Model.PacienteUltimaAtencion)</b>
+            </div>
+        }
+        else
+        {
+            <div class="col-md-4">
+                Ult.Atención: <b>-</b>
+            </div>
+        }
+    </div>
+    @if (!Model.ForzarParticular &&  !string.IsNullOrEmpty(Model.Financiador))
+    {
+        <div class="row mt-2">
+            <div class="col-md-8">
+                Cobertura: <b>@string.Format("{0} - {1}. Nro. Afiliado/Socio: {2}.", Model.Financiador , Model.FinanciadorPlan, Model.NroAfiliadoSocio)</b>
+            </div>
+            @if (Model.ShowButton)
+            {
+                <div class="col-md-4 text-right">
+                    <button type="button" class="btn btn-secondary btResumenVerHistoriaClinica"><i class="fa fa-search"></i> VER HISTORIA CLÍNICA</button>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="row mt-2">
+            <div class="col-md-8">
+                Cobertura: <b>Sin Cobertura</b>
+            </div>
+            @if (Model.ShowButton)
+            {
+                <div class="col-md-4 text-right">
+                    <button type="button" class="btn btn-secondary btResumenVerHistoriaClinica"><i class="fa fa-search"></i> VER HISTORIA CLÍNICA</button>
+                </div>
+            }
+        </div>
+    }
+</div>
+<script>
+    $('.btResumenVerHistoriaClinica')
+        .on('click', function () {
+            var idPaciente = $('.hdnResumenIdPaciente').val();
+            var action = '/Pacientes/HistoriaClinicaView?id=' + idPaciente + '&showResumenPaciente=false';
+
+            Modals.loadAnyModal('historiaClinicaDialog', 'modal-95', action, function () {}, function () { });
+        });
+</script>

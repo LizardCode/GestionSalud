@@ -1,0 +1,49 @@
+﻿{
+  "MergeWith": "~/wwwroot/template/pdf/remito.pdf",
+  "GlobalFont": { "Name": "Helvetica", "Size": 9.0 },
+  "GlobalColor": "Black",
+  "Margins": { "Left": -20.0, "Right": 0.0, "Top": 125, "Bottom": 10.0 },
+  "MultiPage": false,
+
+  "Elements": [
+    {
+      "Type": "Text",
+      "Align": "Left",
+      "Position": { "X": 140.0, "Y": 46.0 },
+      "Text": [ "[@REMITO_NRO]" ],
+      "Font": { "Name": "Helvetica", "Size": 12.0 },
+      "LineSpacing": 2.0,
+      "SpacingBefore": 60.0
+    },
+    {
+      "Type": "Text",
+      "Align": "Left",
+      "Position": { "X": 132.0, "Y": 196.5 },
+      "Text": [ "[@FECHA_HORA]" ],
+      "Font": { "Name": "Helvetica", "Size": 12.0 },
+      "LineSpacing": 2.0,
+      "SpacingBefore": 60.0
+    },
+    {
+      "Type": "Text",
+      "Align": "Left",
+      "Position": {"X": 221.0,"Y": 216.5 },
+      "Width": 50.0,
+      "Text": [ "[@CLIENTE]" ],
+      "Font": { "Name": "Helvetica", "Size": 12.0 },
+      "LineSpacing": 2.0,
+      "SpacingBefore": 60.0
+    },
+    {
+      "Type": "Text",
+      "Align": "Left",
+      "Position": { "X": 160.0, "Y": 237.0 },
+      "Width": 50.0,
+      "Text": [ "[@NRO_TRAMITE]" ],
+      "Font": { "Name": "Helvetica", "Size": 12.0 },
+      "LineSpacing": 2.0,
+      "SpacingBefore": 60.0
+    }
+  ]
+}
+

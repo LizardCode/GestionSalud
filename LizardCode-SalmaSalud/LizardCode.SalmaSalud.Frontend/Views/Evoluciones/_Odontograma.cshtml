@@ -1,0 +1,141 @@
+﻿@model LizardCode.SalmaSalud.Application.Models.Evoluciones.Odontograma.OdontogramaViewModel;
+
+@{
+	Layout = null;
+
+	var clase = Model.IdEvolucion > 0 ? "ODONTOGRAMA_CONSULTA_hdnIdEvolucion" : "ODONTOGRAMA_hdnIdEvolucion";
+}
+
+@*<link href="/css/Views/Odontograma/index.css?3661" rel="stylesheet" />*@
+<link href="@Url.Content("~/css/Views/Odontograma/index.css?3661")" rel="stylesheet" type="text/css" />
+
+@Html.HiddenFor(m => m.IdEvolucion, new { @class = clase, @name = clase, @id = clase})
+<div class="container">
+<div class="@string.Format("row {0}", Model.IdEvolucion > 0 ? "dvMainOdontogramaConsulta" : "dvMainOdontograma")">
+	<div id="tr" class="col-xs-6 col-sm-6 col-md-6 col-lg-6" style="@string.Format("", Model.IdEvolucion == 0 ? 11 : 2)">
+		@for(int i = 18; i >= 11; i--)
+		{
+			var pieza = Model.Piezas.FirstOrDefault(p => p.Pieza == i);
+			<div data-pieza="@i" class="pieza diente">
+				<span style="margin-left: 45px; margin-bottom:5px; display: inline-block !important; border-radius: 10px !important;" class="label label-info">@i</span>
+				<div class="@string.Format("cuadro piezaZona piezaZona_{0}_{1} background-{2}", i, 2, pieza?.Zonas.FirstOrDefault(z => z.Zona == 2)?.TipoTrabajo)" data-pieza="@i" data-zona="2" data-tipo-trabajo="@pieza?.Zonas.FirstOrDefault(z=>z.Zona == 2)?.TipoTrabajo || 0"></div>
+				<div class="@string.Format("cuadro izquierdo piezaZona piezaZona_{0}_{1} background-{2}", i, 1, pieza?.Zonas.FirstOrDefault(z => z.Zona == 1)?.TipoTrabajo)" data-pieza="@i" data-zona="1" data-tipo-trabajo="@pieza?.Zonas.FirstOrDefault(z=>z.Zona == 1)?.TipoTrabajo || 0"></div>
+				<div class="@string.Format("cuadro debajo piezaZona piezaZona_{0}_{1} background-{2}", i, 4, pieza?.Zonas.FirstOrDefault(z => z.Zona == 4)?.TipoTrabajo)" data-pieza="@i" data-zona="4" data-tipo-trabajo="@pieza?.Zonas.FirstOrDefault(z=>z.Zona == 4)?.TipoTrabajo || 0"></div>
+				<div class="@string.Format("cuadro derecha piezaZona piezaZona_{0}_{1} background-{2}", i, 5, pieza?.Zonas.FirstOrDefault(z => z.Zona == 5)?.TipoTrabajo)" data-pieza="@i" data-zona="5" data-tipo-trabajo="@pieza?.Zonas.FirstOrDefault(z=>z.Zona == 5)?.TipoTrabajo || 0"></div>
+				<div class="@string.Format("centro piezaZona piezaZona_{0}_{1} background-{2}", i, 3, pieza?.Zonas.FirstOrDefault(z => z.Zona == 3)?.TipoTrabajo)" data-pieza="@i" data-zona="3" data-tipo-trabajo="@pieza?.Zonas.FirstOrDefault(z=>z.Zona == 3)?.TipoTrabajo || 0"></div>
+			</div>
+		}
+	</div>
+	<div id="tl" class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+		@for(int i = 21; i <= 28; i++)
+		{
+			var pieza = Model.Piezas.FirstOrDefault(p => p.Pieza == i);
+			<div data-pieza="@i" class="pieza diente">
+				<span style="margin-left: 45px; margin-bottom:5px; display: inline-block !important; border-radius: 10px !important;" class="label label-info">@i</span>
+				<div class="@string.Format("cuadro piezaZona piezaZona_{0}_{1} background-{2}", i, 2, pieza?.Zonas.FirstOrDefault(z => z.Zona == 2)?.TipoTrabajo)" data-pieza="@i" data-zona="2" data-tipo-trabajo="@pieza?.Zonas.FirstOrDefault(z=>z.Zona == 2)?.TipoTrabajo || 0"></div>
+				<div class="@string.Format("cuadro izquierdo piezaZona piezaZona_{0}_{1} background-{2}", i, 1, pieza?.Zonas.FirstOrDefault(z => z.Zona == 1)?.TipoTrabajo)" data-pieza="@i" data-zona="1" data-tipo-trabajo="@pieza?.Zonas.FirstOrDefault(z=>z.Zona == 1)?.TipoTrabajo || 0"></div>
+				<div class="@string.Format("cuadro debajo piezaZona piezaZona_{0}_{1} background-{2}", i, 4, pieza?.Zonas.FirstOrDefault(z => z.Zona == 4)?.TipoTrabajo)" data-pieza="@i" data-zona="4" data-tipo-trabajo="@pieza?.Zonas.FirstOrDefault(z=>z.Zona == 4)?.TipoTrabajo || 0"></div>
+				<div class="@string.Format("cuadro derecha piezaZona piezaZona_{0}_{1} background-{2}", i, 5, pieza?.Zonas.FirstOrDefault(z => z.Zona == 5)?.TipoTrabajo)" data-pieza="@i" data-zona="5" data-tipo-trabajo="@pieza?.Zonas.FirstOrDefault(z=>z.Zona == 5)?.TipoTrabajo || 0"></div>
+				<div class="@string.Format("centro piezaZona piezaZona_{0}_{1} background-{2}", i, 3, pieza?.Zonas.FirstOrDefault(z => z.Zona == 3)?.TipoTrabajo)" data-pieza="@i" data-zona="3" data-tipo-trabajo="@pieza?.Zonas.FirstOrDefault(z=>z.Zona == 3)?.TipoTrabajo || 0"></div>
+			</div>
+		}
+	</div>
+	<div id="tr" class="col-xs-6 col-sm-6 col-md-6 col-lg-6" style="@string.Format("", Model.IdEvolucion == 0 ? 11 : 2)">
+		@for(int i = 48; i >= 41; i--)
+		{
+			var pieza = Model.Piezas.FirstOrDefault(p => p.Pieza == i);
+			<div data-pieza="@i" class="pieza diente">
+				<span style="margin-left: 45px; margin-bottom:5px; display: inline-block !important; border-radius: 10px !important;" class="label label-info">@i</span>
+				<div class="@string.Format("cuadro piezaZona piezaZona_{0}_{1} background-{2}", i, 2, pieza?.Zonas.FirstOrDefault(z => z.Zona == 2)?.TipoTrabajo)" data-pieza="@i" data-zona="2" data-tipo-trabajo="@pieza?.Zonas.FirstOrDefault(z=>z.Zona == 2)?.TipoTrabajo || 0"></div>
+				<div class="@string.Format("cuadro izquierdo piezaZona piezaZona_{0}_{1} background-{2}", i, 1, pieza?.Zonas.FirstOrDefault(z => z.Zona == 1)?.TipoTrabajo)" data-pieza="@i" data-zona="1" data-tipo-trabajo="@pieza?.Zonas.FirstOrDefault(z=>z.Zona == 1)?.TipoTrabajo || 0"></div>
+				<div class="@string.Format("cuadro debajo piezaZona piezaZona_{0}_{1} background-{2}", i, 4, pieza?.Zonas.FirstOrDefault(z => z.Zona == 4)?.TipoTrabajo)" data-pieza="@i" data-zona="4" data-tipo-trabajo="@pieza?.Zonas.FirstOrDefault(z=>z.Zona == 4)?.TipoTrabajo || 0"></div>
+				<div class="@string.Format("cuadro derecha piezaZona piezaZona_{0}_{1} background-{2}", i, 5, pieza?.Zonas.FirstOrDefault(z => z.Zona == 5)?.TipoTrabajo)" data-pieza="@i" data-zona="5" data-tipo-trabajo="@pieza?.Zonas.FirstOrDefault(z=>z.Zona == 5)?.TipoTrabajo || 0"></div>
+				<div class="@string.Format("centro piezaZona piezaZona_{0}_{1} background-{2}", i, 3, pieza?.Zonas.FirstOrDefault(z => z.Zona == 3)?.TipoTrabajo)" data-pieza="@i" data-zona="3" data-tipo-trabajo="@pieza?.Zonas.FirstOrDefault(z=>z.Zona == 3)?.TipoTrabajo || 0"></div>
+			</div>
+		}
+	</div>
+	<div id="tl" class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+		@for(int i = 31; i <=38; i++)
+		{
+			var pieza = Model.Piezas.FirstOrDefault(p => p.Pieza == i);
+			<div data-pieza="@i" class="pieza diente">
+				<span style="margin-left: 45px; margin-bottom:5px; display: inline-block !important; border-radius: 10px !important;" class="label label-info">@i</span>
+				<div class="@string.Format("cuadro piezaZona piezaZona_{0}_{1} background-{2}", i, 2, pieza?.Zonas.FirstOrDefault(z => z.Zona == 2)?.TipoTrabajo)" data-pieza="@i" data-zona="2" data-tipo-trabajo="@pieza?.Zonas.FirstOrDefault(z=>z.Zona == 2)?.TipoTrabajo || 0"></div>
+				<div class="@string.Format("cuadro izquierdo piezaZona piezaZona_{0}_{1} background-{2}", i, 1, pieza?.Zonas.FirstOrDefault(z => z.Zona == 1)?.TipoTrabajo)" data-pieza="@i" data-zona="1" data-tipo-trabajo="@pieza?.Zonas.FirstOrDefault(z=>z.Zona == 1)?.TipoTrabajo || 0"></div>
+				<div class="@string.Format("cuadro debajo piezaZona piezaZona_{0}_{1} background-{2}", i, 4, pieza?.Zonas.FirstOrDefault(z => z.Zona == 4)?.TipoTrabajo)" data-pieza="@i" data-zona="4" data-tipo-trabajo="@pieza?.Zonas.FirstOrDefault(z=>z.Zona == 4)?.TipoTrabajo || 0"></div>
+				<div class="@string.Format("cuadro derecha piezaZona piezaZona_{0}_{1} background-{2}", i, 5, pieza?.Zonas.FirstOrDefault(z => z.Zona == 5)?.TipoTrabajo)" data-pieza="@i" data-zona="5" data-tipo-trabajo="@pieza?.Zonas.FirstOrDefault(z=>z.Zona == 5)?.TipoTrabajo || 0"></div>
+				<div class="@string.Format("centro piezaZona piezaZona_{0}_{1} background-{2}", i, 3, pieza?.Zonas.FirstOrDefault(z => z.Zona == 3)?.TipoTrabajo)" data-pieza="@i" data-zona="3" data-tipo-trabajo="@pieza?.Zonas.FirstOrDefault(z=>z.Zona == 3)?.TipoTrabajo || 0"></div>
+			</div>
+		}
+	</div>
+	</div>
+	<div class="row">
+	<div id="tlr" class="col-xs-6 col-sm-6 col-md-6 col-lg-6"> 
+		@for(int i = 55; i >= 51; i--)
+		{
+			var pieza = Model.Piezas.FirstOrDefault(p => p.Pieza == i);
+			<div data-pieza="@i" class="pieza diente-leche">
+				<span style="margin-left: 45px; margin-bottom:5px; display: inline-block !important; border-radius: 10px !important;" class="label label-primary">@i</span>
+				<div class="@string.Format("cuadro-leche top-leche piezaZona piezaZona_{0}_{1} background-{2}", i, 2, pieza?.Zonas.FirstOrDefault(z => z.Zona == 2)?.TipoTrabajo)" data-pieza="@i" data-zona="2" data-tipo-trabajo="@pieza?.Zonas.FirstOrDefault(z=>z.Zona == 2)?.TipoTrabajo || 0"></div>
+				<div class="@string.Format("cuadro-leche izquierdo-leche piezaZona piezaZona_{0}_{1} background-{2}", i, 1, pieza?.Zonas.FirstOrDefault(z => z.Zona == 1)?.TipoTrabajo)" data-pieza="@i" data-zona="1" data-tipo-trabajo="@pieza?.Zonas.FirstOrDefault(z=>z.Zona == 1)?.TipoTrabajo || 0"></div>
+				<div class="@string.Format("cuadro-leche debajo-leche piezaZona piezaZona_{0}_{1} background-{2}", i, 4, pieza?.Zonas.FirstOrDefault(z => z.Zona == 4)?.TipoTrabajo)" data-pieza="@i" data-zona="4" data-tipo-trabajo="@pieza?.Zonas.FirstOrDefault(z=>z.Zona == 4)?.TipoTrabajo || 0"></div>
+				<div class="@string.Format("cuadro-leche derecha-leche piezaZona piezaZona_{0}_{1} background-{2}", i, 5, pieza?.Zonas.FirstOrDefault(z => z.Zona == 5)?.TipoTrabajo)" data-pieza="@i" data-zona="5" data-tipo-trabajo="@pieza?.Zonas.FirstOrDefault(z=>z.Zona == 5)?.TipoTrabajo || 0"></div>
+				<div class="@string.Format("centro-leche piezaZona piezaZona_{0}_{1} background-{2}", i, 3, pieza?.Zonas.FirstOrDefault(z => z.Zona == 3)?.TipoTrabajo)" data-pieza="@i" data-zona="3" data-tipo-trabajo="@pieza?.Zonas.FirstOrDefault(z=>z.Zona == 3)?.TipoTrabajo || 0"></div>
+			</div>
+		}
+	</div>	
+	<div id="tll" class="col-xs-4 col-sm-4 col-md-4 col-lg-4" style="@string.Format("", Model.IdEvolucion == 0 ? 3 : 7)">
+		@for (int i = 61; i <= 65; i++)
+		{
+			var pieza = Model.Piezas.FirstOrDefault(p => p.Pieza == i);
+			<div data-pieza="@i" class="pieza diente-leche">
+				<span style="margin-left: 45px; margin-bottom:5px; display: inline-block !important; border-radius: 10px !important;" class="label label-primary">@i</span>
+				<div class="@string.Format("cuadro-leche top-leche piezaZona piezaZona_{0}_{1} background-{2}", i, 2, pieza?.Zonas.FirstOrDefault(z => z.Zona == 2)?.TipoTrabajo)" data-pieza="@i" data-zona="2" data-tipo-trabajo="@pieza?.Zonas.FirstOrDefault(z=>z.Zona == 2)?.TipoTrabajo || 0"></div>
+				<div class="@string.Format("cuadro-leche izquierdo-leche piezaZona piezaZona_{0}_{1} background-{2}", i, 1, pieza?.Zonas.FirstOrDefault(z => z.Zona == 1)?.TipoTrabajo)" data-pieza="@i" data-zona="1" data-tipo-trabajo="@pieza?.Zonas.FirstOrDefault(z=>z.Zona == 1)?.TipoTrabajo || 0"></div>
+				<div class="@string.Format("cuadro-leche debajo-leche piezaZona piezaZona_{0}_{1} background-{2}", i, 4, pieza?.Zonas.FirstOrDefault(z => z.Zona == 4)?.TipoTrabajo)" data-pieza="@i" data-zona="4" data-tipo-trabajo="@pieza?.Zonas.FirstOrDefault(z=>z.Zona == 4)?.TipoTrabajo || 0"></div>
+				<div class="@string.Format("cuadro-leche derecha-leche piezaZona piezaZona_{0}_{1} background-{2}", i, 5, pieza?.Zonas.FirstOrDefault(z => z.Zona == 5)?.TipoTrabajo)" data-pieza="@i" data-zona="5" data-tipo-trabajo="@pieza?.Zonas.FirstOrDefault(z=>z.Zona == 5)?.TipoTrabajo || 0"></div>
+				<div class="@string.Format("centro-leche piezaZona piezaZona_{0}_{1} background-{2}", i, 3, pieza?.Zonas.FirstOrDefault(z => z.Zona == 3)?.TipoTrabajo)" data-pieza="@i" data-zona="3" data-tipo-trabajo="@pieza?.Zonas.FirstOrDefault(z=>z.Zona == 3)?.TipoTrabajo || 0"></div>
+			</div>
+		}
+	</div>
+	<div id="tlr" class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+		@for (int i = 85; i >= 81; i--)
+		{
+			var pieza = Model.Piezas.FirstOrDefault(p => p.Pieza == i);
+			<div data-pieza="@i" class="pieza diente-leche">
+				<span style="margin-left: 45px; margin-bottom:5px; display: inline-block !important; border-radius: 10px !important;" class="label label-primary">@i</span>
+				<div class="@string.Format("cuadro-leche top-leche piezaZona piezaZona_{0}_{1} background-{2}", i, 2, pieza?.Zonas.FirstOrDefault(z => z.Zona == 2)?.TipoTrabajo)" data-pieza="@i" data-zona="2" data-tipo-trabajo="@pieza?.Zonas.FirstOrDefault(z=>z.Zona == 2)?.TipoTrabajo || 0"></div>
+				<div class="@string.Format("cuadro-leche izquierdo-leche piezaZona piezaZona_{0}_{1} background-{2}", i, 1, pieza?.Zonas.FirstOrDefault(z => z.Zona == 1)?.TipoTrabajo)" data-pieza="@i" data-zona="1" data-tipo-trabajo="@pieza?.Zonas.FirstOrDefault(z=>z.Zona == 1)?.TipoTrabajo || 0"></div>
+				<div class="@string.Format("cuadro-leche debajo-leche piezaZona piezaZona_{0}_{1} background-{2}", i, 4, pieza?.Zonas.FirstOrDefault(z => z.Zona == 4)?.TipoTrabajo)" data-pieza="@i" data-zona="4" data-tipo-trabajo="@pieza?.Zonas.FirstOrDefault(z=>z.Zona == 4)?.TipoTrabajo || 0"></div>
+				<div class="@string.Format("cuadro-leche derecha-leche piezaZona piezaZona_{0}_{1} background-{2}", i, 5, pieza?.Zonas.FirstOrDefault(z => z.Zona == 5)?.TipoTrabajo)" data-pieza="@i" data-zona="5" data-tipo-trabajo="@pieza?.Zonas.FirstOrDefault(z=>z.Zona == 5)?.TipoTrabajo || 0"></div>
+				<div class="@string.Format("centro-leche piezaZona piezaZona_{0}_{1} background-{2}", i, 3, pieza?.Zonas.FirstOrDefault(z => z.Zona == 3)?.TipoTrabajo)" data-pieza="@i" data-zona="3" data-tipo-trabajo="@pieza?.Zonas.FirstOrDefault(z=>z.Zona == 3)?.TipoTrabajo || 0"></div>
+			</div>
+		}
+	</div>
+	<div id="tll" class="col-xs-4 col-sm-4 col-md-4 col-lg-4" style="@string.Format("", Model.IdEvolucion == 0 ? 3 : 7)">
+		@for (int i = 71; i <= 75; i++)
+		{
+			var pieza = Model.Piezas.FirstOrDefault(p => p.Pieza == i);
+			<div data-pieza="@i" class="pieza diente-leche">
+				<span style="margin-left: 45px; margin-bottom:5px; display: inline-block !important; border-radius: 10px !important;" class="label label-primary">@i</span>
+				<div class="@string.Format("cuadro-leche top-leche piezaZona piezaZona_{0}_{1} background-{2}", i, 2, pieza?.Zonas.FirstOrDefault(z => z.Zona == 2)?.TipoTrabajo)" data-pieza="@i" data-zona="2" data-tipo-trabajo="@pieza?.Zonas.FirstOrDefault(z=>z.Zona == 2)?.TipoTrabajo || 0"></div>
+				<div class="@string.Format("cuadro-leche izquierdo-leche piezaZona piezaZona_{0}_{1} background-{2}", i, 1, pieza?.Zonas.FirstOrDefault(z => z.Zona == 1)?.TipoTrabajo)" data-pieza="@i" data-zona="1" data-tipo-trabajo="@pieza?.Zonas.FirstOrDefault(z=>z.Zona == 1)?.TipoTrabajo || 0"></div>
+				<div class="@string.Format("cuadro-leche debajo-leche piezaZona piezaZona_{0}_{1} background-{2}", i, 4, pieza?.Zonas.FirstOrDefault(z => z.Zona == 4)?.TipoTrabajo)" data-pieza="@i" data-zona="4" data-tipo-trabajo="@pieza?.Zonas.FirstOrDefault(z=>z.Zona == 4)?.TipoTrabajo || 0"></div>
+				<div class="@string.Format("cuadro-leche derecha-leche piezaZona piezaZona_{0}_{1} background-{2}", i, 5, pieza?.Zonas.FirstOrDefault(z => z.Zona == 5)?.TipoTrabajo)" data-pieza="@i" data-zona="5" data-tipo-trabajo="@pieza?.Zonas.FirstOrDefault(z=>z.Zona == 5)?.TipoTrabajo || 0"></div>
+				<div class="@string.Format("centro-leche piezaZona piezaZona_{0}_{1} background-{2}", i, 3, pieza?.Zonas.FirstOrDefault(z => z.Zona == 3)?.TipoTrabajo)" data-pieza="@i" data-zona="3" data-tipo-trabajo="@pieza?.Zonas.FirstOrDefault(z=>z.Zona == 3)?.TipoTrabajo || 0"></div>
+			</div>
+		}
+	</div>
+</div>
+</div>
+<script>
+	var JSON_COSO = @Html.Raw(Json.Serialize(@Model.Piezas));
+</script>
+@if (Model.IdEvolucion == 0)
+{
+	<script src="/js/Views/Odontograma/index.js?3661"></script>
+}
+else
+{
+	<script src="/js/Views/Odontograma/indexConsulta.js?3661"></script>
+}

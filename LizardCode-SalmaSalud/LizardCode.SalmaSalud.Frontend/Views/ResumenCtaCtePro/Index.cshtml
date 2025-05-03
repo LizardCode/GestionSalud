@@ -1,0 +1,157 @@
+﻿@using LizardCode.Framework.Application.Models.Repeater;
+
+@model LizardCode.SalmaSalud.Application.Models.ResumenCtaCtePro.ResumenCtaCteProViewModel
+@{
+    Layout = "~/Views/Shared/ReportLayout.cshtml";
+
+    ViewBag.MainClass = "ReportResumenCtaCteProView";
+
+    ViewBag.Title = "Resumen de Cuenta Corriente de Proveedores";
+    ViewBag.ItemMenu = "Resumen Cta. Cte.";
+
+    ViewBag.ButtonExcel = true;
+    ViewBag.ButtonPDF = true;
+    ViewBag.ButtonPrint = true;
+
+    ViewBag.AjaxGetAll = Url.Action("ObtenerTodos", "ResumenCtaCtePro");
+}
+
+@section Styles {
+    <link href="/css/Views/ResumenCtaCtePro/index.css?3661" rel="stylesheet" />
+}
+
+@section ToolbarButtons {
+	<button type="button" class="btn btn-primary btDetalleGeneralCtasPagar" title="Detalle General de Cuentas por Pagar"><i class="fa fa-badge-dollar"></i> <span>Detalle General de Cuentas por Pagar</span></button>
+}
+
+@section Filters {
+    <div class="col">
+
+        <div class="row">
+            @Html.FilterDropDownListFor(m => m.IdProveedor, Model.MaestroProveedores, "Proveedor", colSize: "col-md-4")
+			@Html.FilterDropDownListFor(m => m.SaldosEnCero, Model.MaestroSaldosEnCero, "Saldos en 0", colSize: "col-md-1")
+        </div>
+
+        <div class="row">
+            @Html.FilterPickerDateFor(m => m.FechaDesde, "Fecha Desde", colSize: "col-md-2")
+            @Html.FilterPickerDateFor(m => m.FechaHasta, "Fecha Hasta", colSize: "col-md-2")
+        </div>
+    
+    </div>
+}
+
+@section GridColumns {
+
+    <th>ID</th>
+    <th>Proveedor</th>
+    <th>Nombre de Fantasia</th>
+	<th>C.U.I.T.</th>
+	<th>Saldo Pendiente</th>
+	<th></th>
+
+}
+
+@section TemplateTables {
+
+	<div class="templateDetalleCtasPagar table-responsive" style="display:none;">
+		<div class="row table-detalle-botones">
+			<div class="col">
+				<button type="button" class="btn btn-primary btnExcelDetalleCtasCobrar" ><i class="fas fa-file-excel"></i> Excel</button>
+				<button type="button" class="btn btn-primary btnPDFDetalleCtasCobrar"><i class="fa fa-file-pdf"></i> PDF</button>
+				<button type="button" class="btn btn-primary btnPrintDetalleCtasCobrar"><i class="fa fa-print"></i> Imprimir</button>
+			</div>
+		</div>
+
+		<table class="table table-bordered mb-4" role="grid">
+			<thead>
+				<tr>
+					<th>Fecha</th>
+					<th>Tipo Comprobante</th>
+					<th>Sucursal</th>
+					<th>NroComprobante</th>
+					<th>Número</th>
+					<th>Saldo</th>
+				</tr>
+			</thead>
+			<tbody>
+		
+			</tbody>
+		</table>
+	</div>
+
+	<div class="templateDetalleCtasCte table-responsive" style="display:none;">
+		<div class="row table-detalle-botones">
+			<div class="col">
+				<button type="button" class="btn btn-primary btnExcelDetalleCtasCobrar" ><i class="fas fa-file-excel"></i> Excel</button>
+				<button type="button" class="btn btn-primary btnPDFDetalleCtasCobrar"><i class="fa fa-file-pdf"></i> PDF</button>
+				<button type="button" class="btn btn-primary btnPrintDetalleCtasCobrar"><i class="fa fa-print"></i> Imprimir</button>
+			</div>
+		</div>
+		<table class="table table-bordered mb-4">
+			<thead>
+				<tr>
+					<th>IdDocumento</th>
+					<th>Fecha</th>
+					<th>Tipo Comprobante</th>
+					<th>Sucursal</th>
+					<th>NroComprobante</th>
+					<th>Número</th>
+					<th>Debe</th>
+					<th>Haber</th>
+					<th>Saldo</th>
+					<th>PDF</th>
+				</tr>
+			</thead>
+			<tbody>
+		
+			</tbody>
+		</table>
+	</div>
+
+}
+
+@section CustomModals {
+
+	<div class="modal fade modalDetalleGeneralCtasPagar" role="dialog" aria-hidden="true">
+		<div class="modal-dialog bounceInRight animated">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Detalle General de Cuentas por Pagar...</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true" class="zmdi zmdi-close"></span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<button type="button" class="btn btn-primary btExcelDetalleGeneralCtasPagar" title="Excel"><i class="fa fa-file-excel"></i> <span>Excel</span></button>
+					<div class="table-responsive">
+						<table class="table table-bordered mb-4 tableDetalleGeneralCtasPagar">
+							<thead>
+								<tr>
+									<th>Proveedor</th>
+									<th>C.U.I.T.</th>
+									<th>Fecha</th>
+									<th>Vto.</th>
+									<th>Tipo Comprobante</th>
+									<th>Sucursal</th>
+									<th>NroComprobante</th>
+									<th>Número</th>
+									<th>Saldo</th>
+								</tr>
+							</thead>
+							<tbody>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" data-dismiss="modal" class="btn btn-default"><i class="fa fa-times"></i> Cerrar</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+}
+
+@section Scripts {
+    <script src="/js/Views/ResumenCtaCtePro/index.js?3661"></script>
+}

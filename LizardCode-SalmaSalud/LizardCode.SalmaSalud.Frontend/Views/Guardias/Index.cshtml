@@ -1,0 +1,82 @@
+﻿@model LizardCode.SalmaSalud.Application.Models.Guardias.GuardiasViewModel
+
+@{
+    Layout = "~/Views/Shared/MaestroLayout.cshtml";
+
+    ViewBag.MainClass = "ABMGuardiasView";
+
+    ViewBag.Title = "Mantenimiento de Registros de Guardias";
+    ViewBag.TitleNew = "Nuevo registro de Guardia...";
+    ViewBag.TitleEdit = "Modificar registro de Guardia...";
+    ViewBag.TitleRemove = "Eliminar registro de Guardia...";
+    ViewBag.ItemMenu = "Registros de Guardias";
+
+    ViewBag.ButtonNew = true;
+    ViewBag.ButtonEdit = false;
+    ViewBag.ButtonRemove = true;
+
+    ViewBag.AjaxGetAll = Url.Action("ObtenerTodos", "Guardias");
+    ViewBag.AjaxGet = Url.Action("Obtener", "Guardias");
+    ViewBag.AjaxAdd = Url.Action("Nuevo", "Guardias");
+    ViewBag.AjaxUpdate = Url.Action("Modificar", "Guardias");
+    ViewBag.AjaxDelete = Url.Action("Eliminar", "Guardias");
+
+    ViewBag.Tabs = new string[] { "Registro de Guardia" };
+}
+
+@section Styles {
+    <link href="/css/Views/Guardias/index.css?3661" rel="stylesheet" />
+    <style>
+        .row-flex {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .stick-to-bottom {
+            position: absolute;
+            bottom: -3rem;
+        }
+    </style>
+}
+
+@section Filters {
+    
+    @Html.FilterPickerDateFor(m => m.FechaFiltroDesde, "Fecha Desde", value: Model.FechaFiltroDesde.ToString("dd/MM/yyyy"), colSize: "col-md-2")
+    @Html.FilterPickerDateFor(m => m.FechaFiltroHasta, "Fecha Hasta", value: Model.FechaFiltroHasta.ToString("dd/MM/yyyy"), colSize: "col-md-2")
+    @Html.FilterDropDownListFor(m => m.IdProfesional, Model.MaestroProfesionales, "Profesional", colSize: "col-md-4")
+    @* @Html.FilterDropDownListFor(m => m.IdEstadoGuardia, Model.MaestroEstados, "Estado", colSize: "col-md-4") *@
+}
+
+@section GridColumns {
+
+    <th>ID</th>
+    <th>Fecha Carga</th>
+    <th>Desde</th>
+    <th>Hasta</th>
+    <th>Profesional</th>
+    @* <th>Estado</th> *@
+    <th>Total</th>
+
+}
+
+@section CrudForm {
+
+    <div class="col">
+        <div class="row">
+            @Html.FormGroupTextBoxFor(m => m.IdGuardia, title: "ID", colSize: "col-md-2", editingDisabled: true, newVisible: false)
+
+            @Html.FormGroupPickerDateFor(m => m.Desde, title: "Fecha Desde", colSize: "col-md-3", addValidator: true, editingDisabled: false)
+
+            @Html.FormGroupPickerDateFor(m => m.Hasta, title: "Fecha Hasta", colSize: "col-md-3", addValidator: true, editingDisabled: false)
+
+            @Html.FormGroupDropDownListFor(m => m.IdProfesional, Model.MaestroProfesionales, "Profesional", fieldCss: "select2-field profesional", editingDisabled: true, addValidator: true, colSize: "col-md-6")
+
+            @Html.FormGroupInputGroupFor(m => m.Total, "Total", icon: "$", colSize: "col-md-3", addValidator: true)
+        </div>
+    </div>
+}
+
+@section Scripts {
+
+    <script src="/js/Views/Guardias/index.js?3661"></script>
+}

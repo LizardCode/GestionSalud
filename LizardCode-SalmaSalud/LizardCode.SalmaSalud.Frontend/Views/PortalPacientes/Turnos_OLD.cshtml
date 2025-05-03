@@ -1,0 +1,122 @@
+﻿@using LizardCode.SalmaSalud.Domain.Enums;
+@model List<LizardCode.SalmaSalud.Application.Models.PortalPacientes.TurnosViewModel>;
+@{
+    Layout = "~/Views/Shared/BaseLayoutPortal.cshtml";
+
+    ViewBag.Title = "";
+    ViewBag.MainClass = "TurnosView";
+}
+
+@section Styles {
+    <link href="/lib/datatables/DataTables-1.10.20/css/dataTables.bootstrap4.min.css" rel="stylesheet" />
+    <link href="/lib/datatables/Buttons-1.6.1/css/buttons.bootstrap4.min.css" rel="stylesheet" />
+    <link href="/lib/select2/css/select2.css" rel="stylesheet" />
+    <link href="/lib/datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet" />
+    <link href="/lib/timepicker/css/bootstrap-timepicker.min.css" rel="stylesheet" />
+    <link href="/css/Shared/dt-global_style.css?3661" rel="stylesheet" />
+
+    <link href="/css/Shared/maestroLayout.css?3661" rel="stylesheet" />
+    <link href="/css/Shared/modal.css?3661" rel="stylesheet" />
+    <link href="/css/Views/PortalPacientes/turnos.css?3661" rel="stylesheet" />
+}
+
+<div class="@ViewBag.MainClass" data-mainclass="@ViewBag.MainClass">
+    <div class="row layout-top-spacing">
+        <div class="col-12">
+            <div class="accordion" id="accordionExample">
+                @{
+                    int i = 0;
+                }
+                @foreach (var turno in Model)
+                {
+                    <div class="card">
+                        <div class="card-header" id="headingOne">
+                            <h2 class="mb-0">
+                                <button class="btn btn-link btn-block text-left btnVerTurno" data-id-turno="@turno.IdTurno" data-idx="@i" type="button" data-toggle="collapse" data-target="@string.Format("#collapse{0}", i)" aria-expanded="false" aria-controls="@string.Format("collapse{0}", i)">
+                                    @Html.Raw(string.Format("{0} - {1} - {2} - {3}", turno.Fecha.ToString("dd/MM/yyyy"), turno.Empresa, turno.Especialidad,
+                                    string.Format("<span class=\"badge badge-{0}\">{1}</span>", turno.EstadoClase, turno.Estado)))
+                                </button>
+                            </h2>
+                        </div>
+
+                        <div id="@string.Format("collapse{0}", i)" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+                            <div class="card-body" id="@string.Format("turnosBody{0}", i)">
+                                <div class="row alert alert-secondary">
+                                    <div class="col-md-2">
+                                        <b>Hora: </b>
+                                        @* <p>@turno.Fecha.ToString("HH:mm")</p> *@
+                                        <div class="avatar avatar-sm"><span class="avatar-title rounded-circle azul-avatar">@turno.Fecha.ToString("HH:mm")</span></div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <b>Profesional: </b>
+                                        <p>@turno.Profesional.ToUpperInvariant()</p>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <b>Lugar: </b>
+                                        <p>@turno.EmpresaDireccion</p>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <b>Contacto: </b>
+                                        <p><a href="tel:@turno.EmpresaTelefono">@turno.EmpresaTelefono</a> / <a href="mailto:@turno.EmpresaEmail">@turno.EmpresaEmail</a></p>
+                                    </div>
+                                    @if (turno.IdEstadoTurno == (int)EstadoTurno.Agendado || turno.IdEstadoTurno == (int)EstadoTurno.Confirmado)
+                                    {
+                                        <div class="col mt-3">
+                                            <button type="button" class="btn btn-danger btnCancelarTurno" data-width-class="modal-50" data-ajax-action="@string.Format("/Turnos/CancelarView?idTurno={0}", turno.IdTurno)">
+                                                <i class="fa fa-times"></i> CANCELAR
+                                            </button>
+                                            @if (turno.IdEstadoTurno == (int)EstadoTurno.Agendado)
+                                            {
+                                                <button type="button" class="btn btn-success btnCconfirmarTurno" data-id-turno="@turno.IdTurno">
+                                                    <i class="fa fa-check"></i> CONFIRMAR
+                                                </button>
+                                            }
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    i++;
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="/lib/datepicker/js/bootstrap-datepicker.min.js"></script>
+    <script src="/lib/datepicker/js/bootstrap-datepicker.es.min.js"></script>
+    <script src="/lib/timepicker/js/bootstrap-timepicker.js"></script>
+    <script src="/lib/datatables/DataTables-1.10.20/js/jquery.dataTables.min.js"></script>
+    <script src="/lib/datatables/DataTables-1.10.20/js/dataTables.bootstrap4.min.js"></script>
+    <script src="/lib/datatables/DateTime-1.10.x/datetime-moment.js"></script>
+    <script src="/lib/datatables/Buttons-1.6.1/js/dataTables.buttons.min.js"></script>
+    <script src="/lib/datatables/Buttons-1.6.1/js/buttons.bootstrap4.min.js"></script>
+    <script src="/lib/datatables/Select-1.3.1/js/dataTables.select.min.js"></script>
+    <script src="/lib/datatables/Select-1.3.1/js/select.bootstrap4.min.js"></script>
+    <script src="/lib/select2/js/select2.min.js"></script>
+    <script src="/lib/select2/js/select2_locale_es.js?3661"></script>
+    <script src="/lib/accounting/accounting.min.js"></script>
+    <script src="/lib/autonumeric/autoNumeric.min.js"></script>
+    <script src="/lib/jquery-alphanum/jquery.alphanum.js"></script>
+    <script src="/lib/cleave/cleave.min.js"></script>
+    <script src="/lib/cleave/cleave.jquery.js"></script>
+    <script src="/lib/cleave/cleave-phone.ar.js"></script>
+    <script src="/lib/flatpickr/flatpickr.js"></script>
+    <script src="/lib/flatpickr/es.js"></script>
+
+    <script src="/js/Helpers/dataTables.helper.js?3661"></script>
+    <script src="/js/Helpers/select2.helper.js?3661"></script>
+    <script src="/js/Helpers/formData.helper.js?3661"></script>
+    <script src="/js/Helpers/ajax-action.js?3661"></script>
+    <script src="/js/Helpers/constraints.helper.js?3661"></script>
+    <script src="/js/Helpers/accounting.helper.js"></script>
+    <script src="/js/Helpers/dropdown-group-list.helper.js?3661"></script>
+    <script src="/js/Helpers/parseDynamicContent.helper.js?3661"></script>
+
+    <script src="/js/Shared/enums.js?3661"></script>
+    <script src="/js/Shared/modals.js?3661"></script>
+
+    <script src="/js/Views/PortalPacientes/turnos.js?3661"></script>
+}

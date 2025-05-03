@@ -1,0 +1,101 @@
+﻿@using LizardCode.Framework.Application.Models.Repeater;
+
+@model LizardCode.SalmaSalud.Application.Models.ProveedoresOrdenesPago.ProveedoresOrdenesPagoViewModel
+@{
+    Layout = "~/Views/Shared/ReportLayout.cshtml";
+
+    ViewBag.MainClass = "ReportProveedoresOrdenesPagoView";
+
+    ViewBag.Title = "Facturas";
+    ViewBag.ItemMenu = "Facturas";
+
+    ViewBag.ButtonExcel = true;
+    ViewBag.ButtonPDF = true;
+    ViewBag.ButtonPrint = true;
+
+    ViewBag.AjaxGetAll = Url.Action("ObtenerTodos", "ProveedoresOrdenesPago");
+}
+
+@section Styles {
+    <link href="/css/Views/ProveedoresOrdenesPago/index.css?3661" rel="stylesheet" />
+}
+
+@section Filters {
+    <div class="col">
+
+        <div class="row">
+            @Html.FilterPickerDateFor(m => m.FechaDesde, "Fecha Desde", colSize: "col-md-2")
+            @Html.FilterPickerDateFor(m => m.FechaHasta, "Fecha Hasta", colSize: "col-md-2")
+        </div>
+    
+    </div>
+}
+
+@section ToolbarButtons {
+    <button type="button" class="btn btn-warning btImprimirRetenciones" title="Imprimir Comprobantes OP"><i class="fa fa-print"></i> <span>Imp. Orden Pago</span></button>
+}
+
+@section GridColumns {
+
+    <th>ID</th>
+    <th>Fecha</th>
+    <th>Moneda</th>
+    <th>Importe</th>
+    <th>Estado</th>
+
+}
+
+@section CustomModals {
+
+    <div class="modal fade modalPrint" role="dialog" aria-hidden="true">
+        <div class="modal-dialog bounceInRight animated">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Imprimir...</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true" class="zmdi zmdi-close"></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row justify-content-center">
+                        <div class="col-md-6">
+                            <div class="row mb-2">
+                                <div class="col">
+                                    <button type="button" class="btn btn-primary w-100 btPrintOrdenPago" data-ajax-action="/OrdenesPago/Imprimir/"><i class="fas fa-file-pdf"></i> Orden de Pago</button>
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col">
+                                    <button type="button" class="btn btn-info w-100 btPrintGanancias" data-ajax-action="/OrdenesPago/ImprimirRetencionesGanancias/"><i class="fas fa-file-pdf"></i> Retenciones Ganancias</button>
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col">
+                                    <button type="button" class="btn btn-info w-100 btPrintIVA" data-ajax-action="/OrdenesPago/ImprimirRetencionesIVA/"><i class="fas fa-file-pdf"></i> Retenciones IVA</button>
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col">
+                                    <button type="button" class="btn btn-info w-100 btPrintIIBB" data-ajax-action="/OrdenesPago/ImprimirRetencionesIIBB/"><i class="fas fa-file-pdf"></i> Retenciones IIBB</button>
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col">
+                                    <button type="button" class="btn btn-info w-100 btPrintSUSS" data-ajax-action="/OrdenesPago/ImprimirRetencionesSUSS/"><i class="fas fa-file-pdf"></i> Retenciones SUSS</button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" data-dismiss="modal" class="btn btn-default"><i class="fa fa-times"></i> Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    <script src="/js/Views/ProveedoresOrdenesPago/index.js?3661"></script>
+}

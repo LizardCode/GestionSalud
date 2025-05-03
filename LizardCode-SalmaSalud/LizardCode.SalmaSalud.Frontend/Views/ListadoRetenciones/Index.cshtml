@@ -1,0 +1,58 @@
+﻿@using LizardCode.Framework.Application.Models.Repeater;
+
+@model LizardCode.SalmaSalud.Application.Models.ListadoRetenciones.ListadoRetencionesViewModel
+@{
+    Layout = "~/Views/Shared/ReportLayout.cshtml";
+
+    ViewBag.MainClass = "ReportListadoRetencionesView";
+
+    ViewBag.Title = "Listado de Retenciones / Percepciones";
+    ViewBag.ItemMenu = "Listado de Retenciones";
+
+    ViewBag.ButtonExcel = true;
+    ViewBag.ButtonPDF = true;
+    ViewBag.ButtonPrint = true;
+
+    ViewBag.AjaxGetAll = Url.Action("ObtenerTodos", "ListadoRetenciones");
+    ViewBag.AjaxGet = Url.Action("Obtener", "ListadoRetenciones");
+}
+
+@section Styles {
+    <link href="/css/Views/ListadoRetenciones/index.css?3661" rel="stylesheet" />
+}
+
+@section ToolbarButtons {
+    <button type="button" class="btn btn-primary btDownloadSicore" title="Download Citi Ventas"><i class="fa fa-download"></i> <span>Descargar SICORE</span></button>
+}
+
+@section Filters {
+    <div class="col">
+
+        <div class="row">
+            @Html.FilterDropDownListFor(m => m.IdTipoRetecion, Model.MaestroTipoRetecion, "Tipo de Reteción", colSize: "col-md-4")
+        </div>
+
+        <div class="row">
+            @Html.FilterPickerDateFor(m => m.FechaDesde, "Fecha Desde", value: string.Empty, colSize: "col-md-2")
+            @Html.FilterPickerDateFor(m => m.FechaHasta, "Fecha Hasta", value: string.Empty, colSize: "col-md-2")
+        </div>
+    
+    </div>
+}
+
+@section GridColumns {
+
+    <th>ID</th>
+    <th>Fecha</th>
+    <th>Comprobante</th>
+    <th>Cliente / Proveedor</th>
+    <th>C.U.I.T.</th>
+    <th>Número</th>
+    <th>Base Imponible</th>
+    <th>Importe</th>
+
+}
+
+@section Scripts {
+    <script src="/js/Views/ListadoRetenciones/index.js?3661"></script>
+}

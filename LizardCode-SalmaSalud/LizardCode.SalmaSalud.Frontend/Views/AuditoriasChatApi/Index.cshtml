@@ -1,0 +1,74 @@
+﻿@model LizardCode.SalmaSalud.Application.Models.AuditoriasChatApiViewModel.AuditoriaChatApiViewModel
+@{
+    Layout = "~/Views/Shared/MaestroLayout.cshtml";
+
+    ViewBag.MainClass = "AuditoriasChatApiView";
+
+    ViewBag.Title = "Auditoria de Mensajes de WhatsApp";
+    ViewBag.TitleNew = "Nuevo Feriado...";
+    ViewBag.TitleEdit = "Mensaje de WhatsApp...";
+    ViewBag.TitleRemove = "Eliminar Feriado...";
+    ViewBag.ItemMenu = "Mensajes de WhatsApp";
+
+    ViewBag.ButtonNew = false;
+    ViewBag.ButtonEdit = true;
+    ViewBag.ButtonRemove = false;
+
+    ViewBag.AjaxGetAll = Url.Action("ObtenerTodos", "AuditoriasChatApi");
+    ViewBag.AjaxGet = Url.Action("Obtener", "AuditoriasChatApi");
+    ViewBag.AjaxAdd = Url.Action("Nuevo", "AuditoriasChatApi");
+    ViewBag.AjaxUpdate = Url.Action("Modificar", "AuditoriasChatApi");
+    ViewBag.AjaxDelete = Url.Action("Eliminar", "AuditoriasChatApi");
+
+    ViewBag.Tabs = new string[] { "General" };
+}
+
+@section Styles {
+    <link href="/css/Views/Feriados/index.css?3661" rel="stylesheet" />
+}
+
+@section Filters {
+    <div class="col">
+
+        <div class="row">
+            @Html.FilterDropDownListFor(m => m.IdEvento, Model.MaestroEventos, "Evento", colSize: "col-md-4")
+
+            @Html.FilterDropDownListFor(m => m.IdEstadoChatApi, Model.MaestroEstados, "Estado", colSize: "col-md-4")
+
+            @Html.FilterPickerDateFor(m => m.FechaDesde, "Fecha Desde", value: DateTime.Now.Date.AddDays(-7).ToString("dd/MM/yyyy"), colSize: "col-md-2")
+            @Html.FilterPickerDateFor(m => m.FechaHasta, "Fecha Hasta", value: DateTime.Now.Date.AddDays(1).ToString("dd/MM/yyyy"), colSize: "col-md-2")
+        </div>
+    
+    </div>
+}
+
+@section GridColumns {
+
+    <th>Id</th>
+    <th>Fecha</th>
+    <th>Evento</th>
+    <th>Paciente</th>
+    <th>Telefono</th>
+    <th>Estado</th>
+    @*<th></th>*@
+
+}
+
+@section CrudForm {
+
+    @Html.FormGroupTextBoxFor(m => m.IdAuditoria, title: "ID", editingDisabled: true, newVisible: false)
+
+    @Html.FormGroupTextBoxFor(m => m.Fecha, title: "Fecha", editingDisabled: true, newVisible: false)
+
+    @Html.FormGroupTextBoxFor(m => m.Paciente, title: "Paciente", editingDisabled: true, newVisible: false)
+
+    @Html.FormGroupTextBoxFor(m => m.Telefono, title: "Telefono", editingDisabled: true, newVisible: false)
+
+    @Html.FormGroupTextAreaFor(m => m.Respuesta, title: "Respuesta", editingDisabled: true, rows: 6)
+
+
+}
+
+@section Scripts {
+    <script src="/js/Views/AuditoriasChatApi/index.js?3661"></script>
+}

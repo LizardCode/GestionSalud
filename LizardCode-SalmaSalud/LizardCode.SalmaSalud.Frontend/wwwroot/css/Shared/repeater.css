@@ -1,0 +1,202 @@
+﻿div.repeater-component {
+
+}
+
+div.repeater-component > table {
+
+}
+
+div.repeater-component > table > thead > tr > th {
+    padding-right: 5px;
+    color: #3b3f5c;
+    white-space: nowrap;
+    box-sizing: content-box;
+}
+
+div.repeater-component > table > thead > tr > th > span {
+    display: block;
+    padding: 1px 2px;
+    border-bottom: solid 1px #dcdcdc;
+}
+
+div.repeater-component > table > tbody:before {
+    content: ' ';
+    display: block;
+    line-height: 10px;
+}
+
+div.repeater-component > table > tbody > tr.repeater-row-template {
+    display: none;
+}
+
+div.repeater-component > table > tbody > tr > td {
+    padding-right: 10px;
+    box-sizing: content-box;
+}
+
+div.repeater-component > table > thead > tr > th.hidden,
+div.repeater-component > table > tbody > tr > td.hidden {
+    display: none;
+}
+
+div.repeater-component > table > tbody > tr > td:last-child {
+    display: none;
+    padding-right: 0;
+    white-space: nowrap;
+}
+
+div.repeater-component > table > tbody > tr > td:last-child > i {
+    font-size: 22px;
+    color: #3b3f5c;
+    padding-right: 4px;
+    cursor: pointer;
+}
+
+div.repeater-component > table > tbody > tr > td:last-child > i:last-child {
+    padding-right: 0;
+}
+
+div.repeater-component > table > tbody > tr > td:last-child > i:hover {
+    color: var(--primary);
+}
+
+div.repeater-component:not(.readonly) > table > tbody > tr:hover > td:last-child {
+    display: block;
+}
+
+div.repeater-component > table > tbody > tr > td > .repeater-control {
+    width: 100%;
+    border: none;
+    border-top: solid 1px transparent;
+    border-left: solid 1px transparent;
+    border-bottom: solid 1px #dcdcdc;
+    padding: 1px 2px;
+    text-transform: uppercase;
+}
+
+div.repeater-component > table > tbody > tr > td > .repeater-control:hover:not(:focus) {
+    background-color: #008a700a;
+}
+
+div.repeater-component > table > tbody > tr > td > .repeater-control::selection {
+    background-color: rgba(var(--primary-rgb), 0.8);
+    color: white;
+}
+
+div.repeater-component > table > tbody > tr > td > .repeater-control[readonly],
+div.repeater-component > table > tbody > tr > td > .repeater-control[disabled] {
+    background: none;
+    color: darkgray;
+    cursor: not-allowed;
+}
+
+div.repeater-component.readonly > table > tbody > tr > td > .repeater-control[disabled] {
+    color: #565656;
+    opacity: 1;
+}
+
+div.repeater-component > table > tbody > tr > td > .repeater-control:not([readonly]):not([disabled]):focus {
+    border-left: solid 1px rgba(var(--primary-rgb), 0.8);
+    border-bottom-color: rgba(var(--primary-rgb), 0.8);
+    color: var(--primary);
+}
+
+div.repeater-component > table > tbody > tr > td > select.repeater-control {
+    appearance: none;
+    cursor: pointer;
+}
+
+div.repeater-component > table > tbody > tr > td > select.repeater-control:not([readonly]):not([disabled]) {
+    padding-right: 16px;
+    background-image: linear-gradient(45deg, transparent 50%, #94959e 50%), linear-gradient(135deg, #94959e 50%, transparent 50%);
+    background-position: calc(100% - 7px) 50%, calc(100% - 3px) 50%;
+    background-size: 5px 5px, 5px 5px;
+    background-repeat: no-repeat;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+div.repeater-component > table > tbody > tr > td > select.repeater-control:not([readonly]):not([disabled]):focus {
+    background-image: linear-gradient(45deg, transparent 50%, #00bbaf 50%), linear-gradient(135deg, #00bbaf 50%, transparent 50%);
+}
+
+div.repeater-component > table.disable-add > tbody > tr > td > i.action-add {
+    display: none;
+}
+
+div.repeater-component > table.disable-remove > tbody > tr > td > i.action-remove {
+    display: none;
+}
+
+div.repeater-component > table > tbody > tr > td > div.repeater-control.select2-container > a.select2-choice {
+    padding: 0;
+    height: auto;
+    min-height: 22px;
+    border: none;
+    line-height: 22px;
+}
+
+div.repeater-component > table > tbody > tr > td > div.repeater-control.select2-container > a.select2-choice > span.select2-arrow {
+    top: -7px;
+}
+
+div.repeater-component > table > tfoot > tr > td > div {
+    text-align: center;
+    color: black;
+    font-size: 16px;
+    padding: 10px;
+    cursor: pointer;
+}
+
+div.repeater-component > table > tfoot.hidden {
+    display: none;
+}
+
+div.repeater-component > table > tfoot > tr > td > div:hover {
+    background-color: rgba(var(--primary-rgb), 0.05);
+}
+
+div.repeater-component > table > tfoot > tr > td > div:active {
+    background-color: rgba(var(--primary-rgb), 0.1);
+}
+
+div.repeater-component-dropdown.select2-drop {
+    border-top: 1px solid #3F51B5;
+}
+
+div.repeater-component-dropdown.select2-drop > div.select2-search {
+    padding-top: 5px;
+}
+
+div.repeater-component-dropdown.select2-drop.select2-drop-above {
+    border-radius: 0;
+    border-bottom: 1px solid #3F51B5;
+}
+
+div.repeater-component-dropdown.select2-drop.select2-drop-above > div.select2-search {
+    padding-top: 1px;
+}
+
+div.repeater-component > table > tbody > tr > td > .repeater-control.select2-container-active {
+    border-left: solid 1px rgba(var(--primary-rgb), 0.8);
+    border-bottom-color: rgba(var(--primary-rgb), 0.8);
+    color: var(--primary);
+}
+
+div.repeater-component > table > tbody > tr > td > .repeater-control.select2-container-active > a.select2-choice {
+    color: var(--primary);
+}
+
+div.repeater-component > table > tbody > tr > td > .repeater-control.select2-container-active > a.select2-choice span.select2-arrow b {
+    background-image: url(../../lib/select2/css/select2-focus.png);
+}
+
+div.repeater-component.readonly > table > tfoot > tr > td > div {
+    color: #4d4d4d;
+    background-color: #f1f2f3;
+}
+
+div.repeater-component.readonly > table > tfoot > tr > td > div:hover {
+    cursor: default;
+}

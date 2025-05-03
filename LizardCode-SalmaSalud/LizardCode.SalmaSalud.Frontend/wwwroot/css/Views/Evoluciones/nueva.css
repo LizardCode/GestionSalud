@@ -1,0 +1,26 @@
+﻿.row-flex {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.stick-to-bottom {
+    position: absolute;
+    bottom: -3rem;
+}
+
+.user-info {
+    padding-top: 10px !important;
+    height: 65px !important;
+}
+
+.field-validation-error {
+    color: red;
+    font-weight: 400;
+    font-size: 11px;
+}
+
+.alert-odonto {
+    color: #fff;
+    background-color: #007bff;
+    border-color: #0455ab;
+}

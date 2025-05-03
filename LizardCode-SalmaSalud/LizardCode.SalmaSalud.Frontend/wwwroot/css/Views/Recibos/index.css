@@ -1,0 +1,63 @@
+﻿.pac-container {
+    z-index: 10002;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.text-left {
+    text-align: left;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.table-controls {
+    padding: 0;
+    margin-bottom: 0;
+}
+
+.table-controls li {
+    list-style: none;
+    display: inline;
+}
+
+.table-controls li i {
+    cursor: pointer;
+    margin: 0;
+    vertical-align: middle;
+    cursor: pointer;
+    color: #515365;
+    width: 28px;
+    height: 28px;
+}
+
+.table-hover:not(.table-dark) tbody tr:hover .table-controls li i {
+    color: #191e3a;
+}
+
+.table-hover:not(.table-dark) tbody tr:hover td:first-child {
+    color: #4361ee !important;
+}
+
+.asiento, .details {
+    font-size: 1.7em;
+}
+
+.hide {
+    display: none;
+}
+
+.show {
+    display: inherit;
+}
+
+.repeater-table tfoot {
+    visibility: hidden;
+}
+
+.dvAnticipos {
+    margin-bottom: 10px;
+}

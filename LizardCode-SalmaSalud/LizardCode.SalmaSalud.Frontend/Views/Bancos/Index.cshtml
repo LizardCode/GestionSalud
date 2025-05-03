@@ -1,0 +1,66 @@
+﻿@model LizardCode.SalmaSalud.Application.Models.Bancos.BancosViewModel
+@{
+    Layout = "~/Views/Shared/MaestroLayout.cshtml";
+
+    ViewBag.MainClass = "ABMBancosView";
+
+    ViewBag.Title = "Mantenimiento de Bancos";
+    ViewBag.TitleNew = "Nuevo Banco...";
+    ViewBag.TitleEdit = "Modificar Banco...";
+    ViewBag.TitleRemove = "Eliminar Banco...";
+    ViewBag.ItemMenu = "Bancos";
+
+    ViewBag.ButtonNew = true;
+    ViewBag.ButtonEdit = true;
+    ViewBag.ButtonRemove = true;
+
+    ViewBag.AjaxGetAll = Url.Action("ObtenerTodos", "Bancos");
+    ViewBag.AjaxGet = Url.Action("Obtener", "Bancos");
+    ViewBag.AjaxAdd = Url.Action("Nuevo", "Bancos");
+    ViewBag.AjaxUpdate = Url.Action("Modificar", "Bancos");
+    ViewBag.AjaxDelete = Url.Action("Eliminar", "Bancos");
+
+    ViewBag.Tabs = new string[] { "General" };
+}
+
+@section Styles {
+    <link href="/css/Views/Bancos/index.css?3661" rel="stylesheet" />
+}
+
+@section GridColumns {
+
+    <th>ID</th>
+    <th>Descripción</th>
+    <th>CUIT</th>
+    <th>N°Cuenta</th>
+    <th>Descubierto</th>
+
+}
+
+@section CrudForm {
+
+    @Html.FormGroupTextBoxFor(m => m.IdBanco, title: "ID", editingDisabled: true, newVisible: false)
+
+    @Html.FormGroupDropDownListFor(m => m.IdCuentaContable, Model.MaestroCuentasContables, "Cuenta Contable", addValidator: false)
+
+    @Html.FormGroupTextBoxFor(m => m.Descripcion, title: "Descripción", addValidator: true)
+
+    @Html.FormGroupDropDownListFor(m => m.IdMoneda, Model.MaestroMonedas, "Moneda", addValidator: true)
+
+    @Html.FormGroupTextBoxFor(m => m.CUIT, title: "C.U.I.T.", addValidator: true)
+
+    @Html.FormGroupTextBoxFor(m => m.NroCuenta, title: "N° Cuenta", addValidator: true)
+
+    @Html.FormGroupTextBoxFor(m => m.CBU, title: "C.B.U.", addValidator: true)
+
+    @Html.FormGroupInputGroupFor(m => m.SaldoDescubierto, title: "Saldo Descubierto", icon: "$", addValidator: true)
+
+    @Html.FormGroupDropDownListFor(m => m.IdProveedor, Model.MaestroProveedores, "Proveedor", addValidator: false)
+
+    @Html.FormGroupCheckboxFor(m => m.EsDefault, title: "Default")
+
+}
+
+@section Scripts {
+    <script src="/js/Views/Bancos/index.js?3661"></script>
+}

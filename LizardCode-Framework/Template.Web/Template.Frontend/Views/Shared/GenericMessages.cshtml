@@ -1,0 +1,103 @@
+﻿@model Template.Application.Models.GenericMessages.GenericMessageViewModel
+@{ 
+    Layout = null;
+}
+
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="msapplication-TileColor" content="#0061da">
+    <meta name="theme-color" content="#1643a3">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+
+    <title>Gestión de Stock - @Model.Title</title>
+
+    <link rel="apple-touch-icon" sizes="57x57" href="/img/iconset/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/img/iconset/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/img/iconset/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/img/iconset/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/img/iconset/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/img/iconset/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/img/iconset/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/img/iconset/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/iconset/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/img/iconset/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/iconset/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/img/iconset/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/iconset/favicon-16x16.png">
+    <link rel="manifest" href="/img/iconset/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/img/iconset/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    <link rel="shortcut icon" href="/img/iconset/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/img/iconset/favicon.ico" type="image/x-icon">
+
+    <link href="~/lib/fontawesome/css/all.min.css" rel="stylesheet" />
+    <link href="~/css/Shared/dashboard.css" rel="stylesheet" />
+    <link href="~/lib/animate/animate.min.css" rel="stylesheet" />
+    <link href="~/lib/noty/css/themes/bootstrap-v4.css" rel="stylesheet" />
+
+    <link href="~/css/Shared/genericMessages.css" rel="stylesheet" />
+
+</head>
+<body>
+    <div class="login-img">
+        <div class="page">
+            <div class="page-single">
+                <div class="container">
+
+                    <div class="row">
+                        <div class="col">
+                            <div class="text-center mb-6">
+                                <img src="~/img/brand/logo.png" alt="">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+
+                            <div class="row">
+                                <div class="col">
+                                    <label class="titulo">@Model.Title</label>
+                                    @if (!string.IsNullOrWhiteSpace(Model.Subtitle))
+                                    {
+                                        <label class="subtitulo">@Model.Subtitle</label>
+                                    }
+                                    @if (!string.IsNullOrWhiteSpace(Model.Exception))
+                                    {
+                                        <label class="excepcion">@Model.Exception</label>
+                                    }
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <a href="@Model.Redirection" class="btn btn-primary">@Model.Button</a>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/jquery-3.2.1.min.js"></script>
+    <script src="~/lib/bootstrap/bootstrap.bundle.min.js"></script>
+
+    <script>
+        var RootPath = '@Context.Request.PathBase';
+    </script>
+
+</body>
+</html>

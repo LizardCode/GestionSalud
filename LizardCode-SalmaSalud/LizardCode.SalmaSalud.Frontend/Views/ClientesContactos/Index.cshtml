@@ -1,0 +1,73 @@
+﻿@model LizardCode.SalmaSalud.Application.Models.ClientesContactos.ClienteContactoViewModel
+@{
+    Layout = "~/Views/Shared/MaestroLayout.cshtml";
+
+    ViewBag.MainClass = "ABMClientesContactosView";
+
+    ViewBag.Title = "Mantenimiento de Contactos por Cliente";
+    ViewBag.TitleNew = "Nuevo Contacto...";
+    ViewBag.TitleEdit = "Modificar Contacto...";
+    ViewBag.TitleRemove = "Eliminar Contacto...";
+    ViewBag.ItemMenu = "Contactos por Cliente";
+
+    ViewBag.ButtonNew = true;
+    ViewBag.ButtonEdit = true;
+    ViewBag.ButtonRemove = true;
+
+    ViewBag.AjaxGetAll = Url.Action("ObtenerTodos", "ClientesContactos");
+    ViewBag.AjaxGet = Url.Action("Obtener", "ClientesContactos");
+    ViewBag.AjaxAdd = Url.Action("Nuevo", "ClientesContactos");
+    ViewBag.AjaxUpdate = Url.Action("Modificar", "ClientesContactos");
+    ViewBag.AjaxDelete = Url.Action("Eliminar", "ClientesContactos");
+
+    ViewBag.Tabs = new string[] { "General" };
+}
+
+@section Styles {
+    <link href="/css/Views/ClientesContactos/index.css?3661" rel="stylesheet" />
+}
+
+@section Filters {
+
+    @Html.FilterDropDownListFor(m => m.IdCliente, Model.MaestroClientes, "Cliente")
+    @Html.FilterTextBoxFor(m => m.Nombre, "Nombre", value: string.Empty)
+    @Html.FilterTextBoxFor(m => m.Apellido, "Apellido", value: string.Empty)
+    @Html.FilterTextBoxFor(m => m.Cargo, "Cargo", value: string.Empty)
+    @Html.FilterTextBoxFor(m => m.Email, "Email", value: string.Empty)
+
+}
+
+@section GridColumns {
+
+    <th>ID</th>
+    <th>Cliente</th>
+    <th>Nombre</th>
+    <th>Apellido</th>
+    <th>Cargo</th>
+    <th>Teléfono</th>
+    <th>Email</th>
+
+}
+
+@section CrudForm {
+
+    @Html.FormGroupTextBoxFor(m => m.IdClienteContacto, title: "ID", editingDisabled: true, newVisible: false)
+
+    @Html.FormGroupDropDownListFor(m => m.IdCliente, Model.MaestroClientes, "Cliente", addValidator: true)
+
+    @Html.FormGroupTextBoxFor(m => m.Nombre, title: "Nombre", addValidator: true)
+
+    @Html.FormGroupTextBoxFor(m => m.Apellido, title: "Apellido", addValidator: true)
+
+    @Html.FormGroupTextBoxFor(m => m.Cargo, title: "Cargo", addValidator: false)
+
+    @Html.FormGroupDropDownGroupFor(m => m.Telefono, "IdTipoTelefono", Model.MaestroTipoTelefono, title: "Teléfono", addValidator: true)
+
+    @Html.FormGroupTextBoxFor(m => m.Email, title: "Email", fieldCss: "form-control lowercase", addValidator: true)
+
+}
+
+
+@section Scripts {
+    <script src="/js/Views/ClientesContactos/index.js?3661"></script>
+}

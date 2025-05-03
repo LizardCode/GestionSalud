@@ -1,0 +1,58 @@
+﻿@model LizardCode.SalmaSalud.Application.Models.Vendedores.VendedorViewModel
+@{
+    Layout = "~/Views/Shared/MaestroLayout.cshtml";
+
+    ViewBag.MainClass = "ABMVendedoresView";
+
+    ViewBag.Title = "Mantenimiento de Vendedores";
+    ViewBag.TitleNew = "Nuevo vendedor...";
+    ViewBag.TitleEdit = "Modificar vendedor...";
+    ViewBag.TitleRemove = "Eliminar vendedor...";
+    ViewBag.ItemMenu = "Vendedores";
+
+    ViewBag.ButtonNew = true;
+    ViewBag.ButtonEdit = true;
+    ViewBag.ButtonRemove = true;
+
+    ViewBag.AjaxGetAll = Url.Action("ObtenerTodos", "Vendedores");
+    ViewBag.AjaxGet = Url.Action("Obtener", "Vendedores");
+    ViewBag.AjaxAdd = Url.Action("Nuevo", "Vendedores");
+    ViewBag.AjaxUpdate = Url.Action("Modificar", "Vendedores");
+    ViewBag.AjaxDelete = Url.Action("Eliminar", "Vendedores");
+
+    ViewBag.Tabs = new string[] { "General" };
+}
+
+@section Styles {
+    <link href="/css/Views/Vendedores/index.css?3661" rel="stylesheet" />
+}
+
+@section GridColumns {
+
+    <th>ID</th>
+    <th>Nombre</th>
+    <th>Apellido</th>
+    <th>Teléfono</th>
+    <th>Email</th>
+
+}
+
+@section CrudForm {
+
+    @Html.FormGroupTextBoxFor(m => m.IdVendedor, title: "ID", editingDisabled: true, newVisible: false)
+
+    @Html.FormGroupTextBoxFor(m => m.Nombre, title: "Nombre", addValidator: true)
+
+    @Html.FormGroupTextBoxFor(m => m.Apellido, title: "Apellido", addValidator: true)
+
+    @Html.FormGroupDropDownGroupFor(m => m.Telefono, "IdTipoTelefono", Model.MaestroTipoTelefono, title: "Teléfono", addValidator: true)
+
+    @Html.FormGroupTextBoxFor(m => m.Email, title: "Email", fieldCss: "form-control lowercase", addValidator: true)
+
+    @Html.FormGroupInputGroupFor(m => m.Comision, title: "Comisión", icon: "%", addValidator: true)
+
+}
+
+@section Scripts {
+    <script src="/js/Views/Vendedores/index.js?3661"></script>
+}

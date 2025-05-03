@@ -1,0 +1,105 @@
+﻿@using System.Text.RegularExpressions
+@model LizardCode.SalmaSalud.Application.Models.Turnos.DetalleViewModel
+
+@{
+    Layout = "~/Views/Shared/BaseLayout.cshtml";
+
+    ViewBag.Title = "";
+    ViewBag.MainClass = "AsignarView";
+    // ViewBag.AjaxAction = Url.Action("Asignar", "Turnos");
+}
+
+@section Styles {
+    <link href="/lib/datatables/DataTables-1.10.20/css/dataTables.bootstrap4.min.css" rel="stylesheet" />
+    <link href="/lib/datatables/Buttons-1.6.1/css/buttons.bootstrap4.min.css" rel="stylesheet" />
+    <link href="/lib/select2/css/select2.css" rel="stylesheet" />
+    <link href="/lib/flatpickr/flatpickr.css" rel="stylesheet" type="text/css">
+    <link href="/lib/flatpickr/custom-flatpickr.css" rel="stylesheet" type="text/css">
+    <link href="/lib/datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet" />
+    <link href="/lib/timepicker/css/bootstrap-timepicker.min.css" rel="stylesheet" />
+    <link href="/css/Shared/dt-global_style.css?3661" rel="stylesheet" />
+
+    <link href="/css/Shared/maestroLayout.css?3661" rel="stylesheet" />
+    <link href="/css/Shared/modal.css?3661" rel="stylesheet" />
+    <link href="/css/Views/Turnos/detalle.css?3661" rel="stylesheet" />
+}
+
+<div class="@ViewBag.MainClass" data-mainclass="@ViewBag.MainClass">
+
+    <div class="row mt-4">
+        <div class="col">
+            <div class="">
+                <div class="card-header p-2">
+                    <a href="##" onClick="history.go(-1); return false;">
+                        <h6 class="card-title"><i class="fa fa-arrow-left"></i> Volver a Nuevo Turno</h6>
+                    </a>
+                    <h4>@string.Format("{0} - {1}.", @Model.Especialidad.ToUpperInvariant(), @Model.Fecha)</h4>
+                    <p class="card-title mt-2">Paso 2/3 - Elegí la hora del Turno.</p>
+                    <div class="row">
+                        <div class="col">
+                            <table class="@string.Format("table table-striped dt-view dataTable dtHistorial", "00")" width="100%">
+                                <thead>
+                                    <tr>
+                                        <th>Profesional</th>
+                                        <th>Hora</th>
+                                        <th style="text-align:center;">
+                                            Acciones
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var turno in Model.Turnos)
+                                    {
+                                        <tr>
+                                            <td>@turno.Profesional</td>
+                                            <td><div class="avatar avatar-sm"><span class="avatar-title rounded-circle azul-avatar">@turno.Hora.Substring(0, 5)</span></div></td>
+                                            <td style="text-align:center;">
+                                                <span class="btn btn-info agendarTurno" alt="Agendar" data-id-profesional-turno="@turno.IdProfesionalTurno" data-hora-turno="@turno.Hora"><i class="fas fa-calendar-check"></i> AGENDAR</span>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="/lib/datepicker/js/bootstrap-datepicker.min.js"></script>
+    <script src="/lib/datepicker/js/bootstrap-datepicker.es.min.js"></script>
+    <script src="/lib/timepicker/js/bootstrap-timepicker.js"></script>
+    <script src="/lib/datatables/DataTables-1.10.20/js/jquery.dataTables.min.js"></script>
+    <script src="/lib/datatables/DataTables-1.10.20/js/dataTables.bootstrap4.min.js"></script>
+    <script src="/lib/datatables/DateTime-1.10.x/datetime-moment.js"></script>
+    <script src="/lib/datatables/Buttons-1.6.1/js/dataTables.buttons.min.js"></script>
+    <script src="/lib/datatables/Buttons-1.6.1/js/buttons.bootstrap4.min.js"></script>
+    <script src="/lib/datatables/Select-1.3.1/js/dataTables.select.min.js"></script>
+    <script src="/lib/datatables/Select-1.3.1/js/select.bootstrap4.min.js"></script>
+    <script src="/lib/select2/js/select2.min.js"></script>
+    <script src="/lib/select2/js/select2_locale_es.js?3661"></script>
+    <script src="/lib/accounting/accounting.min.js"></script>
+    <script src="/lib/autonumeric/autoNumeric.min.js"></script>
+    <script src="/lib/jquery-alphanum/jquery.alphanum.js"></script>
+    <script src="/lib/cleave/cleave.min.js"></script>
+    <script src="/lib/cleave/cleave.jquery.js"></script>
+    <script src="/lib/cleave/cleave-phone.ar.js"></script>
+    <script src="/lib/flatpickr/flatpickr.js"></script>
+    <script src="/lib/flatpickr/es.js"></script>
+
+    <script src="/js/Helpers/dataTables.helper.js?3661"></script>
+    <script src="/js/Helpers/select2.helper.js?3661"></script>
+    <script src="/js/Helpers/formData.helper.js?3661"></script>
+    <script src="/js/Helpers/ajax-action.js?3661"></script>
+    <script src="/js/Helpers/constraints.helper.js?3661"></script>
+    <script src="/js/Helpers/accounting.helper.js"></script>
+    <script src="/js/Helpers/dropdown-group-list.helper.js?3661"></script>
+    <script src="/js/Helpers/parseDynamicContent.helper.js?3661"></script>
+
+    <script src="/js/Shared/enums.js?3661"></script>
+
+    <script src="/js/Views/Turnos/detalle.js?3661"></script>
+}

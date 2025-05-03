@@ -1,0 +1,205 @@
+﻿@{
+    Layout = "~/Views/Shared/BaseLayout.cshtml";
+
+    ViewBag.Title = "";
+    ViewBag.MainClass = "DashboardView";
+}
+
+@section Styles {
+    <link href="/lib/datatables/DataTables-1.10.20/css/dataTables.bootstrap4.min.css" rel="stylesheet" />
+    <link href="/lib/datatables/Buttons-1.6.1/css/buttons.bootstrap4.min.css" rel="stylesheet" />
+    <link href="/lib/select2/css/select2.css" rel="stylesheet" />
+    <link href="/lib/datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet" />
+    <link href="/lib/timepicker/css/bootstrap-timepicker.min.css" rel="stylesheet" />
+    <link href="/css/Shared/dt-global_style.css?3661" rel="stylesheet" />
+
+    <link href="/css/Shared/maestroLayout.css?3661" rel="stylesheet" />
+    <link href="/css/Shared/modal.css?3661" rel="stylesheet" />
+    <link href="/css/Views/Home/dashboard.css?3661" rel="stylesheet" />
+}
+
+    <div class="@ViewBag.MainClass" data-mainclass="@ViewBag.MainClass">
+
+        <div class="row layout-top-spacing">
+            <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12 layout-spacing">
+                <div class="widget widget-card-four">
+                    <div class="widget-content">
+                        <div class="w-header">
+                            <div class="w-info">
+                                <div class="row">
+                                    <div class="col-md-10">
+                                        <h6 class="value">Facturas (mes actual)</h6>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <span class="badge badge-primary wBadgeStatus bFacturas" style="cursor: pointer;">TOTAL</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="w-content">
+                                    <div class="w-info">
+                                        <img id="FacturasLoader" alt="" src="/img/mini_loader.gif" width="75px;">
+                                        <p class="value text-info pFacturas" style="display: none;"> [VALUE]<i class="fas fa-primary-circle ml-2 fa-info-dashboard" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Total"></i></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12 layout-spacing">
+                <div class="widget widget-card-four">
+                    <div class="widget-content">
+                        <div class="w-header">
+                            <div class="w-info">
+                                <div class="row">
+                                    <div class="col-md-10">
+                                        <h6 class="value">Fc Prov. (mes actual)</h6>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <span class="badge badge-primary wBadgeStatus bFacturasProveedores" style="cursor: pointer;">TOTAL</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="w-content">
+                                    <div class="w-info">
+                                        <img id="FacturasProveedoresLoader" alt="" src="/img/mini_loader.gif" width="75px;">
+                                        <p class="value text-info pFacturasProveedores" style="display: none;"> [VALUE]<i class="fas fa-primary-circle ml-2 fa-info-dashboard" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Total"></i></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12 layout-spacing">
+                <div class="widget widget-card-four">
+                    <div class="widget-content">
+                        <div class="w-header">
+                            <div class="w-info">
+                                <div class="row">
+                                    <div class="col-md-10">
+                                        <h6 class="value">Posición IVA (mes actual)</h6>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <span class="badge badge-primary wBadgeStatus bPosicionIVA" style="cursor: pointer;">TOTAL</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="w-content">
+                                    <div class="w-info">
+                                        <img id="PosicionIVALoader" alt="" src="/img/mini_loader.gif" width="75px;">
+                                        <p class="value text-info pPosicionIVA" style="display: none;"> [VALUE]<i class="fas fa-primary-circle ml-2 fa-info-dashboard" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Total"></i></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12 layout-spacing">
+                <div class="widget widget-card-four">
+                    <div class="widget-content">
+                        <div class="w-header">
+                            <div class="w-info">
+                                <div class="row">
+                                    <div class="col-md-10">
+                                        <h6 class="value">Saldo Cta Cte Clientes</h6>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <span class="badge badge-primary wBadgeStatus bSaldoCuentas" style="cursor: pointer;">TOTAL</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="w-content">
+                                    <div class="w-info">
+                                        <img id="SaldoCuentasLoader" alt="" src="/img/mini_loader.gif" width="75px;">
+                                        <p class="value text-info pSaldoCuentas" style="display: none; font-size:25px!important;"> [VALUE]<i class="fas fa-primary-circle ml-2 fa-info-dashboard" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Total"></i></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-12 col-lg-12 layout-spacing">
+                <div class="row">
+                    <div class="col">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <h5 class="card-title ml-2">Tipos de cambio</h5>
+                                    <div class="table-responsive">
+                                        <table class="table table-striped dt-view dataTable dtTiposDeCambio">
+                                            <thead>
+                                                <tr>
+                                                    <th>Símbolo</th>
+                                                    <th>Descripción</th>
+                                                    <th>Ult. Actualización</th>
+                                                    <th>Cotización</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    @section Scripts {
+    <script src="/lib/datepicker/js/bootstrap-datepicker.min.js"></script>
+    <script src="/lib/datepicker/js/bootstrap-datepicker.es.min.js"></script>
+    <script src="/lib/timepicker/js/bootstrap-timepicker.js"></script>
+    <script src="/lib/datatables/DataTables-1.10.20/js/jquery.dataTables.min.js"></script>
+    <script src="/lib/datatables/DataTables-1.10.20/js/dataTables.bootstrap4.min.js"></script>
+    <script src="/lib/datatables/DateTime-1.10.x/datetime-moment.js"></script>
+    <script src="/lib/datatables/Buttons-1.6.1/js/dataTables.buttons.min.js"></script>
+    <script src="/lib/datatables/Buttons-1.6.1/js/buttons.bootstrap4.min.js"></script>
+    <script src="/lib/datatables/Select-1.3.1/js/dataTables.select.min.js"></script>
+    <script src="/lib/datatables/Select-1.3.1/js/select.bootstrap4.min.js"></script>
+    <script src="/lib/select2/js/select2.min.js"></script>
+    <script src="/lib/select2/js/select2_locale_es.js?3661"></script>
+    <script src="/lib/accounting/accounting.min.js"></script>
+    <script src="/lib/autonumeric/autoNumeric.min.js"></script>
+    <script src="/lib/jquery-alphanum/jquery.alphanum.js"></script>
+    <script src="/lib/cleave/cleave.min.js"></script>
+    <script src="/lib/cleave/cleave.jquery.js"></script>
+    <script src="/lib/cleave/cleave-phone.ar.js"></script>
+    <script src="/lib/flatpickr/flatpickr.js"></script>
+    <script src="/lib/flatpickr/es.js"></script>
+
+    <script src="/js/Helpers/dataTables.helper.js?3661"></script>
+    <script src="/js/Helpers/select2.helper.js?3661"></script>
+    <script src="/js/Helpers/formData.helper.js?3661"></script>
+    <script src="/js/Helpers/ajax-action.js?3661"></script>
+    <script src="/js/Helpers/constraints.helper.js?3661"></script>
+    <script src="/js/Helpers/accounting.helper.js"></script>
+    <script src="/js/Helpers/dropdown-group-list.helper.js?3661"></script>
+    <script src="/js/Helpers/parseDynamicContent.helper.js?3661"></script>
+
+    <script src="/js/Shared/enums.js?3661"></script>
+    <script src="/js/Views/Home/administracion.js?3661"></script>
+
+}

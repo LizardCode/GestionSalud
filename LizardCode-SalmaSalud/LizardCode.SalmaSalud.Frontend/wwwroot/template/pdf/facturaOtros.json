@@ -1,0 +1,504 @@
+{
+  "MergeWith": "~/wwwroot/template/pdf/facturaOtros.pdf",
+  "GlobalFont": {
+    "Name": "Helvetica",
+    "Size": 9.0
+  },
+  "GlobalColor": "Black",
+  "Margins": {
+    "Left": -8.0,
+    "Right": 0.0,
+    "Top": 75.0,
+    "Bottom": 20.0
+  },
+  "MultiPage": false,
+
+  "Elements": [
+    {
+      "Type": "Text",
+      "Align": "Left",
+      "Position": {
+        "X": 45.0,
+        "Y": 40.0
+      },
+      "Text": [ "[@EMPRESA]" ],
+      "Font": {
+        "Name": "Helvetica",
+        "Size": 14.0
+      },
+      "LineSpacing": 2.0,
+      "SpacingBefore": 60.0
+    },
+
+    {
+      "Type": "Paragraph",
+      "Width": 250.0,
+      "Align": "Left",
+      "Position": {
+        "X": 45.0,
+        "Y": 78.0
+      },
+      "Text": [ "[@EMPRESA_DIRECCION]" ],
+      "Font": {
+        "Name": "Helvetica",
+        "Size": 10.0
+      },
+      "LineSpacing": 2.0,
+      "SpacingBefore": 60.0
+    },
+
+    {
+      "Type": "Text",
+      "Align": "Left",
+      "Position": {
+        "X": 45.0,
+        "Y": 90.0
+      },
+      "Text": [ "[@EMPRESA_CP]" ],
+      "Font": {
+        "Name": "Helvetica",
+        "Size": 10.0
+      },
+      "LineSpacing": 2.0,
+      "SpacingBefore": 60.0
+    },
+
+    {
+      "Type": "Text",
+      "Align": "Left",
+      "Position": {
+        "X": 45.0,
+        "Y": 100.0
+      },
+      "Text": [ "[@EMPRESA_TELEFONO]" ],
+      "Font": {
+        "Name": "Helvetica",
+        "Size": 10.0
+      },
+      "LineSpacing": 2.0,
+      "SpacingBefore": 60.0
+    },
+
+    {
+      "Type": "Text",
+      "Align": "Left",
+      "Position": {
+        "X": 45.0,
+        "Y": 110.0
+      },
+      "Text": [ "[@EMPRESA_CUIT]" ],
+      "Font": {
+        "Name": "Helvetica",
+        "Size": 10.0
+      },
+      "LineSpacing": 2.0,
+      "SpacingBefore": 60.0
+    },
+
+    {
+      "Type": "Text",
+      "Align": "Center",
+      "Position": {
+        "X": 302.0,
+        "Y": 30.0
+      },
+      "Text": [ "[@LETRA]" ],
+      "Font": {
+        "Name": "Helvetica",
+        "Size": 18.0
+      },
+      "LineSpacing": 2.0,
+      "SpacingBefore": 60.0
+    },
+
+    {
+      "Type": "Text",
+      "Align": "Right",
+      "Position": {
+        "X": 554.0,
+        "Y": 52.0
+      },
+      "Text": [ "[@CODIGO]" ],
+      "Font": {
+        "Name": "Helvetica",
+        "Size": 8.0
+      },
+      "LineSpacing": 2.0,
+      "SpacingBefore": 60.0
+    },
+
+    {
+      "Type": "Text",
+      "Align": "Left",
+      "Position": {
+        "X": 350.0,
+        "Y": 30.0
+      },
+      "Width": 50.0,
+      "Text": [ "[@TIPO_COMPROBANTE]" ],
+      "Font": {
+        "Name": "Helvetica",
+        "Size": 12.0
+      },
+      "LineSpacing": 2.0,
+      "SpacingBefore": 60.0
+    },
+
+    {
+      "Type": "Text",
+      "Align": "Left",
+      "Position": {
+        "X": 370.0,
+        "Y": 45.0
+      },
+      "Width": 50.0,
+      "Text": [ "[@COMPROBANTE]" ],
+      "Font": {
+        "Name": "Helvetica",
+        "Size": 14.0
+      },
+      "LineSpacing": 2.0,
+      "SpacingBefore": 60.0
+    },
+
+    {
+      "Type": "Text",
+      "Align": "Left",
+      "Position": {
+        "X": 410.0,
+        "Y": 82.0
+      },
+      "Text": [ "[@FECHA]" ],
+      "Font": {
+        "Name": "Helvetica",
+        "Size": 8.0
+      },
+      "LineSpacing": 2.0,
+      "SpacingBefore": 60.0
+    },
+
+    {
+      "Type": "Text",
+      "Align": "Left",
+      "Position": {
+        "X": 410.0,
+        "Y": 99.0
+      },
+      "Width": 50.0,
+      "Text": [ "[@CUIT]" ],
+      "Font": {
+        "Name": "Helvetica",
+        "Size": 8.0
+      },
+      "LineSpacing": 2.0,
+      "SpacingBefore": 60.0
+    },
+
+    {
+      "Type": "Text",
+      "Align": "Left",
+      "Position": {
+        "X": 410.0,
+        "Y": 107.0
+      },
+      "Width": 50.0,
+      "Text": [ "[@IIBB]" ],
+      "Font": {
+        "Name": "Helvetica",
+        "Size": 8.0
+      },
+      "LineSpacing": 2.0,
+      "SpacingBefore": 60.0
+    },
+
+    {
+      "Type": "Text",
+      "Align": "Left",
+      "Position": {
+        "X": 410.0,
+        "Y": 117.0
+      },
+      "Width": 50.0,
+      "Text": [ "[@FECHA_INICIO_ACTIVIDADES]" ],
+      "Font": {
+        "Name": "Helvetica",
+        "Size": 8.0
+      },
+      "LineSpacing": 2.0,
+      "SpacingBefore": 60.0
+    },
+
+    {
+      "Type": "Text",
+      "Align": "Left",
+      "Position": {
+        "X": 80.0,
+        "Y": 134.0
+      },
+      "Width": 50.0,
+      "Text": [ "[@CLIENTE]" ],
+      "Font": {
+        "Name": "Helvetica",
+        "Size": 10.0
+      },
+      "LineSpacing": 2.0,
+      "SpacingBefore": 60.0
+    },
+
+    {
+      "Type": "Paragraph",
+      "Align": "Left",
+      "Position": {
+        "X": 80.0,
+        "Y": 162.0
+      },
+      "Width": 280.0,
+      "Text": [ "[@CLIENTE_DOMICILIO]" ],
+      "Font": {
+        "Name": "Helvetica",
+        "Size": 10.0
+      },
+      "LineSpacing": 2.0,
+      "SpacingBefore": 60.0
+    },
+
+    {
+      "Type": "Text",
+      "Align": "Left",
+      "Position": {
+        "X": 420.0,
+        "Y": 148.0
+      },
+      "Width": 50.0,
+      "Text": [ "[@CLIENTE_LOCALIDAD]" ],
+      "Font": {
+        "Name": "Helvetica",
+        "Size": 10.0
+      },
+      "LineSpacing": 2.0,
+      "SpacingBefore": 60.0
+    },
+
+    {
+      "Type": "Text",
+      "Align": "Left",
+      "Position": {
+        "X": 80.0,
+        "Y": 148.0
+      },
+      "Width": 50.0,
+      "Text": [ "[@CLIENTE_IVA]" ],
+      "Font": {
+        "Name": "Helvetica",
+        "Size": 10.0
+      },
+      "LineSpacing": 2.0,
+      "SpacingBefore": 60.0
+    },
+
+    {
+      "Type": "Text",
+      "Align": "Left",
+      "Position": {
+        "X": 420.0,
+        "Y": 162.0
+      },
+      "Width": 50.0,
+      "Text": [ "[@CLIENTE_CUIT]" ],
+      "Font": {
+        "Name": "Helvetica",
+        "Size": 10.0
+      },
+      "LineSpacing": 2.0,
+      "SpacingBefore": 60.0
+    },
+
+    {
+      "Type": "Text",
+      "Align": "Left",
+      "Position": {
+        "X": 363.0,
+        "Y": 178.0
+      },
+      "Width": 50.0,
+      "Text": [ "[@VENCIMIENTO]" ],
+      "Font": {
+        "Name": "Helvetica",
+        "Size": 9.0
+      },
+      "LineSpacing": 2.0,
+      "SpacingBefore": 60.0
+    },
+
+    {
+      "Type": "Text",
+      "Align": "Left",
+      "Position": {
+        "X": 100.0,
+        "Y": 687.0
+      },
+      "Width": 50.0,
+      "Text": [ "[@SUB_TOTAL]" ],
+      "Font": {
+        "Name": "Helvetica",
+        "Size": 11.0
+      },
+      "LineSpacing": 2.0,
+      "SpacingBefore": 60.0
+    },
+
+    {
+      "Type": "Text",
+      "Align": "Left",
+      "Position": {
+        "X": 100.0,
+        "Y": 710.0
+      },
+      "Width": 50.0,
+      "Text": [ "[@IMPUESTOS]" ],
+      "Font": {
+        "Name": "Helvetica",
+        "Size": 10.0
+      },
+      "LineSpacing": 2.0,
+      "SpacingBefore": 60.0
+    },
+
+    {
+      "Type": "Text",
+      "Align": "Right",
+      "Position": {
+        "X": 584.0,
+        "Y": 710.0
+      },
+      "Width": 50.0,
+      "Text": [ "[@TOTAL]" ],
+      "Font": {
+        "Name": "Helvetica",
+        "Size": 14.0
+      },
+      "LineSpacing": 2.0,
+      "SpacingBefore": 60.0
+    },
+
+    {
+      "Type": "Text",
+      "Align": "Right",
+      "Position": {
+        "X": 584.0,
+        "Y": 680.0
+      },
+      "Width": 50.0,
+      "Text": [ "[@IIBB_CABA]" ],
+      "Font": {
+        "Name": "Helvetica",
+        "Size": 9.0
+      },
+      "LineSpacing": 2.0,
+      "SpacingBefore": 60.0
+    },
+
+    {
+      "Type": "Text",
+      "Align": "Right",
+      "Position": {
+        "X": 584.0,
+        "Y": 692.0
+      },
+      "Width": 50.0,
+      "Text": [ "[@IIBB_BSAS]" ],
+      "Font": {
+        "Name": "Helvetica",
+        "Size": 9.0
+      },
+      "LineSpacing": 2.0,
+      "SpacingBefore": 60.0
+    },
+
+    {
+      "Type": "Text",
+      "Align": "Left",
+      "Position": {
+        "X": 25.0,
+        "Y": 755.0
+      },
+      "Width": 50.0,
+      "Text": [ "[@OBSERVACIONES]" ],
+      "Font": {
+        "Name": "Helvetica",
+        "Size": 8.0
+      },
+      "LineSpacing": 2.0,
+      "SpacingBefore": 60.0
+    },
+
+    {
+      "Type": "Text",
+      "Align": "Left",
+      "Position": {
+        "X": 25.0,
+        "Y": 800.0
+      },
+      "Width": 50.0,
+      "Text": [ "[@CAE]" ],
+      "Font": {
+        "Name": "Helvetica",
+        "Size": 10.0
+      },
+      "LineSpacing": 2.0,
+      "SpacingBefore": 60.0
+    },
+
+    {
+      "Type": "Text",
+      "Align": "Right",
+      "Position": {
+        "X": 584.0,
+        "Y": 800.0
+      },
+      "Width": 50.0,
+      "Text": [ "[@REFERENCIA_COMERCIAL]" ],
+      "Font": {
+        "Name": "Helvetica",
+        "Size": 10.0
+      },
+      "LineSpacing": 2.0,
+      "SpacingBefore": 60.0
+    },
+
+    {
+      "Type": "Paragraph",
+      "Align": "Left",
+      "Position": {
+        "X": 35.0,
+        "Y": 645.0
+      },
+      "Width": 350.0,
+      "Text": [ "[@IMPORTE_LETRAS]" ],
+      "Font": {
+        "Name": "Helvetica",
+        "Size": 8.0
+      },
+      "LineSpacing": 2.0,
+      "SpacingBefore": 60.0
+    },
+
+    {
+      "Type": "Paragraph",
+      "Align": "Left",
+      "Position": {
+        "X": 23.0,
+        "Y": 732.0
+      },
+      "Width": 350.0,
+      "Text": [ "[@LEYENDA_DOLARES]" ],
+      "Font": {
+        "Name": "Helvetica",
+        "Size": 8.0
+      },
+      "LineSpacing": 2.0,
+      "SpacingBefore": 60.0
+    }
+  ]
+}
+

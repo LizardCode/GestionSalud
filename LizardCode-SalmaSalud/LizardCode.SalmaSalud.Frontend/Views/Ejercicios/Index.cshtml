@@ -1,0 +1,50 @@
+﻿@model LizardCode.SalmaSalud.Application.Models.Ejercicios.EjerciciosViewModel
+@{
+    Layout = "~/Views/Shared/MaestroLayout.cshtml";
+
+    ViewBag.MainClass = "ABMEjerciciosView";
+
+    ViewBag.Title = "Mantenimiento de Ejercicios";
+    ViewBag.TitleNew = "Nuevo Ejercicio...";
+    ViewBag.TitleEdit = "Modificar Ejercicio...";
+    ViewBag.TitleRemove = "Eliminar Ejercicio...";
+    ViewBag.ItemMenu = "Cheques";
+
+    ViewBag.ButtonNew = true;
+    ViewBag.ButtonEdit = false;
+    ViewBag.ButtonRemove = false;
+
+    ViewBag.AjaxGetAll = Url.Action("ObtenerTodos", "Ejercicios");
+    ViewBag.AjaxGet = Url.Action("Obtener", "Ejercicios");
+    ViewBag.AjaxAdd = Url.Action("Nuevo", "Ejercicios");
+
+    ViewBag.Tabs = new string[] { "General" };
+}
+
+@section Styles {
+    <link href="/css/Views/Ejercicios/index.css?3661" rel="stylesheet" />
+}
+
+@section GridColumns {
+
+    <th>ID</th>
+    <th>Código</th>
+    <th>Fecha Desde</th>
+    <th>Fecha Hasta</th>
+    <th>Cerrado</th>
+
+}
+
+@section CrudForm {
+
+    @Html.FormGroupTextBoxFor(m => m.IdEjercicio, title: "ID", editingDisabled: true, newVisible: false)
+
+    @Html.FormGroupInputGroupFor(m => m.MesAnnoInicio, title: "Mes/Año Inicio", icon: "#", addValidator: true, editingDisabled: true)
+
+    @Html.FormGroupInputGroupFor(m => m.MesAnnoFin, title: "Mes/Año Fin", icon: "#", addValidator: true, editingDisabled: true)
+
+}
+
+@section Scripts {
+    <script src="/js/Views/Ejercicios/index.js?3661"></script>
+}

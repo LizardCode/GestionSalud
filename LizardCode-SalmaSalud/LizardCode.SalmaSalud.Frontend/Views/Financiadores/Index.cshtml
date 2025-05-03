@@ -1,0 +1,119 @@
+﻿@using LizardCode.Framework.Application.Models.Repeater;
+
+@model LizardCode.SalmaSalud.Application.Models.Financiadores.FinanciadorViewModel
+@{
+    Layout = "~/Views/Shared/MaestroLayout.cshtml";
+
+    ViewBag.MainClass = "ABMFinanciadoresView";
+
+    ViewBag.Title = "Mantenimiento de Financiadores";
+    ViewBag.TitleNew = "Nuevo financiador...";
+    ViewBag.TitleEdit = "Modificar financiador...";
+    ViewBag.TitleRemove = "Eliminar financiador...";
+    ViewBag.ItemMenu = "Financiadores";
+
+    ViewBag.ButtonNew = true;//PermisosBusiness.Instance.VerificarPermisos(ModuloOperativo.Usuarios, Permiso.Alta);
+    ViewBag.ButtonEdit = true;//PermisosBusiness.Instance.VerificarPermisos(ModuloOperativo.Usuarios, Permiso.Modificacion);
+    ViewBag.ButtonRemove = true;//PermisosBusiness.Instance.VerificarPermisos(ModuloOperativo.Usuarios, Permiso.Baja);
+
+    ViewBag.AjaxGetAll = Url.Action("ObtenerTodos", "Financiadores");
+    ViewBag.AjaxGet = Url.Action("Obtener", "Financiadores");
+    ViewBag.AjaxAdd = Url.Action("Nuevo", "Financiadores");
+    ViewBag.AjaxUpdate = Url.Action("Modificar", "Financiadores");
+    ViewBag.AjaxDelete = Url.Action("Eliminar", "Financiadores");
+
+    ViewBag.Tabs = new string[] { "General", "Dirección", "Planes" };
+}
+
+@section Styles {
+    <link href="/css/Views/Financiadores/index.css?3661" rel="stylesheet" />
+}
+
+@section ToolbarButtons {
+
+    <button type="button" class="btn btn-secondary btPrestaciones" title="Prestaciones" disabled><i class="fa fa-list"></i> PRESTACIONES</button>
+    <button type="button" class="btn btn-info btPadron" title="Padrón de afiliados" disabled><i class="fa fa-list"></i> PADRÓN</button>
+}
+
+@section Filters {
+
+    @*@Html.FilterTextBoxFor(m => m.FiltroCUIT, "C.U.I.T.", value: string.Empty, placeholder: "__-________-_")*@
+    @Html.FilterTextBoxFor(m => m.FiltroNombre, "Nombre", value: string.Empty)
+}
+
+@section GridColumns {
+
+    <th>ID</th>
+    <th>Nombre</th>
+    <th>CUIT</th>
+    <th>Nro.</th>
+    <th>Teléfono</th>
+    <th>Email</th>
+
+}
+
+@section CrudForm {
+
+    @Html.FormGroupTextBoxFor(m => m.IdFinanciador, title: "ID", editingDisabled: true, newVisible: false)
+
+    @Html.FormGroupTextBoxFor(m => m.Nombre, title: "Nombre", addValidator: false)
+
+    @Html.FormGroupTextBoxFor(m => m.NroFinanciador, title: "Nro. Financiador", addValidator: true)
+
+    @Html.FormGroupCheckboxFor(m => m.Capita, title: "Cápita")
+
+    @Html.FormGroupButtonGroupFor(m => m.CUIT, buttonCss: "btnCUIT", buttonText: "AFIP", title: "C.U.I.T.", addValidator: true, position: "append")
+
+    @Html.FormGroupDropDownListFor(m => m.IdTipoIVA, Model.MaestroTipoIVA, "Tipo de IVA", fieldCss: "select2-field tipoIVA", addValidator: true)
+
+    @Html.FormGroupTextBoxFor(m => m.NroIBr, title: "N° de Ingresos Brutos", addValidator: false)
+
+    @Html.FormGroupDropDownGroupFor(m => m.Telefono, "IdTipoTelefono", Model.MaestroTipoTelefono, title: "Teléfono", addValidator: true)
+
+    @Html.FormGroupTextBoxFor(m => m.Email, title: "Email", fieldCss: "form-control lowercase", addValidator: true)
+
+}
+
+@section CrudTab01 {
+
+    @Html.HiddenFor(m => m.Latitud)
+    @Html.HiddenFor(m => m.Longitud)
+
+    @Html.FormGroupTextBoxFor(m => m.Direccion, title: "Dirección", colSize: "col-md-8", autocomplete: false, addValidator: true)
+
+    @Html.FormGroupTextBoxFor(m => m.Piso, title: "Piso", colSize: "col-md-2")
+
+    @Html.FormGroupTextBoxFor(m => m.Departamento, title: "Depto.", colSize: "col-md-2")
+
+    @Html.FormGroupTextBoxFor(m => m.Provincia, title: "Provincia", colSize: "col-md-5")
+
+    @Html.FormGroupTextBoxFor(m => m.Localidad, title: "Localidad", colSize: "col-md-5")
+
+    @Html.FormGroupTextBoxFor(m => m.CodigoPostal, title: "Código Postal", colSize: "col-md-2")
+}
+
+@section CrudTab02 {
+
+    <div class="col">
+        <div class="row">
+            <div class="col">
+                <h4>Carga de planes</h4>
+            </div>
+        </div>
+
+        <div class="row dvPlanes">
+            <div class="col">
+                @await Component.InvokeAsync("Repeater", new RepeaterViewModel().SetItems(
+                    Model.Items
+                ))
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    
+    <script src="/js/Views/Financiadores/index.js?3661"></script>
+    <script src="/js/Shared/modals.js?3661"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBAnt1IhTMCk1BVOjr_p4q8IxlicSEVGyw&libraries=places&callback=ABMFinanciadoresView.initAutocomplete"></script>
+}

@@ -1,0 +1,13 @@
+﻿.pac-container {
+    z-index: 10002;
+}
+
+.table > thead > tr > th {
+    text-align: center;
+}
+
+#dt-cierre-mes {
+    width: 97%;
+    margin: 0 auto 30px auto;
+    border: 1px solid #dee2e6;
+}

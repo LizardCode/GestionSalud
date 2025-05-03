@@ -1,0 +1,90 @@
+﻿@model LizardCode.SalmaSalud.Application.Models.Pacientes.PacienteViewModel
+@{
+    Layout = "~/Views/Shared/MaestroLayout.cshtml";
+
+    ViewBag.MainClass = "ABMPacientesView";
+
+    ViewBag.Title = "Mantenimiento de Pacientes";
+    ViewBag.TitleNew = "Nuevo paciente...";
+    ViewBag.TitleEdit = "Modificar paciente...";
+    ViewBag.TitleRemove = "Eliminar paciente...";
+    ViewBag.ItemMenu = "Pacientes";
+
+    ViewBag.ButtonNew = true;//PermisosBusiness.Instance.VerificarPermisos(ModuloOperativo.Usuarios, Permiso.Alta);
+    ViewBag.ButtonEdit = true;//PermisosBusiness.Instance.VerificarPermisos(ModuloOperativo.Usuarios, Permiso.Modificacion);
+    ViewBag.ButtonRemove = true;//PermisosBusiness.Instance.VerificarPermisos(ModuloOperativo.Usuarios, Permiso.Baja);
+
+    ViewBag.AjaxGetAll = Url.Action("ObtenerTodos", "Pacientes");
+    ViewBag.AjaxGet = Url.Action("Obtener", "Pacientes");
+    ViewBag.AjaxAdd = Url.Action("Nuevo", "Pacientes");
+    ViewBag.AjaxUpdate = Url.Action("Modificar", "Pacientes");
+    ViewBag.AjaxDelete = Url.Action("Eliminar", "Pacientes");
+
+    ViewBag.Tabs = new string[] { "General" };
+}
+
+@section Styles {
+    <link href="/css/Views/Pacientes/index.css?3661" rel="stylesheet" />
+}
+
+@section ToolbarButtons {
+
+    @* <button type="button" class="btn btn-secondary btHistoriaClinica" title="Historia Clínica" disabled><i class="fa fa-search"></i> VER HISTORIA CLÍNICA</button> *@
+}
+
+@*
+@section Filters {
+
+    @Html.FilterTextBoxFor(m => m.FiltroNombre, "Nombre", value: string.Empty)
+    @Html.FilterTextBoxFor(m => m.FiltroDocumento, "Nombre", value: string.Empty)
+
+}
+*@
+
+@section GridColumns {
+
+    <th>ID</th>
+    <th>Nombre</th>
+    <th>Documento</th>
+    <th>Afiliado Nro.</th>
+    <th>Teléfono</th>
+    <th>Email</th>
+
+}
+
+@section CrudForm {
+
+    @Html.FormGroupTextBoxFor(m => m.IdPaciente, title: "ID", editingDisabled: true, newVisible: false)
+
+    @Html.FormGroupTextBoxFor(m => m.FinanciadorNro, title: "Nro. Afiliado/Socio", addValidator: true, fieldCss: "form-control financiadorNro")
+
+    @Html.FormGroupTextBoxFor(m => m.Nombre, title: "Nombre", addValidator: true)
+
+    <div class="col">
+        <div class="row">
+            @Html.FormGroupTextBoxFor(m => m.Documento, title: "Documento", addValidator: true, colSize: "col-md-6")
+
+            @Html.FormGroupPickerDateFor(m => m.FechaNacimiento, title: "Fecha Nacimiento", colSize: "col-md-6", addValidator: true, editingDisabled: false)
+        </div>
+    </div>
+    
+    @Html.FormGroupTextBoxFor(m => m.Nacionalidad, title: "Nacionalidad", addValidator: true)
+
+    @* @Html.FormGroupCheckboxFor(m => m.SinCobertura, title: "Sin Cobertura")
+    
+    @Html.FormGroupDropDownListFor(m => m.IdFinanciador, Model.MaestroFinanciadores, "Financiador", fieldCss: "select2-field validate financiador")
+
+    @Html.FormGroupDropDownListFor(m => m.IdFinanciadorPlan, null, "Plan", fieldCss: "select2-field validate financiadorPlan") *@
+    
+
+    @Html.FormGroupTextBoxFor(m => m.Telefono, title: "Teléfono Móvil", addValidator: true)
+
+    @Html.FormGroupTextBoxFor(m => m.Email, title: "Email", fieldCss: "form-control lowercase", addValidator: true)
+
+}
+
+@section Scripts {
+
+    <script src="/js/Shared/modals.js?3661"></script>
+    <script src="/js/Views/Pacientes/index.js?3661"></script>
+}

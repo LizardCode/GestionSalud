@@ -1,0 +1,73 @@
+﻿@import url('https://fonts.googleapis.com/css2?family=Quicksand&display=swap');
+
+.pac-container {
+    z-index: 10002;
+}
+
+.modal .modal-dialog .no-transform {
+    text-transform: none;
+}
+
+.modal .modal-dialog div.frame-etiquetas {
+    overflow: auto;
+    height: 329px;
+    border: solid 1px #bfc9d4;
+    border-radius: 6px;
+    padding: 6px 10px;
+}
+
+.modal .modal-dialog div.frame-etiquetas > ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.modal .modal-dialog div.frame-etiquetas > ul > li {
+    height: 25px;
+    line-height: 24px;
+    padding-left: 7px;
+    cursor: pointer;
+}
+
+.modal .modal-dialog div.frame-etiquetas > ul > li:hover {
+    background-color: #f7f7ff;
+}
+
+.modal .modal-dialog div.frame-etiquetas > ul > li::selection,
+.modal .modal-dialog div.frame-etiquetas > ul > li > i::selection,
+.modal .modal-dialog div.frame-etiquetas > ul > li > span::selection {
+    color: unset;
+    background-color: unset;
+}
+
+.modal .modal-dialog div.frame-etiquetas > ul > li > i {
+    color: #7777ff;
+}
+
+.modal .modal-dialog div.frame-etiquetas > ul > li.template {
+    display: none;
+}
+
+.pdf-viewer {
+    position: relative;
+    box-sizing: border-box;
+    height: 100vh;
+}
+
+.pdf-viewer .pdf-viewer-page {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    height: auto;
+    border: 1px solid darkgray;
+    background-color: lightgray;
+    box-sizing: border-box;
+    overflow: auto;
+    text-align: center;
+}
+
+.hide {
+    display: none;
+}

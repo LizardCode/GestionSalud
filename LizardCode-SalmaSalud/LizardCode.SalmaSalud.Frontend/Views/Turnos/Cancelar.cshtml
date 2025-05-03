@@ -1,0 +1,54 @@
+﻿@using System.Text.RegularExpressions
+@model LizardCode.SalmaSalud.Application.Models.Turnos.CancelarViewModel
+@{
+    Layout = null;
+
+    ViewBag.AjaxAsignar = Url.Action("Cancelar", "Turnos");
+    ViewBag.MainClass = "TurnosCancelarView";
+}
+
+
+<div class="modal-header">
+    <h5 class="modal-title">Cancelar Turno</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true" class="fa fa-times"></span>
+    </button>
+</div>
+<div class="modal-body">
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                @*<div class="card-header p-b-0 azulClaro">
+                <h6 class="card-title"><i class="fa fa-calendar"></i>  </h6>
+                </div>*@
+                <div class="card-body">
+
+                    @using (Html.AjaxBeginForm((string)ViewBag.AjaxAsignar, (string)ViewBag.MainClass, begin: "ajaxCancelarBegin", success: "ajaxCancelarSuccess", failure: "ajaxCancelarFailure", css: "frmCancelar"))
+                    {
+                        @Html.HiddenFor(m => m.IdTurno, new { @class = "hdnIdTurno"})
+                        <div class="col">
+                            @*<div class="alert alert-primary text-center" role="alert">
+                                <b>@string.Format("{0}, {1}, {2}.", @Model.Profesional, @Model.Especialidad, @Model.Fecha)</b>
+                            </div>*@
+
+                            @Html.FormGroupTextAreaFor(m => m.Observaciones, title: "Observaciones", rows: 4, addValidator: true)
+                            @*
+                            <div class="row">
+                                @Html.FormGroupTextAreaFor(m => m.Observaciones, title: "Observaciones", rows: 4)
+                            </div>
+                            *@
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal-footer">
+    <button type="button" data-dismiss="modal" class="btn btn-default"><i class="fa fa-times"></i> CERRAR</button>
+    <button type="button" class="btn btn-danger btSave"><i class="fa fa-check"></i> CANCELAR</button>
+</div>
+
+
+<script src="/js/Views/Turnos/cancelar.js?3661"></script>

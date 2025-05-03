@@ -1,0 +1,80 @@
+﻿.pac-container {
+    z-index: 10002;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.text-left {
+    text-align: left;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.table-controls {
+    padding: 0;
+    margin-bottom: 0;
+}
+
+.table-controls li {
+    list-style: none;
+    display: inline;
+}
+
+.table-controls li i {
+    cursor: pointer;
+    color: #515365;
+    font-size: 1.7em;
+}
+
+.table-hover:not(.table-dark) tbody tr:hover .table-controls li i {
+    color: #191e3a;
+}
+
+.table-hover:not(.table-dark) tbody tr:hover td:first-child {
+    color: #4361ee !important;
+}
+
+.dvPercepciones .master-detail-table tfoot span {
+    font-size: 12px;
+    padding: 0px !important;
+}
+
+.dvPercepciones .master-detail-table tfoot div {
+    padding: 0px !important;
+}
+
+.hide {
+    display: none;
+}
+
+.table-hover:not(.table-dark) tbody tr:hover .table-controls li i {
+    color: #191e3a;
+}
+
+.table-hover:not(.table-dark) tbody tr:hover td:first-child {
+    color: #4361ee !important;
+}
+
+.asiento, .details, .validar {
+    font-size: 1.7em;
+}
+
+.rojo {
+    color: red;
+}
+
+.verde {
+    color: green;
+}
+
+.azul {
+    color: blue;
+}
+
+.amarillo {
+    color: yellow;
+}

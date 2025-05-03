@@ -1,0 +1,155 @@
+﻿@model LizardCode.SalmaSalud.Application.Models.Turnos.TurnoViewModel
+@using System.Text.RegularExpressions
+
+@{
+    Layout = "~/Views/Shared/BaseLayout.cshtml";
+
+    //ViewBag.Title = "Turnos";
+    //ViewBag.HideTitle = true;
+    ViewBag.MainClass = "CalendarioView";
+    ViewBag.ItemMenu = "Turnos";
+}
+
+@section Styles {
+    <link href="/lib/datatables/DataTables-1.10.20/css/dataTables.bootstrap4.min.css" rel="stylesheet" />
+    <link href="/lib/datatables/Buttons-1.6.1/css/buttons.bootstrap4.min.css" rel="stylesheet" />
+    <link href="/lib/select2/css/select2.css" rel="stylesheet" />
+    <link href="/lib/datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet" />
+    <link href="/lib/timepicker/css/bootstrap-timepicker.min.css" rel="stylesheet" />
+    <link href="/css/Shared/dt-global_style.css?3661" rel="stylesheet" />
+
+    <link href="/css/Shared/maestroLayout.css?3661" rel="stylesheet" />
+    <link href="/css/Shared/modal.css?3661" rel="stylesheet" />
+    <link href="/css/Shared/custom-accordions.css" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="/css/Views/Shared/maestroLayout.css?3661">
+    <link rel="stylesheet" type="text/css" href="/css/Views/Turnos/turnos.css?3661">
+
+    <link rel="stylesheet" type="text/css" href="/lib/fullcalendar/main.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/Shared/fullcalendar.css">
+    <link rel="stylesheet" type="text/css" href="/css/Views/Turnos/index.css">
+}
+
+<div class="@ViewBag.MainClass" data-mainclass="@ViewBag.MainClass">
+
+    <div class="col-lg-12">
+
+        <div class="row">
+            <div class="col">
+                <div id="iconsAccordion" class="accordion-icons mt-3">
+                    <div class="card-header">
+                        <div class="card-header p-2">
+                            <a href="##" onClick="history.go(-1); return false;">
+                                <h6 class="card-title"><i class="fa fa-arrow-left"></i> Volver</h6>
+                            </a>
+                            <h4> Nuevo Turno</h4>
+                            <p class="card-title mt-2">Paso 1/3 - Indicá Especialidad y/o Profesional para ver la disponibilidad diaria.</p>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="row">
+                                @Html.FormGroupDropDownListFor(m => m.IdEspecialidad, Model.MaestroEspecialidades, "Especialidades", fieldCss: "s2Especialidades", colSize: "col-md-5")
+                                @Html.FormGroupDropDownListFor(m => m.IdProfesional, Model.MaestroProfesionales, "Profesionales", fieldCss: "s2Profesionales", colSize: "col-md-5")
+                                <div class="col-md-2 pt-4">
+                                    <button type="button" class="btFiltros btn btn-primary float-right m-1"> BUSCAR</button>
+                                </div>
+                            </div>
+                            <div class="row dvInfoBusqueda" style="display:none;">
+                                <div class="col-12">
+                                    <h6 class="iInfoBusqueda">
+                                        <i class="fa fa-info-circle text-primary" aria-hidden="true"></i> <b class="bInfoBusqueda">Existen [CANTIDAD] turnos disponibles para el mes de [MES].</b>
+                                    </h6>
+                                </div>
+                            </div>
+                            <div class="row dvInfoBusquedaProximoTurno" style="display:none;">
+                                <div class="col-12">
+                                    <h6 class="iInfoBusquedaProximoTurno">
+                                        <i class="fa fa-exclamation-triangle text-success" aria-hidden="true"></i> <b class="bInfoBusquedaProximoTurno">El próximo turno disponible es el [DIA] a las [HORA].</b>
+                                        <span class="btn btn-agendar badge badge-primary btnPrimerTurnoAgendar justify-content-end float-right" alt="Agendar" data-id-profesional-turno="0"><i class="fas fa-calendar-check"></i> AGENDAR</span>
+                                    </h6>
+                                </div>
+                            </div>
+                            @* <div class="row dvInfoBusquedaProximoTurno" style="display:none;">
+                                <div class="col-12 col-md-12 iInfoBusquedaProximoTurno">
+                                    <span style="line-height: 40px;"><i class="fa fa-exclamation-triangle text-success" aria-hidden="true"></i> <b class="bInfoBusquedaProximoTurno">El próximo turno disponible es el [DIA] a las [HORA].</b></span>
+                                    <span class="btn btn-agendar badge badge-primary btnPrimerTurnoAgendar justify-content-end float-right" alt="Agendar" data-id-profesional-turno="0"><i class="fas fa-calendar-check"></i> AGENDAR</span>
+                                </div>
+                            </div> *@
+                            @* 
+                            <div class="col-md-5 pl-4">
+                                <div class="n-chk">
+                                    <label class="new-control new-checkbox checkbox-primary">
+                                        <input type="checkbox" class="new-control-input chkMostarPrimerosDsiponibles">
+                                        <span class="new-control-indicator"></span>Mostrar Turnos mas Próximos
+                                    </label>
+                                </div>
+                            </div> 
+                            *@
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <div class="row">
+                    <div class="col-xl-12 col-xxl-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div id="CalendarioTurnos" class="calendarioTurnos" style="height:20%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @*</div>*@
+    </div>
+</div>
+
+@section Scripts {
+    <script src="/lib/datepicker/js/bootstrap-datepicker.min.js"></script>
+    <script src="/lib/datepicker/js/bootstrap-datepicker.es.min.js"></script>
+    <script src="/lib/timepicker/js/bootstrap-timepicker.js"></script>
+    <script src="/lib/datatables/DataTables-1.10.20/js/jquery.dataTables.min.js"></script>
+    <script src="/lib/datatables/DataTables-1.10.20/js/dataTables.bootstrap4.min.js"></script>
+    <script src="/lib/datatables/DateTime-1.10.x/datetime-moment.js"></script>
+    <script src="/lib/datatables/Buttons-1.6.1/js/dataTables.buttons.min.js"></script>
+    <script src="/lib/datatables/Buttons-1.6.1/js/buttons.bootstrap4.min.js"></script>
+    <script src="/lib/datatables/Select-1.3.1/js/dataTables.select.min.js"></script>
+    <script src="/lib/datatables/Select-1.3.1/js/select.bootstrap4.min.js"></script>
+    <script src="/lib/select2/js/select2.min.js"></script>
+    <script src="/lib/select2/js/select2_locale_es.js?3661"></script>
+    <script src="/lib/accounting/accounting.min.js"></script>
+    <script src="/lib/autonumeric/autoNumeric.min.js"></script>
+    <script src="/lib/jquery-alphanum/jquery.alphanum.js"></script>
+    <script src="/lib/cleave/cleave.min.js"></script>
+    <script src="/lib/cleave/cleave.jquery.js"></script>
+    <script src="/lib/cleave/cleave-phone.ar.js"></script>
+
+    <script src="/js/Helpers/dataTables.helper.js?3661"></script>
+    <script src="/js/Helpers/select2.helper.js?3661"></script>
+    <script src="/js/Helpers/bootstrap-datepicker.helper.js?3661"></script>
+    <script src="/js/Helpers/formData.helper.js?3661"></script>
+    <script src="/js/Helpers/ajax-action.js?3661"></script>
+    <script src="/js/Helpers/masks.helper.js?3661"></script>
+    <script src="/js/Helpers/constraints.helper.js?3661"></script>
+    <script src="/js/Helpers/accounting.helper.js"></script>
+    <script src="/js/Helpers/dropdown-group-list.helper.js?3661"></script>
+    <script src="/js/Helpers/repeater.helper.js?3661"></script>
+    <script src="/js/Helpers/parseDynamicContent.helper.js?3661"></script>
+
+    <script src="/js/Shared/enums.js?3661"></script>
+
+    <script src="/js/Shared/modals.js?3661"></script>
+    <script src="/js/Views/Turnos/index.js?3661"></script>
+
+    <script src="/lib/fullcalendar/main.min.js"></script>
+    <script src="/lib/fullcalendar/locales/es.js"></script>
+
+    <script>
+        $.validator.setDefaults({ ignore: ':hidden:not(.validate):not(.validate :hidden), .no-validate' });
+        Utils.setupValidator();
+    </script>
+}

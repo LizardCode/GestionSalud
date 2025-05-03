@@ -1,0 +1,59 @@
+﻿@model LizardCode.SalmaSalud.Application.Models.CuentasContables.CuentasContablesViewModel
+@{
+    Layout = "~/Views/Shared/MaestroLayout.cshtml";
+
+    ViewBag.MainClass = "ABMCuentasContablesView";
+
+    ViewBag.Title = "Mantenimiento de Cuentas Contables";
+    ViewBag.TitleNew = "Nuevo Cuenta Contable...";
+    ViewBag.TitleEdit = "Modificar Cuenta Contable...";
+    ViewBag.TitleRemove = "Eliminar Cuenta Contable...";
+    ViewBag.ItemMenu = "Cuentas Contables";
+
+    ViewBag.ButtonNew = true;
+    ViewBag.ButtonEdit = true;
+    ViewBag.ButtonRemove = true;
+
+    ViewBag.AjaxGetAll = Url.Action("ObtenerTodos", "CuentasContables");
+    ViewBag.AjaxGet = Url.Action("Obtener", "CuentasContables");
+    ViewBag.AjaxAdd = Url.Action("Nuevo", "CuentasContables");
+    ViewBag.AjaxUpdate = Url.Action("Modificar", "CuentasContables");
+    ViewBag.AjaxDelete = Url.Action("Eliminar", "CuentasContables");
+
+    ViewBag.Tabs = new string[] { "General" };
+}
+
+@section Styles {
+    <link href="/css/Views/CuentasContables/index.css?3661" rel="stylesheet" />
+}
+
+@section GridColumns {
+
+    <th>ID</th>
+    <th>Código Cuenta</th>
+    <th>Descripción Cuenta</th>
+    <th>Código Rubro</th>
+    <th>Descripción Rubro</th>
+
+}
+
+@section CrudForm {
+
+    @Html.FormGroupTextBoxFor(m => m.IdCuentaContable, title: "ID", editingDisabled: true, newVisible: false)
+
+    @Html.FormGroupDropDownListFor(m => m.IdRubroContable, Model.MaestroRubrosContables, "Rubro Contable", addValidator: true)
+
+    @Html.FormGroupTextBoxFor(m => m.CodigoCuenta, title: "Código de Cuenta", addValidator: true)
+
+    @Html.FormGroupTextBoxFor(m => m.Descripcion, title: "Descripción", addValidator: true)
+
+    @Html.FormGroupDropDownListFor(m => m.IdCodigoObservacion, Model.MaestroCodigosObservacion, "Código de Observación", addValidator: true)
+
+    @Html.FormGroupCheckboxFor(m => m.EsCtaGastos, title: "Cta. de Gastos")
+
+}
+
+
+@section Scripts {
+    <script src="/js/Views/CuentasContables/index.js?3661"></script>
+}

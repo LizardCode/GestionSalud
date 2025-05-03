@@ -1,0 +1,40 @@
+﻿.user-info {
+    padding-top: 10px !important;
+    height: 65px !important;
+}
+
+.field-validation-error {
+    color: red;
+    font-weight: 400;
+    font-size: 11px;
+}
+
+form .form-group > .controls span.fly-remove {
+    position: absolute;
+    top: 6px;
+    right: 8px;
+    font-size: 22px;
+    color: #1b1e21;
+    cursor: pointer;
+    z-index: 3;
+}
+
+    form .form-group > .controls span.fly-remove:hover {
+        color: #d6d8d9;
+    }
+
+    form .form-group > .controls span.fly-remove:active {
+        color: #c6c8ca;
+    }
+
+.iInfoBusqueda {
+    background-color: aliceblue;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.dvSearchButton {
+    font-size: 12px;
+    padding-left: 0;
+}

@@ -1,0 +1,209 @@
+{
+  "MergeWith": "~/wwwroot/template/pdf/ordenPago.pdf",
+  "GlobalFont": { "Name": "Helvetica", "Size": 9.0 },
+  "GlobalColor": "Black",
+  "Margins": { "Left": 5.0, "Right": 0.0, "Top": 80.0, "Bottom": 20.0 },
+  "MultiPage": false,
+
+  "Elements": [
+    {
+      "Type": "Text",
+      "Align": "Left",
+      "Position": {
+        "X": 40.0,
+        "Y": 40.0
+      },
+      "Text": [ "[@EMPRESA]" ],
+      "Font": {
+        "Name": "Helvetica",
+        "Size": 14.0
+      },
+      "LineSpacing": 2.0,
+      "SpacingBefore": 60.0
+    },
+
+    {
+      "Type": "Paragraph",
+      "Width": 250.0,
+      "Align": "Left",
+      "Position": {
+        "X": 40.0,
+        "Y": 53.0
+      },
+      "Text": [ "[@EMPRESA_DIRECCION]" ],
+      "Font": {
+        "Name": "Helvetica",
+        "Size": 10.0
+      },
+      "LineSpacing": 2.0,
+      "SpacingBefore": 60.0
+    },
+
+    {
+      "Type": "Text",
+      "Align": "Left",
+      "Position": {
+        "X": 40.0,
+        "Y": 65.0
+      },
+      "Text": [ "[@EMPRESA_CP]" ],
+      "Font": {
+        "Name": "Helvetica",
+        "Size": 10.0
+      },
+      "LineSpacing": 2.0,
+      "SpacingBefore": 60.0
+    },
+
+    {
+      "Type": "Text",
+      "Align": "Left",
+      "Position": {
+        "X": 40.0,
+        "Y": 75.0
+      },
+      "Text": [ "[@EMPRESA_TELEFONO]" ],
+      "Font": {
+        "Name": "Helvetica",
+        "Size": 10.0
+      },
+      "LineSpacing": 2.0,
+      "SpacingBefore": 60.0
+    },
+
+    {
+      "Type": "Text",
+      "Align": "Left",
+      "Position": {
+        "X": 40.0,
+        "Y": 85.0
+      },
+      "Text": [ "[@EMPRESA_CUIT]" ],
+      "Font": {
+        "Name": "Helvetica",
+        "Size": 10.0
+      },
+      "LineSpacing": 2.0,
+      "SpacingBefore": 60.0
+    },
+
+    {
+      "Type": "Text",
+      "Align": "Right",
+      "Position": {
+        "X": 560.0,
+        "Y": 40.0
+      },
+      "Width": 50.0,
+      "Text": [ "[@COMPROBANTE]" ],
+      "Font": {
+        "Name": "Helvetica",
+        "Size": 14.0
+      },
+      "LineSpacing": 2.0,
+      "SpacingBefore": 60.0
+    },
+
+    {
+      "Type": "Text",
+      "Align": "Right",
+      "Position": {
+        "X": 560.0,
+        "Y": 55.0
+      },
+      "Text": [ "[@FECHA]" ],
+      "Font": {
+        "Name": "Helvetica",
+        "Size": 12.0
+      },
+      "LineSpacing": 2.0,
+      "SpacingBefore": 60.0
+    },
+
+    {
+      "Type": "Text",
+      "Align": "Left",
+      "Position": {
+        "X": 115.0,
+        "Y": 140.0
+      },
+      "Width": 50.0,
+      "Text": [ "[@PROVEEDOR]" ],
+      "Font": {
+        "Name": "Helvetica",
+        "Size": 10.0
+      },
+      "LineSpacing": 2.0,
+      "SpacingBefore": 60.0
+    },
+
+    {
+      "Type": "Text",
+      "Align": "Left",
+      "Position": {
+        "X": 495.0,
+        "Y": 140.0
+      },
+      "Width": 50.0,
+      "Text": [ "[@PROVEEDOR_CUIT]" ],
+      "Font": {
+        "Name": "Helvetica",
+        "Size": 10.0
+      },
+      "LineSpacing": 2.0,
+      "SpacingBefore": 60.0
+    },
+
+    {
+      "Type": "Text",
+      "Align": "Left",
+      "Position": {
+        "X": 115.0,
+        "Y": 160.0
+      },
+      "Width": 50.0,
+      "Text": [ "[@PROVEEDOR_IVA]" ],
+      "Font": {
+        "Name": "Helvetica",
+        "Size": 10.0
+      },
+      "LineSpacing": 2.0,
+      "SpacingBefore": 60.0
+    },
+
+    {
+      "Type": "Paragraph",
+      "Width": 300.0,
+      "Align": "Left",
+      "Position": {
+        "X": 115.0,
+        "Y": 180.0
+      },
+      "Text": [ "[@PROVEEDOR_DIRECCION]" ],
+      "Font": {
+        "Name": "Helvetica",
+        "Size": 10.0
+      },
+      "LineSpacing": 2.0,
+      "SpacingBefore": 60.0
+    },
+
+    {
+      "Type": "Paragraph",
+      "Width": 100.0,
+      "Align": "Left",
+      "Position": {
+        "X": 495.0,
+        "Y": 180.0
+      },
+      "Text": [ "[@PROVEEDOR_LOCALIDAD]" ],
+      "Font": {
+        "Name": "Helvetica",
+        "Size": 10.0
+      },
+      "LineSpacing": 2.0,
+      "SpacingBefore": 60.0
+    }
+  ]
+}
+

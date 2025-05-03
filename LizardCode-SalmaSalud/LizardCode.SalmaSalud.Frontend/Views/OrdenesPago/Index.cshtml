@@ -1,0 +1,360 @@
+﻿@using LizardCode.Framework.Application.Models.MasterDetail
+@using LizardCode.Framework.Application.Models.Repeater;
+@using LizardCode.SalmaSalud.Application.Models.OrdenesPago
+
+@model OrdenesPagoViewModel
+@{
+    Layout = "~/Views/Shared/MaestroLayout.cshtml";
+
+    ViewBag.MainClass = "ABMOrdenesPagoView";
+
+    ViewBag.Title = "Mantenimiento de Ordenes de Pago";
+    ViewBag.TitleNew = "Nueva Orden de Pago...";
+    ViewBag.TitleEdit = "Modificar Orden de Pago...";
+    ViewBag.TitleRemove = "Eliminar Orden de Pago...";
+    ViewBag.ItemMenu = "Ordenes de Pago";
+
+    ViewBag.ButtonNew = true;
+    ViewBag.ButtonEdit = false;
+    ViewBag.ButtonRemove = true;
+
+    ViewBag.AjaxGetAll = Url.Action("ObtenerTodos", "OrdenesPago");
+    ViewBag.AjaxGet = Url.Action("Obtener", "OrdenesPago");
+    ViewBag.AjaxAdd = Url.Action("Nuevo", "OrdenesPago");
+    ViewBag.AjaxDelete = Url.Action("Eliminar", "OrdenesPago");
+
+    ViewBag.AjaxAddPagar = Url.Action("AddPagar", "OrdenesPago");
+
+    ViewBag.Tabs = new string[] { "General" };
+}
+
+@section Styles {
+    <link href="/css/Views/OrdenesPago/index.css?3661" rel="stylesheet" />
+}
+
+@section ToolbarButtons {
+
+    <button type="button" class="btn btn-primary btImprimir" title="Exportar resultados" data-ajax-action="/OrdenesPago/Imprimir/"><i class="fas fa-print"></i> <span>Imprimir</span></button>
+    <button type="button" class="btn btn-secondary btPagar" title="Pagar Orden de Pago" disabled><i class="far fa-money-check-edit-alt"></i> <span>Pagar</span></button>
+
+}
+
+@section Filters {
+    <div class="col">
+
+        <div class="row">
+            @Html.FilterDropDownListFor(m => m.IdProveedor, Model.MaestroProveedores, "Proveedor", colSize: "col-md-4")
+            @Html.FilterDropDownListFor(m => m.IdEstadoOrdenPago, Model.MaestroEstadoOrdenPago, "Estado Orden de Pago", colSize: "col-md-4")
+            @Html.FilterTextBoxFor(m => m.NumeroOrdenPago, "Número de Orden de Pago", value: string.Empty, colSize: "col-md-3")
+        </div>
+
+        <div class="row">
+            @Html.FilterPickerDateFor(m => m.FechaDesde, "Fecha Desde", value: string.Empty, colSize: "col-md-2")
+            @Html.FilterPickerDateFor(m => m.FechaHasta, "Fecha Hasta", value: string.Empty, colSize: "col-md-2")
+        </div>
+    
+    </div>
+}
+
+@section GridColumns {
+
+    <th>ID</th>
+    <th>Fecha</th>
+    <th>Tipo</th>
+    <th>Proveedor</th>
+    <th>Descripción</th>
+    <th>Moneda</th>
+    <th>Importe</th>
+    <th>Estado</th>
+    <th></th>
+}
+
+@section CrudForm {
+
+    <div class="col">
+        <div class="row">
+            <div class="col">
+                <h4>Datos de la Orden de Pago</h4>
+            </div>
+        </div>
+        <div class="row">
+            @Html.HiddenFor(m => m.IdOrdenPago)
+            @Html.FormGroupDropDownListFor(m => m.IdEjercicio, Model.MaestroEjercicios, "Ejercicio", colSize: "col-md-2", addValidator:true)
+            @Html.FormGroupPickerDateFor(m => m.Fecha, title: "Fecha", colSize: "col-md-2", addValidator: true, editingDisabled: false)
+            @Html.FormGroupDropDownListFor(m => m.IdTipoOrdenPago, Model.MaestroTipoOrdenPago, "Tipo de Orden de Pago", colSize: "col-md-2", addValidator:true, editingDisabled: true)
+            @Html.FormGroupDropDownListFor(m => m.IdMoneda, Model.MaestroMonedas, "Moneda Comprobantes", colSize: "col-md-2", addValidator:true, editingDisabled: true)
+            @Html.HiddenFor(m => m.Moneda)
+            @Html.FormGroupDropDownListFor(m => m.IdMonedaPago, Model.MaestroMonedas, "Moneda Pago", colSize: "col-md-2", addValidator:true, editingDisabled: true)
+            @Html.HiddenFor(m => m.MonedaPago)
+            @Html.FormGroupInputGroupFor(m => m.Cotizacion, "Cotización", icon: "$", addValidator: true, colSize: "col-md-2", editingDisabled: true)
+        </div>
+        <div class="row">
+            @Html.FormGroupDropDownListFor(m => m.IdProveedor, Model.MaestroProveedores, "Proveedor", colSize: "col-md-4", addValidator:true, editingDisabled: true)
+            @Html.FormGroupTextBoxFor(m => m.Descripcion, title: "Descripción", addValidator: true, colSize: "col-md-6", editingDisabled: false)
+            @Html.FormGroupInputGroupFor(m => m.Importe, "Importe", icon: "$", addValidator: true, colSize: "col-md-2", editingDisabled: true)
+            @Html.FormGroupInputGroupFor(m => m.ImporteAnticipo, "Importe Anticipo", icon: "$", addValidator: true, colSize: "col-md-2", editingDisabled: true)
+            @Html.FormGroupInputGroupFor(m => m.ImporteVarios, "Importe Gastos Varios", icon: "$", addValidator: true, colSize: "col-md-2", editingDisabled: true)
+        </div>
+        <div class="row">
+            @Html.FormGroupDropDownListFor(m => m.IdCuentaContable, Model.MaestroCuentasGastos, "Cuenta Contable del Gasto", colSize: "col-md-6", addValidator:true, editingDisabled: true)
+        </div>
+        
+        <hr />
+
+        <div class="row">
+            <div class="col">
+                <button type="button" class="btn btn-primary mb-2 btnCargaItems hide">Cargar Items</button>
+            </div>
+        </div>
+            
+        <div class="row">
+            <div class="col">
+                <div class="areaImputaciones hide">
+                    <div class="row">
+                        <div class="col dvImputaciones">
+                            <h4>Comprobantes a Cancelar</h4>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col dvImputaciones">
+                            @await Component.InvokeAsync("Repeater", new RepeaterViewModel().SetItems(
+                                Model.Imputaciones,
+                                "Imputaciones"
+                            ))
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="areaAnticipos hide">
+                    <div class="row">
+                        <div class="col dvAnticipos">
+                            <h4>Anticipos</h4>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col dvAnticipos">
+                            @await Component.InvokeAsync("Repeater", new RepeaterViewModel().SetItems(
+                                Model.Anticipos,
+                                "Anticipos"
+                            ))
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="areaPlanillaGastos hide">
+                    <div class="row">
+                        <div class="col dvPlanillaGastos">
+                            <h4>Planilla de Gastos a Cancelar</h4>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col dvPlanillaGastos">
+                            @await Component.InvokeAsync("Repeater", new RepeaterViewModel().SetItems(
+                                Model.PlanillasGastos,
+                                "PlanillasGastos"
+                            ))
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+}
+
+@section CustomModals {
+
+    <div class="modal fade modalPrint" role="dialog" aria-hidden="true">
+        <div class="modal-dialog bounceInRight animated">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Imprimir...</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true" class="zmdi zmdi-close"></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row justify-content-center">
+                        <div class="col-md-6">
+                            <div class="row mb-2">
+                                <div class="col">
+                                    <button type="button" class="btn btn-primary w-100 btPrintOrdenPago" data-ajax-action="/OrdenesPago/Imprimir/"><i class="fas fa-file-pdf"></i> Orden de Pago</button>
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col">
+                                    <button type="button" class="btn btn-info w-100 btPrintGanancias" data-ajax-action="/OrdenesPago/ImprimirRetencionesGanancias/"><i class="fas fa-file-pdf"></i> Retenciones Ganancias</button>
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col">
+                                    <button type="button" class="btn btn-info w-100 btPrintIVA" data-ajax-action="/OrdenesPago/ImprimirRetencionesIVA/"><i class="fas fa-file-pdf"></i> Retenciones IVA</button>
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col">
+                                    <button type="button" class="btn btn-info w-100 btPrintIIBB" data-ajax-action="/OrdenesPago/ImprimirRetencionesIIBB/"><i class="fas fa-file-pdf"></i> Retenciones IIBB</button>
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col">
+                                    <button type="button" class="btn btn-info w-100 btPrintSUSS" data-ajax-action="/OrdenesPago/ImprimirRetencionesSUSS/"><i class="fas fa-file-pdf"></i> Retenciones SUSS</button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" data-dismiss="modal" class="btn btn-default"><i class="fa fa-times"></i> Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @using (Html.BeginModal("Forma de Pago...", (string)ViewBag.MainClass, "modalFormaPago", (string)ViewBag.AjaxAddPagar))
+    {
+        <div class="row">
+            <div class="col">
+                <div class="inv--total-amounts">
+                    <div class="row mt-4">
+                        <div class="col-sm-5 col-12 order-sm-0 order-1">
+                        </div>
+                        <div class="col-sm-7 col-12 order-sm-1 order-0">
+                            <div class="text-sm-right">
+                                <div class="row">
+                                    <div class="col-sm-9 col-7">
+                                        <h5>Importe Orden de Pago: </h5>
+                                    </div>
+                                    <div class="col-sm-3 col-5">
+                                        <h5 class="importeOrdenPago">$ 0</h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <br />
+
+        <div class="col">
+            <div class="row">
+                @Html.HiddenFor(m => m.IdOrdenPago)
+            </div>
+            
+            <div class="row">
+                <div class="col">
+                    <div class="dvItems">
+                        @await Component.InvokeAsync("MasterDetail", new MasterDetailViewModel().SetItems(
+                            Model.Items,
+                            "Items",
+                            x => new(nameof(x.IdBancoChequeComun), Model.MaestroBancos, nameof(x.BancoChequeComun)),
+                            x => new(nameof(x.IdBancoChequeDiferido), Model.MaestroBancos, nameof(x.BancoChequeDiferido)),
+                            x => new(nameof(x.IdBancoEChequeComun), Model.MaestroBancos, nameof(x.BancoEChequeComun)),
+                            x => new(nameof(x.IdBancoEChequeDiferido), Model.MaestroBancos, nameof(x.BancoEChequeDiferido)),
+                            x => new(nameof(x.IdBancoTranferencia), Model.MaestroBancos, nameof(x.BancoTranferencia))
+                        ))
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="inv--total-amounts">
+            <div class="row mt-4">
+                <div class="col-sm-5 col-12 order-sm-0 order-1">
+                </div>
+                <div class="col-sm-7 col-12 order-sm-1 order-0">
+                    <div class="text-sm-right">
+                        <div class="row">
+                            <div class="col-sm-9 col-7 grand-total-title">
+                                <h5>Importe Composición de Pago: </h5>
+                            </div>
+                            <div class="col-sm-3 col-5 grand-total-amount">
+                                <h5 class="ImporteComposicionPago">$ 0</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    @using (Html.BeginModal("Detalle de Pago...", (string)ViewBag.MainClass, "modalItemsFormaPago"))
+    {
+        <div class="col">
+            <div class="row">
+                @Html.FormGroupDropDownListFor(m => m.Detalle.IdTipoPago, Model.MaestroTipoPago, "Tipo de Pago", addValidator: true)
+                @Html.HiddenFor(m => m.Detalle.Descripcion)
+            </div>
+
+            <div class="row dvTipoPago dvChequeComun hide"> <!-- Cheque Comun -->
+                @Html.FormGroupDropDownListFor(m => m.Detalle.IdBancoChequeComun, Model.MaestroBancos, "Banco", addValidator: true)
+                @Html.FormGroupInputGroupFor(m => m.Detalle.NumeroChequeComun, "Nro. de Cheque", icon: "<i class='far fa-money-check-alt'></i>", addValidator: true, placeholder: "__________")
+                @Html.FormGroupPickerDateFor(m => m.Detalle.FechaChequeComun, "Fecha de Emisión", addValidator: true)
+            </div>
+
+            <div class="row dvTipoPago dvChequeDiferido hide"> <!-- Cheque Diferido -->
+                @Html.FormGroupDropDownListFor(m => m.Detalle.IdBancoChequeDiferido, Model.MaestroBancos, "Banco", addValidator: true)
+                @Html.FormGroupInputGroupFor(m => m.Detalle.NumeroChequeDiferido, "Nro. de Cheque", icon: "<i class='far fa-money-check-alt'></i>", addValidator: true, placeholder: "__________")
+                @Html.FormGroupPickerDateFor(m => m.Detalle.FechaChequeDiferido, "Fecha de Emisión", addValidator: true)
+                @Html.FormGroupPickerDateFor(m => m.Detalle.FechaDiferidoChequeDiferido, "Fecha Diferida", addValidator: true)
+            </div>
+
+            <div class="row dvTipoPago dvEChequeComun hide"> <!-- E-Cheque Comun -->
+                @Html.FormGroupDropDownListFor(m => m.Detalle.IdBancoEChequeComun, Model.MaestroBancos, "Banco", addValidator: true)
+                @Html.FormGroupInputGroupFor(m => m.Detalle.NumeroEChequeComun, "Nro. de E-Cheque", icon: "<i class='far fa-money-check-alt'></i>", addValidator: true, placeholder: "__________")
+                @Html.FormGroupPickerDateFor(m => m.Detalle.FechaEChequeComun, "Fecha de Emisión", addValidator: true)
+            </div>
+
+            <div class="row dvTipoPago dvEChequeDiferido hide"> <!-- E-Cheque Diferido -->
+                @Html.FormGroupDropDownListFor(m => m.Detalle.IdBancoEChequeDiferido, Model.MaestroBancos, "Banco", addValidator: true)
+                @Html.FormGroupInputGroupFor(m => m.Detalle.NumeroEChequeDiferido, "Nro. de E-Cheque", icon: "<i class='far fa-money-check-alt'></i>", addValidator: true, placeholder: "__________")
+                @Html.FormGroupPickerDateFor(m => m.Detalle.FechaEChequeDiferido, "Fecha de Emisión", addValidator: true)
+                @Html.FormGroupPickerDateFor(m => m.Detalle.FechaDiferidoEChequeDiferido, "Fecha Diferida", addValidator: true)
+            </div>
+
+            <div class="row dvTipoPago dvChequeTerceros hide"> <!-- Cheque Terceros -->
+                <div class="form-group field">
+                    <label class="form-label" for="IdChequeTerceros">Cheque</label>
+                    <div class="controls">
+                        @Html.HiddenFor(m => m.Detalle.IdChequeTerceros)  
+                    </div>
+                </div>
+                @Html.FormGroupTextBoxFor(m => m.Detalle.BancoChequeTerceros, "Banco", addValidator: true, editingDisabled: true)
+                @Html.FormGroupInputGroupFor(m => m.Detalle.NumeroChequeTerceros, "Nro. de Cheque", icon: "<i class='far fa-money-check-alt'></i>", addValidator: true, editingDisabled: true)
+                @Html.FormGroupInputGroupFor(m => m.Detalle.FechaChequeTerceros, "Fecha de Emisión", icon: "<i class='fad fa-calendar-check'></i>", addValidator: true, editingDisabled: true)
+                @Html.FormGroupInputGroupFor(m => m.Detalle.FechaDiferidoChequeTerceros, "Fecha Diferida", icon: "<i class='fad fa-calendar-check'></i>", addValidator: true, editingDisabled: true)
+            </div>
+
+            <div class="row dvTipoPago dvTransferencia hide"> <!-- Transferencia -->
+                @Html.FormGroupDropDownListFor(m => m.Detalle.IdBancoTranferencia, Model.MaestroBancos, "Banco", addValidator:true)
+                @Html.FormGroupPickerDateFor(m => m.Detalle.FechaTransferencia, "Fecha de Transferencia", addValidator: true)
+            </div>
+
+            <div class="row dvTipoPago dvCuentaContable hide"> <!-- Cuenta Contable -->
+                @Html.FormGroupDropDownListFor(m => m.Detalle.IdCuentaContable, Model.MaestroCuentas, "Cuenta Contable", addValidator:true)
+            </div>
+
+            <div class="row dvTipoPago dvImporte hide">
+                @Html.FormGroupInputGroupFor(m => m.Detalle.Importe, "Importe", icon: "$", addValidator: true)
+            </div>
+
+        </div>
+    }
+
+}
+
+@section Scripts {
+    <script src="/js/Views/OrdenesPago/index.js?3661"></script>
+}

@@ -1,0 +1,61 @@
+﻿@model LizardCode.SalmaSalud.Application.Models.Presupuestos.PresupuestosAprobadosDetalleViewModel
+@{
+    Layout = null;
+}
+
+@if (Model.Prestaciones.Count > 0)
+{ 
+    <div class="row">
+        <div class="col">
+            <table class="table table-striped dt-view dataTable" width="100%">
+                <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Descripción</th>
+                        <th>Valor</th>
+                        <th>CoPago</th>                                    
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var prestacion in Model.Prestaciones)
+                    {
+                        <tr>
+                            <td>@prestacion.Codigo</td>
+                            <td>@prestacion.Descripcion</td>
+                            <td style="text-align:left;">@prestacion.Valor.ToCurrency()</td>
+                            <td style="text-align:left;">@prestacion.CoPago.ToCurrency()</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <br />
+}
+
+@if (Model.OtrasPrestaciones.Count > 0)
+{
+    <div class="row">
+        <div class="col">
+            <table class="table table-striped dt-view dataTable" width="100%">
+                <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Descripción</th>
+                        <th>Valor</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var prestacion in Model.OtrasPrestaciones)
+                    {
+                        <tr>
+                            <td>@prestacion.Codigo</td>
+                            <td>@prestacion.Descripcion</td>
+                            <td style="text-align:left;">@prestacion.Valor.ToCurrency()</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}

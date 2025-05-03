@@ -1,0 +1,185 @@
+﻿@model LizardCode.SalmaSalud.Application.Models.Empresas.EmpresaViewModel
+@{
+    Layout = "~/Views/Shared/MaestroLayout.cshtml";
+
+    ViewBag.MainClass = "ABMEmpresasView";
+
+    ViewBag.Title = "Mantenimiento de Instituciones";
+    ViewBag.TitleNew = "Nueva institución...";
+    ViewBag.TitleEdit = "Modificar institución...";
+    ViewBag.TitleRemove = "Eliminar institución...";
+    ViewBag.ItemMenu = "Instituciones";
+
+    ViewBag.ButtonNew = true;
+    ViewBag.ButtonEdit = true;
+    ViewBag.ButtonRemove = true;
+
+    ViewBag.AjaxGetAll = Url.Action("ObtenerTodos", "Empresas");
+    ViewBag.AjaxGet = Url.Action("Obtener", "Empresas");
+    ViewBag.AjaxAdd = Url.Action("Nuevo", "Empresas");
+    ViewBag.AjaxUpdate = Url.Action("Modificar", "Empresas");
+    ViewBag.AjaxDelete = Url.Action("Eliminar", "Empresas");
+
+    ViewBag.Tabs = new string[] { "General", "Dirección", "Turnos", "Recetas/Órdenes" };
+    ViewBag.FormMultipart = true;
+}
+
+@section Styles {
+    <link href="/css/Views/Empresas/index.css?3661" rel="stylesheet" />
+}
+
+@section ToolbarButtons {
+    <button type="button" class="btn btn-secondary btCopiar" title="Copiar Plan de Cuentas" disabled><i class="fas fa-paste"></i> <span>Copiar Plan de Cuentas</span></button>
+}
+
+@section Filters {
+    @Html.FilterTextBoxFor(m => m.CUIT, "C.U.I.T.", value: string.Empty)
+    @Html.FilterTextBoxFor(m => m.RazonSocial, "Rázon Social")
+}
+
+@section GridColumns {
+
+    <th>ID</th>
+    <th>Razón Social</th>
+    <th>Tipo IVA</th>
+    <th>CUIT</th>
+    <th>Email</th>
+    <th>Certificado AFIP</th>
+    <th>Acciones</th>
+
+}
+
+@section CrudForm {
+    @Html.HiddenFor(m => m.RemovedRecetaLogo, new { @class = "removedRecetaLogo" })
+
+    @Html.FormGroupTextBoxFor(m => m.IdEmpresa, title: "ID", editingDisabled: true, newVisible: false)
+
+    @Html.FormGroupTextBoxFor(m => m.RazonSocial, title: "Razón Social", addValidator: true)
+
+    @Html.FormGroupTextBoxFor(m => m.NombreFantasia, title: "Nombre de Fantasia", addValidator: false)
+
+    @Html.FormGroupDropDownGroupFor(m => m.CUIT, "IdTipoIVA", Model.MaestroTipoIVA, title: "Tipo de IVA", addValidator: true)
+
+    @Html.FormGroupTextBoxFor(m => m.NroIBr, title: "N° de Ingresos Brutos", addValidator: true)
+
+    @Html.FormGroupDropDownGroupFor(m => m.Telefono, "IdTipoTelefono", Model.MaestroTipoTelefono, title: "Teléfono", addValidator: true)
+
+    @Html.FormGroupTextBoxFor(m => m.Email, title: "Email", fieldCss: "form-control lowercase", addValidator: true)
+
+    @Html.FormGroupCheckboxFor(m => m.AgentePercepcionAGIP, title: "Es Agente de Percepción AGIP")
+
+    @Html.FormGroupCheckboxFor(m => m.AgentePercepcionARBA, title: "Es Agente de Percepción ARBA")
+
+    @Html.FormGroupCheckboxFor(m => m.EnableProdAFIP, title: "Usa AFIP Producción")
+
+    <div class="col">
+        <div class="row">
+            @Html.FormGroupPickerDateFor(m => m.FechaInicioActividades, title: "Fecha Incio Actividades", colSize: "col-md-6", addValidator: true, editingDisabled: false)
+        </div>
+    </div>
+
+    <input type="file" id="fileUpload" name="fileUpload" accept=".txt,.crt" style="display:none;" />
+
+}
+
+@section CrudTab01 {
+
+    @Html.HiddenFor(m => m.Latitud)
+    @Html.HiddenFor(m => m.Longitud)
+
+    @Html.FormGroupTextBoxFor(m => m.Direccion, title: "Dirección", colSize: "col-md-8", autocomplete: false, addValidator: true)
+
+    @Html.FormGroupTextBoxFor(m => m.Piso, title: "Piso", colSize: "col-md-2")
+
+    @Html.FormGroupTextBoxFor(m => m.Departamento, title: "Depto.", colSize: "col-md-2")
+
+    @Html.FormGroupTextBoxFor(m => m.Provincia, title: "Provincia", colSize: "col-md-5")
+
+    @Html.FormGroupTextBoxFor(m => m.Localidad, title: "Localidad", colSize: "col-md-5")
+
+    @Html.FormGroupTextBoxFor(m => m.CodigoPostal, title: "Código Postal", colSize: "col-md-2")
+}
+
+@section CrudTab02 {
+
+    <div class="col">
+        <div class="row">
+            @Html.FormGroupNumberFor(m => m.TurnosHoraInicio, title: "Hora Inicio", colSize: "col-md-4 text-left", autocomplete: false, addValidator: true, minValue: 0, maxValue: 24, step: 1)
+            @Html.FormGroupNumberFor(m => m.TurnosMinutosInicio, title: "&nbsp;", colSize: "col-md-4 text-left", autocomplete: false, addValidator: true, minValue: 0, maxValue: 59, step: 30)
+        </div>
+        <div class="row">
+            @Html.FormGroupNumberFor(m => m.TurnosHoraFin, title: "Hora Fin", colSize: "col-md-4 text-left", autocomplete: false, addValidator: true, maxValue: 24, step: 1)
+            @Html.FormGroupNumberFor(m => m.TurnosMinutosFin, title: "&nbsp;", colSize: "col-md-4 text-left", autocomplete: false, addValidator: true, minValue: 0, maxValue: 59, step: 30)
+        </div>
+        <div class="row">
+            @Html.FormGroupNumberFor(m => m.TurnosIntervalo, title: "Int. Turnos", colSize: "col-md-4 text-left", autocomplete: false, addValidator: true, minValue: 0, maxValue: 120, step: 15)
+        </div>
+    </div>
+}
+
+@section CrudTab03 {
+
+    <div class="col">
+        <div class="alert alert-info text-center" role="alert">
+            <h8>
+                <i class="fa fa-info-circle"></i>
+                Recomendamos una imágen de menos de 1mb de peso. Una relacion de aspecto 16:9, con un máximo de 300 píxeles. Y en lo posible fondo transparente (.png).
+                <br />
+                En caso de no querer incluir el logo en recetas y órdenes. No completar.
+            </h8>
+        </div>
+        <div class="row">
+            <div class="form-group field col-md-12">
+                <label class="form-label" for="RecetaLogo">Logo Recetas</label>
+                @*<span class="desc"></span>*@
+                <div class="controls">
+                    <input accept="image/jpeg,image/gif,image/png" class="form-control recetaLogoInput" data-buttontext="Buscar" data-iconname="fas fa-folder-open" id="RecetaLogo" name="RecetaLogo" type="file">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-12">
+                <div class="col-12 text-center">
+                    <div class="recetaLogoPreview" style="display:none;">
+                        <img id="recetaLogoPreview" class="imgRecetaLogo" />
+                        <button type="button" class="imgRecetaLogo-delete-icon">X</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section CustomModals {
+
+    <!-- Modal - Copiar Plan de Cuentas Excel -->
+    <div class="modal fade modalCopiarPlanCtas" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog bounceInRight animated">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Copiar Plan de Cuentas</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true" class="zmdi zmdi-close"></span>
+                    </button>
+                </div>
+                <div class="modal-body CopiarPlanCtasView">
+                    <div class="row">
+                        <div class="col">
+                            @Html.FormGroupDropDownListFor(m => m.IdEmpresaCopiar, Model.MaestroEmpresas, "Copiar Plan de Cuentas desde:", addValidator: true)
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" data-dismiss="modal" class="btn btn-default"><i class="fa fa-times"></i> Cancelar</button>
+                    <button type="button" class="btn btn-warning btOkCopiar"><i class="fa fa-paste"></i> Copiar Plan de Ctas.</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+
+@section Scripts {
+    <script src="/js/Views/Empresas/index.js?3661"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBAnt1IhTMCk1BVOjr_p4q8IxlicSEVGyw&libraries=places&callback=ABMEmpresasView.initAutocomplete"></script>
+}

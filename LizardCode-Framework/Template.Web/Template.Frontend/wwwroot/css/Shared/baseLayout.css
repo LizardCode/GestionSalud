@@ -1,0 +1,63 @@
+﻿.hidden {
+    display: none;
+}
+
+h2.section-title {
+    margin: 10px auto;
+}
+
+header.navbar .navbar-item.navbar-dropdown {
+    margin-left: auto;
+}
+
+.user-profile-section .media-body > h5,
+#sidebar .user-info > h6 {
+    text-transform: capitalize;
+}
+
+#sidebar ul.menu-categories {
+    padding: 0 0 20px 0;
+}
+
+.sidebar-wrapper ul.menu-categories li.menu.menu-heading > div.first.heading {
+    padding: 0 0 20px 12px;
+}
+
+#sidebar ul.menu-categories > li.menu.active > a {
+    color: white
+}
+
+#sidebar ul.menu-categories > li.menu.active > a svg {
+    color: white;
+    fill: #ffffff40;
+}
+
+.sidebar-wrapper ul.menu-categories > li.separator,
+.sidebar-wrapper ul.menu-categories > li.menu > ul.submenu > li.separator {
+    border-bottom: solid 1px #e6e6e6;
+    margin: 5px 20px;
+}
+
+.sidebar-wrapper ul.menu-categories > li.spacer,
+.sidebar-wrapper ul.menu-categories > li.menu > ul.submenu > li.spacer {
+    margin: 5px 0;
+}
+
+#content > .container > .container {
+    min-height: calc(100vh - 160px);
+}
+
+#content > .footer {
+    text-align: right;
+    font-size: 10px;
+    font-weight: 500;
+}
+
+#content > .footer > span {
+    display: inline-block;
+    padding-top: 7px;
+}
+
+#content > .footer > img {
+    vertical-align: top;
+}

@@ -1,0 +1,7 @@
+﻿.pac-container {
+    z-index: 10002;
+}
+
+.nodo-cuenta {
+    cursor: pointer !important;
+}

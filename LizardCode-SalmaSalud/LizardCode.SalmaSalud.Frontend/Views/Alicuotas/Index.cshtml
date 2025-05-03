@@ -1,0 +1,56 @@
+﻿@model LizardCode.SalmaSalud.Application.Models.Alicuotas.AlicuotasViewModel
+@{
+    Layout = "~/Views/Shared/MaestroLayout.cshtml";
+
+    ViewBag.MainClass = "ABMAlicuotasView";
+
+    ViewBag.Title = "Mantenimiento de Alicuotas";
+    ViewBag.TitleNew = "Nuevo Alicuota...";
+    ViewBag.TitleEdit = "Modificar Alicuota...";
+    ViewBag.TitleRemove = "Eliminar Alicuota...";
+    ViewBag.ItemMenu = "Alicuotas";
+
+    ViewBag.ButtonNew = true;
+    ViewBag.ButtonEdit = true;
+    ViewBag.ButtonRemove = true;
+
+    ViewBag.AjaxGetAll = Url.Action("ObtenerTodos", "Alicuotas");
+    ViewBag.AjaxGet = Url.Action("Obtener", "Alicuotas");
+    ViewBag.AjaxAdd = Url.Action("Nuevo", "Alicuotas");
+    ViewBag.AjaxUpdate = Url.Action("Modificar", "Alicuotas");
+    ViewBag.AjaxDelete = Url.Action("Eliminar", "Alicuotas");
+
+    ViewBag.Tabs = new string[] { "General" };
+}
+
+@section Styles {
+    <link href="/css/Views/Alicuotas/index.css?3661" rel="stylesheet" />
+}
+
+@section GridColumns {
+
+    <th>ID</th>
+    <th>Descripción</th>
+    <th>Tipo</th>
+    <th>Valor</th>
+
+}
+
+@section CrudForm {
+
+    @Html.FormGroupTextBoxFor(m => m.IdAlicuota, title: "ID", editingDisabled: true, newVisible: false)
+
+    @Html.FormGroupDropDownListFor(m => m.IdTipoAlicuota, Model.MaestroTipoAlicuotas, "Tipo de Alicuota", addValidator: true)
+
+    @Html.FormGroupTextBoxFor(m => m.Descripcion, title: "Descripción", addValidator: true)
+
+    @Html.FormGroupTextBoxFor(m => m.Valor, title: "Valor", addValidator: true)
+
+    @Html.FormGroupTextBoxFor(m => m.CodigoAFIP, title: "Código AFIP", addValidator: false)
+
+}
+
+
+@section Scripts {
+    <script src="/js/Views/Alicuotas/index.js?3661"></script>
+}

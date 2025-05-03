@@ -1,0 +1,46 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Version>0.6.0.0</Version>
+    <FileVersion>0.6.305.0</FileVersion>
+    <Configurations>Release;Debug</Configurations>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <ShouldCreateLogs>True</ShouldCreateLogs>
+    <AdvancedSettingsExpanded>True</AdvancedSettingsExpanded>
+    <UpdateAssemblyVersion>True</UpdateAssemblyVersion>
+    <UpdateAssemblyFileVersion>True</UpdateAssemblyFileVersion>
+    <UpdateAssemblyInfoVersion>False</UpdateAssemblyInfoVersion>
+    <AssemblyVersionSettings>None.IncrementOnDemand.None.None</AssemblyVersionSettings>
+    <UpdatePackageVersion>False</UpdatePackageVersion>
+    <AssemblyInfoVersionType>SettingsVersion</AssemblyInfoVersionType>
+    <InheritWinAppVersionFrom>None</InheritWinAppVersionFrom>
+    <AssemblyFileVersionSettings>None.IncrementOnDemand.DayOfYearStamp.None</AssemblyFileVersionSettings>
+    <PrimaryVersionType>AssemblyFileVersionAttribute</PrimaryVersionType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Repositories\ClientesEmpresasRepository.cs" />
+    <Compile Remove="Repositories\PacientesEmpresasRepository.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.1.35" />
+    <PackageReference Include="Dapper-QueryBuilder" Version="1.2.9" />
+    <PackageReference Include="MySql.Data" Version="9.0.0" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\LizardCode-Framework\ApiBase\LizardCode.Framework.Aplication\LizardCode.Framework.Application.csproj" />
+    <ProjectReference Include="..\..\LizardCode-Framework\ApiBase\LizardCode.Framework.Infrastructure\LizardCode.Framework.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\LizardCode-Framework\Dapper\Dapper.Contrib.Extensions\Dapper.Contrib.Extensions.csproj" />
+    <ProjectReference Include="..\..\LizardCode-Framework\Dapper\Dapper.DataTables\Dapper.DataTables.csproj" />
+    <ProjectReference Include="..\..\LizardCode-Framework\Helpers\LizardCode.Framework.Helpers.AFIP\AFIP\LizardCode.Framework.Helpers.AFIP.csproj" />
+    <ProjectReference Include="..\..\LizardCode-Framework\Helpers\LizardCode.Framework.Helpers.Utilities\LizardCode.Framework.Helpers.Utilities.csproj" />
+    <ProjectReference Include="..\LizardCode.SalmaSalud.Application\LizardCode.SalmaSalud.Application.csproj" />
+  </ItemGroup>
+
+</Project>

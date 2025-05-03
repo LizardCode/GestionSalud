@@ -1,0 +1,127 @@
+﻿@model LizardCode.SalmaSalud.Application.Models.Evoluciones.Odontograma.OdontogramaPiezaViewModel;
+@{
+    Layout = null;
+}
+
+@*<link href="/css/Views/Pacientes/historiaClinica.css?3661" rel="stylesheet" />*@
+<link href="@Url.Content("~/css/Views/Odontograma/detalle.css?3661")" rel="stylesheet" type="text/css" />
+
+<div class="modal-header">
+    <h5 class="modal-title">DETALLE PIEZA @Model.Pieza</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true" class="fa fa-times"></span>
+    </button>
+</div>
+<div class="modal-body" data-modal-id-evolucion="@Model.IdEvolucion">
+    @*@Html.Hidden("HC_IdPaciente", Model.IdPaciente, new { @id = "HC_IdPaciente" })*@
+    @Html.HiddenFor(m => m.IdEvolucion, new { @class = "ODONTOGRAMA_DETALLE_hdnIdEvolucion"})
+    @Html.HiddenFor(m => m.Pieza, new { @class = "ODONTOGRAMA_DETALLE_hdnPieza"})
+    <div class="row">
+        <div class="alert alert-success text-center w-100 p-1" role="alert"> @* Se debe mostrar si es edición*@
+            <h8>
+                <i class="fa fa-info-circle"></i>
+                Haga click en la zona correspondiente. <b>AZUL</b> indica prestaciones REQUERIDAS. <b>ROJO</b> indica prestaciones EXISTENTES.
+            </h8>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-4">
+            <div id="tr" class="ml-2 mt-5 col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                <div data-pieza="@Model.Pieza" class="pieza diente piezarda">
+                    <div class="@string.Format("zonaCuadro zona click zona_{0}", 2)" data-zona="2" data-tipo-trabajo="0"></div>
+                    <div class="@string.Format("zonaCuadro zonaIzquierdo zona click zona_{0}", 1)" data-zona="1" data-tipo-trabajo="0"></div>
+                    <div class="@string.Format("zonaCuadro zonaDebajo zona click zona_{0}", 4)" data-zona="4" data-tipo-trabajo="0"></div>
+                    <div class="@string.Format("zonaCuadro zonaDerecha zona click zona_{0}", 5)" data-zona="5" data-tipo-trabajo="0"></div>
+                    <div class="@string.Format("zonaCentro zona click zona_{0}", 3)" data-zona="3" data-tipo-trabajo="0"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-8 pl-5">
+            <div class="row">
+                <div class="col-6">
+                    <div class="row mt-5 pt-4">
+                        <div class="n-chk mt-2">
+                            <label class="new-control new-checkbox checkbox-primary">
+                                <input type="checkbox" class="new-control-input chkCaries">
+                                <span class="new-control-indicator"></span>CARIES
+                            </label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="n-chk mt-2">
+                            <label class="new-control new-checkbox checkbox-primary">
+                                <input type="checkbox" class="new-control-input chkCorona">
+                                <span class="new-control-indicator"></span>CORONA
+                            </label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="n-chk mt-2">
+                            <label class="new-control new-checkbox checkbox-primary">
+                                <input type="checkbox" class="new-control-input chkPrFija">
+                                <span class="new-control-indicator"></span>PR. FIJA
+                            </label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="n-chk mt-2">
+                            <label class="new-control new-checkbox checkbox-primary">
+                                <input type="checkbox" class="new-control-input chkPrRemovible">
+                                <span class="new-control-indicator"></span>PR. REMOVIBLE
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="row mt-5 pt-4">
+                        <div class="n-chk mt-2">
+                            <label class="new-control new-checkbox checkbox-primary">
+                                <input type="checkbox" class="new-control-input chkAmalgama">
+                                <span class="new-control-indicator"></span>AMALGAMA O COMPOSITE
+                            </label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="n-chk mt-2">
+                            <label class="new-control new-checkbox checkbox-primary">
+                                <input type="checkbox" class="new-control-input chkAusente">
+                                <span class="new-control-indicator"></span>AUSENTE
+                            </label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="n-chk mt-2">
+                            <label class="new-control new-checkbox checkbox-primary">
+                                <input type="checkbox" class="new-control-input chkOrtodoncia">
+                                <span class="new-control-indicator"></span>ORTODONCIA
+                            </label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="n-chk mt-2">
+                            <label class="new-control new-checkbox checkbox-primary">
+                                <input type="checkbox" class="new-control-input chkExtraccion">
+                                <span class="new-control-indicator"></span>EXTRACCION
+                            </label>
+                        </div>
+                    </div>
+                </div>                
+            </div>
+        </div>
+    </div>    
+    <div class="row mt-4">
+        <div class="col-12">
+            <h5 class="mt-1">Observaciones</h5>
+            <textarea class="form-control piezaObservaciones" cols="1" data-val="true" data-val-required="Obligatorio" id="Observaciones" name="Observaciones" rows="4" style="resize: none;"></textarea>
+        </div>
+    </div>
+
+    @if (Model.IdEvolucion == 0)
+    { 
+        <div class="modal-footer">
+            <button type="button" data-dismiss="modal" class="btn btn-default"><i class="fa fa-times"></i> CERRAR</button>
+            <button type="button" class="btn btn-primary btOdontogramaDetalleGuardar"><i class="fa fa-check"></i> GUARDAR</button>
+        </div>
+    }
+
+    <script src="/js/Views/Odontograma/detalle.js?3661"></script>

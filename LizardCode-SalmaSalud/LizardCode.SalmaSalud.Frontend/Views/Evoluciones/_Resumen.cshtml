@@ -1,0 +1,236 @@
+﻿@model LizardCode.SalmaSalud.Application.Models.Evoluciones.ResumenViewModel
+@{
+    Layout = null;
+}
+
+<div class="card">
+    <div class="card-header" id="headingDetalle">
+        <h2 class="mb-0">
+            <button class="btn btn-link btn-block text-left btn-heading" type="button" data-toggle="collapse" data-target="@string.Format("#collapse_detalle{0}", Model.IdEvolucion)" aria-expanded="false" aria-controls="@string.Format("collapse_detalle{0}", Model.IdEvolucion)">
+                DETALLE
+            </button>
+        </h2>
+    </div>
+    <div id="@string.Format("collapse_detalle{0}", Model.IdEvolucion)" class="collapse" aria-labelledby="headingDetalle" data-parent="#accordionDetalle">
+        <div class="card-body pb-0">
+            <div class="row alert alert-secondary">
+                @if (!string.IsNullOrEmpty(Model.TipoTurnoDescripcion))
+                {
+                    <div class="col-md-2">
+                        <b>Hora: </b>
+                        @* <p>@Model.TurnoHora</p> *@
+                        <div class="avatar avatar-sm"><span class="avatar-title rounded-circle azul-avatar">@Model.TurnoHora</span></div>
+                    </div>
+                    <div class="col-md-2">
+                        <b>Ingreso por: </b>
+                        <p>@Model.TipoTurnoDescripcion</p>
+                    </div>
+                }
+                <div class="col-md-4">
+                    <b>Especialidad: </b>
+                    <p>@Model.Especialidad.ToUpperInvariant()</p>
+                </div>
+                <div class="col-md-4">
+                    <b>Profesional: </b>
+                    <p>@Model.Profesional.ToUpperInvariant()</p>
+                </div>
+            </div>
+            <div class="row alert alert-secondary">
+                <div class="col-md-12">
+                    <b>Cobertura (al momento de la evolución):</b>
+                    @if (!string.IsNullOrEmpty(Model.Financiador))
+                    {
+                        <p>@string.Format("{0} - {1}. Nro. Afiliado/Socio: {2}.", Model.Financiador , Model.FinanciadorPlan, Model.NroAfiliadoSocio)</p>
+                    }
+                    else
+                    {
+                        <p>SIN COBERTURA</p>
+                    }                        
+                </div>
+            </div>
+            <div class="row alert alert-secondary">
+                <div class="col-md-12">
+                    <b>Diagnóstico: </b>
+                    <p>@Model.Diagnostico</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header" id="headingPrestaciones">
+        <h2 class="mb-0">
+            <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="@string.Format("#collapse_prestaciones{0}", Model.IdEvolucion)" aria-expanded="false" aria-controls="@string.Format("collapse_prestaciones{0}", Model.IdEvolucion)">
+                PRESTACIONES
+            </button>
+        </h2>
+    </div>
+    <div id="@string.Format("collapse_prestaciones{0}", Model.IdEvolucion)" class="collapse" aria-labelledby="headingPrestaciones" data-parent="#accordionPrestaciones">
+        <div class="card-body">
+            <table class="@string.Format("table table-striped dt-view dataTable HC_dtPrestaciones HC_dtPrestaciones_{0}", 0)" width="100%">
+                <thead>
+                    <tr>
+                        <th>Pieza</th>
+                        <th>Código</th>
+                        <th>Nombre</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Prestaciones != null && Model.Prestaciones.Count > 0)
+                    { 
+                        @foreach (var prestacion in Model.Prestaciones)
+                        {
+                            <tr>
+                                <td>@(prestacion.Pieza == 0 ? "" : prestacion.Pieza)</td>
+                                <td>@prestacion.Codigo</td>
+                                <td>@prestacion.Descripcion</td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="3" class="text-center">No se registraron prestaciones</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@if (Model.IdTipoUsuario != (int)TipoUsuario.Paciente)
+{
+    <div class="card">
+        <div class="card-header" id="headingOdontograma">
+            <h2 class="mb-0">
+                <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="@string.Format("#collapse_odontograma{0}", Model.IdEvolucion)" aria-expanded="false" aria-controls="@string.Format("collapse_odontograma{0}", Model.IdEvolucion)">
+                    ODONTOGRAMA
+                </button>
+            </h2>
+        </div>
+        <div id="@string.Format("collapse_odontograma{0}", Model.IdEvolucion)" class="collapse" aria-labelledby="headingOdontograma" data-parent="#accordionOdontograma">
+            <div class="card-body">
+                <div class="dvHCLOdontograma"></div>
+            </div>
+        </div>
+    </div>
+}
+
+@if (Model.Imagenes != null && Model.Imagenes.Count > 0)
+{
+    <div class="card">
+        <div class="card-header" id="headingImagenes">
+            <h2 class="mb-0">
+                <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="@string.Format("#collapse_imagenes{0}", Model.IdEvolucion)" aria-expanded="false" aria-controls="@string.Format("collapse_imagenes{0}", Model.IdEvolucion)">
+                    IMÁGENES
+                </button>
+            </h2>
+        </div>
+        <div id="@string.Format("collapse_imagenes{0}", Model.IdEvolucion)" class="collapse" aria-labelledby="headingImagenes" data-parent="#accordionImagenes">
+            <div class="card-body">            
+                <div class="row">
+                    @foreach(var imagen in Model.Imagenes)
+                    {
+                        <div class="col-md-4 col-xs-12 text-center" style="cursor: pointer;" onclick="@string.Format("openBase64InNewTab('{0}', '{1}')", imagen.Imagen, imagen.Tipo)">
+                            <img src="@string.Format("data:{0};base64, {1}", imagen.Tipo, imagen.Imagen)" />
+                        </div>
+                    }            
+                </div>
+                @*                
+                <div class="ps-gallery text-center">
+                    @foreach (var img in Model.Imagenes)
+                    {
+                        <a href="@string.Format("data:{0};base64, {1}", img.Tipo, img.Imagen)">
+                            <img src="@string.Format("data:{0};base64, {1}", img.Tipo, img.Imagen)" alt="" />
+                        </a>
+                    }
+                </div>
+                *@
+            </div>
+        </div>
+    </div>
+}
+
+@if (Model.Recetas != null && Model.Recetas.Count > 0)
+{
+    <div class="card">
+        <div class="card-header" id="headingRecetas">
+            <h2 class="mb-0">
+                <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="@string.Format("#collapse_recetas{0}", Model.IdEvolucion)" aria-expanded="false" aria-controls="@string.Format("collapse_recetas{0}", Model.IdEvolucion)">
+                    RECETAS
+                </button>
+            </h2>
+        </div>
+        <div id="@string.Format("collapse_recetas{0}", Model.IdEvolucion)" class="collapse" aria-labelledby="headingRecetas" data-parent="#accordionRecetas">
+            <div class="card-body">
+                <div class="row">
+                    @foreach (var receta in Model.Recetas)
+                    {
+                        <div class="col-md-4 col-xs-12 text-center" style="cursor: pointer;">
+                            @*<img src="@string.Format("data:{0};base64, {1}", imagen.Tipo, imagen.Imagen)" />*@
+                            <label class="text-success col" style="font-size:small;">@receta.Descripcion</label>
+                            <a href="@Url.Action("ImprimirReceta", "Evoluciones", new { idEvolucion = @Model.IdEvolucion, idEvolucionReceta = @receta.IdEvolucionReceta })">
+                                <i class='fa fa-file-pdf fa-4x'></i>
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@if (Model.Ordenes != null && Model.Ordenes.Count > 0)
+{
+    <div class="card">
+        <div class="card-header" id="headingOrdenes">
+            <h2 class="mb-0">
+                <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="@string.Format("#collapse_ordenes{0}", Model.IdEvolucion)" aria-expanded="false" aria-controls="@string.Format("collapse_ordenes{0}", Model.IdEvolucion)">
+                    ÓRDENES
+                </button>
+            </h2>
+        </div>
+        <div id="@string.Format("collapse_ordenes{0}", Model.IdEvolucion)" class="collapse" aria-labelledby="headingOrdenes" data-parent="#accordionOrdenes">
+            <div class="card-body">
+                <div class="row">
+                    @foreach (var orden in Model.Ordenes)
+                    {
+                        <div class="col-md-4 col-xs-12 text-center" style="cursor: pointer;">
+                            @*<img src="@string.Format("data:{0};base64, {1}", imagen.Tipo, imagen.Imagen)" />*@
+                            <label class="text-success col" style="font-size:small;">@orden.Descripcion</label>
+                            <a href="@Url.Action("ImprimirOrden", "Evoluciones", new { idEvolucion = Model.IdEvolucion, idEvolucionOrden = orden.IdEvolucionOrden })">
+                                <i class='fa fa-file-pdf fa-4x'></i>
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<script src="/js/Shared/modals.js?3661"></script>
+
+@if (Model.IdTipoUsuario != (int)TipoUsuario.Paciente)
+{ 
+    <script>   
+        $.get('@Url.Action("OdontogramaView", "Evoluciones")', { id: @Model.IdEvolucion }, function (content) {
+            $(".dvHCLOdontograma").html(content);
+        });
+
+        function openBase64InNewTab(data, mimeType) {
+            var byteCharacters = atob(data);
+            var byteNumbers = new Array(byteCharacters.length);
+            for (var i = 0; i < byteCharacters.length; i++) {
+                byteNumbers[i] = byteCharacters.charCodeAt(i);
+            }
+            var byteArray = new Uint8Array(byteNumbers);
+            var file = new Blob([byteArray], { type: mimeType + ';base64' });
+            var fileURL = URL.createObjectURL(file);
+            window.open(fileURL);
+        }
+
+    </script>
+}

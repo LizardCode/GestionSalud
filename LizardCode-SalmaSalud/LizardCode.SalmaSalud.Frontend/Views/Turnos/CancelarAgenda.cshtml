@@ -1,0 +1,50 @@
+﻿@using System.Text.RegularExpressions
+@model LizardCode.SalmaSalud.Application.Models.Turnos.CancelarAgendaViewModel
+@{
+    Layout = null;
+
+    ViewBag.AjaxAction = Url.Action("CancelarAgenda", "Turnos");
+    ViewBag.MainClass = "TurnosCancelarAgendaView";
+}
+
+
+<div class="modal-header">
+    <h5 class="modal-title">Cancelar Agenda de Profesional</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true" class="fa fa-times"></span>
+    </button>
+</div>
+<div class="modal-body">
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                @*<div class="card-header p-b-0 azulClaro">
+                <h6 class="card-title"><i class="fa fa-calendar"></i>  </h6>
+                </div>*@
+                <div class="card-body">
+
+                    @using (Html.AjaxBeginForm((string)ViewBag.AjaxAction, (string)ViewBag.MainClass, begin: "ajaxCancelarAgendaBegin", success: "ajaxCancelarAgendaSuccess", failure: "ajaxCancelarAgendaFailure", css: "frmCancelar"))
+                    {
+                        <div class="col">
+                            <div class="row">
+                                @Html.FormGroupPickerDateFor(m => m.FechaCancelacion, title: "Fecha", colSize: "col-md-4", addValidator: true, editingDisabled: false)
+
+                                @Html.FormGroupDropDownListFor(m => m.IdProfesional, Model.MaestroProfesionales, "Profesional", colSize: "col-md-12", fieldCss: "select2-field validate profesionalCancelarAgenda", addValidator: true)
+
+                                @Html.FormGroupTextBoxFor(m => m.Motivo, title: "Motivo", addValidator: true, maxLength: 50)
+                          </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal-footer">
+    <button type="button" data-dismiss="modal" class="btn btn-default"><i class="fa fa-times"></i> CERRAR</button>
+    <button type="button" class="btn btn-danger btSave"><i class="fa fa-check"></i> CANCELAR</button>
+</div>
+
+
+<script src="/js/Views/Turnos/cancelarAgenda.js?3661"></script>

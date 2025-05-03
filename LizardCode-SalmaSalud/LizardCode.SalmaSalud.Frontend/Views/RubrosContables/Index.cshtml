@@ -1,0 +1,59 @@
+﻿@model LizardCode.SalmaSalud.Application.Models.RubrosContables.RubrosContablesViewModel
+@{
+    Layout = "~/Views/Shared/MaestroLayout.cshtml";
+
+    ViewBag.MainClass = "ABMRubrosContablesView";
+
+    ViewBag.Title = "Mantenimiento de Rubros Contables";
+    ViewBag.TitleNew = "Nuevo Rubros Contables...";
+    ViewBag.TitleEdit = "Modificar Rubros Contables...";
+    ViewBag.TitleRemove = "Eliminar Rubros Contables...";
+    ViewBag.ItemMenu = "Rubros Contables";
+
+    ViewBag.ButtonNew = true;
+    ViewBag.ButtonEdit = true;
+    ViewBag.ButtonRemove = true;
+
+    ViewBag.AjaxGetAll = Url.Action("ObtenerTodos", "RubrosContables");
+    ViewBag.AjaxGet = Url.Action("Obtener", "RubrosContables");
+    ViewBag.AjaxAdd = Url.Action("Nuevo", "RubrosContables");
+    ViewBag.AjaxUpdate = Url.Action("Modificar", "RubrosContables");
+    ViewBag.AjaxDelete = Url.Action("Eliminar", "RubrosContables");
+
+    ViewBag.Tabs = new string[] { "General" };
+}
+
+@section Styles {
+    <link href="/css/Views/RubrosContables/index.css?3661" rel="stylesheet" />
+}
+
+@section GridColumns {
+
+    <th>ID</th>
+    <th>Código</th>
+    <th>Descripción</th>
+    <th>Rubro Padre</th>
+
+}
+
+@section CrudForm {
+
+    @Html.FormGroupTextBoxFor(m => m.IdRubroContable, title: "ID", editingDisabled: true, newVisible: false)
+
+    @Html.FormGroupTextBoxFor(m => m.CodigoRubro, title: "Código de Rubro", addValidator: true)
+
+    @Html.FormGroupTextBoxFor(m => m.Descripcion, title: "Descripción", addValidator: true)
+
+    <div class="form-group field col-md-12">
+        <label class="form-label" for="IdRubroPadre">Rubro Padre</label>
+        <div class="controls">
+            @Html.HiddenFor(m => m.IdRubroPadre)
+        </div>
+    </div>
+
+}
+
+
+@section Scripts {
+    <script src="/js/Views/RubrosContables/index.js?3661"></script>
+}

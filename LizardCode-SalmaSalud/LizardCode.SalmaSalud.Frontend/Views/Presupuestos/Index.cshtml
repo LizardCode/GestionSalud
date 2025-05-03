@@ -1,0 +1,158 @@
+﻿@using LizardCode.Framework.Application.Models.Repeater;
+
+@model LizardCode.SalmaSalud.Application.Models.Presupuestos.PresupuestoViewModel
+@{
+    Layout = "~/Views/Shared/MaestroLayout.cshtml";
+
+    ViewBag.MainClass = "ABMPresupuestosView";
+
+    ViewBag.Title = "Mantenimiento de Presupuestos";
+    ViewBag.TitleNew = "Nuevo presupuesto...";
+    ViewBag.TitleEdit = "Modificar presupuesto...";
+    ViewBag.TitleRemove = "Eliminar presupuesto...";
+    ViewBag.ItemMenu = "Presupuestos";
+
+    ViewBag.ButtonNew = true;
+    ViewBag.ButtonEdit = true;
+    ViewBag.ButtonRemove = true;
+
+    ViewBag.AjaxGetAll = Url.Action("ObtenerTodos", "Presupuestos");
+    ViewBag.AjaxGet = Url.Action("Obtener", "Presupuestos");
+    ViewBag.AjaxAdd = Url.Action("Nuevo", "Presupuestos");
+    ViewBag.AjaxUpdate = Url.Action("Modificar", "Presupuestos");
+    ViewBag.AjaxDelete = Url.Action("Eliminar", "Presupuestos");
+
+    ViewBag.Tabs = new string[] { "Presupuesto" };
+}
+
+@section Styles {
+    <link href="/css/Views/Presupuestos/index.css?3661" rel="stylesheet" />
+    <style>
+        .row-flex {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .stick-to-bottom {
+            position: absolute;
+            bottom: -3rem;
+        }
+    </style>
+}
+
+@section Filters {
+
+    @Html.FilterTextBoxFor(m => m.FiltroNombre, "Nombre", value: string.Empty)
+    @Html.FilterTextBoxFor(m => m.FiltroDocumento, "Documento", value: string.Empty)
+
+}
+
+@section GridColumns {
+
+    <th>ID</th>
+    <th>Fecha</th>
+    <th>Paciente</th>
+    <th>Documento</th>
+    <th>Co-Pago</th>
+    <th>Prestaciones</th>
+    <th>Total</th>
+    <th>Estado</th>
+    <th></th>
+
+}
+
+@section CrudForm {
+
+    @Html.FormGroupTextBoxFor(m => m.IdPresupuesto, title: "ID", colSize: "col-md-2", editingDisabled: true, newVisible: false)
+
+    @Html.FormGroupDropDownListFor(m => m.IdPaciente, Model.MaestroPacientes, "Paciente", fieldCss: "select2-field paciente", editingDisabled: true, addValidator: true, colSize: "col-md-5")
+
+    @Html.FormGroupPickerDateFor(m => m.FechaVencimiento, title: "Fecha Vencimiento", colSize: "col-md-3", addValidator: true, editingDisabled: false)
+
+    <div class="p-2 w-100 resumenView">
+        @* <div class="text-center"><img alt="just a loader" src="/img/mini_loader.gif" width="75px;"></div> *@
+    </div>
+
+    <div class="row ml-2 w-100">
+        <div class="col">
+
+            <div class="row row-flex">
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="col">
+                            <h4>Prestaciones presupuesto</h4>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col dvPrestaciones">
+                            @await Component.InvokeAsync("Repeater", new RepeaterViewModel().SetItems(
+                            Model.Prestaciones,
+                            "Prestaciones",
+                            x => new(nameof(x.IdPrestacion), Model.MaestroPrestaciones)
+                            ))
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="col">
+                            <h4>Otras Prestaciones</h4>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col dvOtrasPrestaciones">
+                            @await Component.InvokeAsync("Repeater", new RepeaterViewModel().SetItems(
+                            Model.OtrasPrestaciones,
+                            "OtrasPrestaciones",
+                            x => new(nameof(x.IdOtraPrestacion), Model.MaestroOtrasPrestaciones)
+                            ))
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="inv--total-amounts">
+                <div class="row mt-4">
+                    <div class="col-sm-4 col-12 order-sm-0 order-1">
+                        <div class="text-sm-right">
+                            <div class="row">
+                                <div class="col-sm-8 col-7">
+                                    <p class="">Total Prestaciones: </p>
+                                </div>
+                                <div class="col-sm-4 col-5">
+                                    <p class="totalPrestaciones">$ 0</p>
+                                </div>
+                                <div class="col-sm-8 col-7">
+                                    <p class="">Total Co-Pagos: </p>
+                                </div>
+                                <div class="col-sm-4 col-5">
+                                    <p class="totalCoPagos">$ 0</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-7 col-12 order-sm-1 order-0">
+                        <div class="text-sm-right">
+                            <div class="row">
+                                <div class="col-sm-8 col-7">
+                                    <p class="">Total Otras Prestaciones: </p>
+                                </div>
+                                <div class="col-sm-2 col-5">
+                                    <p class="totalOtrasPrestaciones">$ 0</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @Html.FormGroupTextAreaFor(m => m.Observaciones, title: "Observaciones",  fieldCss: "form-control", addValidator: false, editingDisabled: false)
+}
+
+@section Scripts {
+    
+    <script src="/js/Views/Presupuestos/index.js?3661"></script>
+}

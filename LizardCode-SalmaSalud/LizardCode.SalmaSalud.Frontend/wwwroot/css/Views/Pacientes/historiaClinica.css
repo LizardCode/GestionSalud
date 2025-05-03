@@ -1,0 +1,30 @@
+﻿body {
+}
+
+.historiaClinicaDialog .modal-body {
+    padding-bottom: 0;
+}
+
+    .historiaClinicaDialog .modal-body .nav.nav-tabs {
+        padding-bottom: 1px;
+    }
+
+    .historiaClinicaDialog .modal-body > .row {
+        min-height: calc(100vh - 154px);
+    }
+
+        .historiaClinicaDialog .modal-body > .row .fechas .table-responsive {
+            min-height: calc(100vh - 240px);
+        }
+
+        .historiaClinicaDialog .modal-body > .row .detalles .row.resumen-view {
+            min-height: calc(100vh - 253px);
+        }
+
+            .historiaClinicaDialog .modal-body > .row .detalles .row.resumen-view .hc-evolucion-view {
+                height: 100%;
+            }
+
+                .historiaClinicaDialog .modal-body > .row .detalles .row.resumen-view .hc-evolucion-view .tab-content {
+                    height: calc(100% - 44px);
+                }

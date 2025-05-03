@@ -1,0 +1,51 @@
+﻿@using System.Text.RegularExpressions
+@model LizardCode.SalmaSalud.Application.Models.Turnos.RecepcionarViewModel
+@{
+    Layout = null;
+
+    ViewBag.AjaxAsignar = Url.Action("Recepcionar", "Turnos");
+
+    ViewBag.MainClass = "TurnosRecepcionarView";
+}
+
+
+<div class="modal-header">
+    <h5 class="modal-title">Recepcionar Turno</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true" class="fa fa-times"></span>
+    </button>
+</div>
+<div class="modal-body">
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+
+                    @using (Html.AjaxBeginForm((string)ViewBag.AjaxAsignar, (string)ViewBag.MainClass, begin: "ajaxRecepcionarBegin", success: "ajaxRecepcionarSuccess", failure: "ajaxRecepcionarFailure", css: "frmRecepcionar"))
+                    {
+                        @Html.HiddenFor(m => m.IdTurno, new { @class = "hdnIdTurno"})
+                        @Html.HiddenFor(m => m.IdPaciente, new { @class = "hdnRecepcionarIdPaciente" })
+                        @Html.HiddenFor(m => m.ForzarParticular, new { @class = "hdnRecepcionarForzarParticular" })
+                        @Html.HiddenFor(m => m.ForzarPadron, new { @class = "hdnRecepcionarForzarPadron" })
+                        @Html.HiddenFor(m => m.FinanciadorNro, new { @class = "hdnRecepcionarFinanciadorNro" })
+
+                        <div class="col">
+                            @*@Html.FormGroupTextBoxFor(m => m.Consultorio, title: "Consultorio", addValidator: true)*@
+                            @Html.FormGroupDropDownListFor(m => m.IdConsultorio, Model.MaestroConsultorios, "Consultorio", fieldCss: "select2-field validate consultorioRecepcionar", addValidator: true)
+
+                            @Html.FormGroupTextAreaFor(m => m.Observaciones, title: "Observaciones", rows: 4, addValidator: true)
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal-footer">
+    <button type="button" data-dismiss="modal" class="btn btn-default"><i class="fa fa-times"></i> CERRAR</button>
+    <button type="button" class="btn btn-info btSave"><i class="fa fa-check"></i> RECEPCIONAR</button>
+</div>
+
+
+<script src="/js/Views/Turnos/recepcionar.js?3661"></script>

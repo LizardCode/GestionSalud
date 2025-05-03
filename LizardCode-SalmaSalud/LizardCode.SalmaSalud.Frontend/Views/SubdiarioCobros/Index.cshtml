@@ -1,0 +1,107 @@
+﻿@model LizardCode.SalmaSalud.Application.Models.SubdiarioCobros.SubdiarioCobrosViewModel
+@{
+    Layout = "~/Views/Shared/ReportLayout.cshtml";
+
+    ViewBag.MainClass = "ReportSubdiarioCobrosView";
+
+    ViewBag.Title = "Subdiario Cobros";
+	ViewBag.ItemMenu = "Subdiario Cobros";
+
+	ViewBag.ButtonExcel = false;
+	ViewBag.ButtonPDF = false;
+	ViewBag.ButtonPrint = false;
+
+	ViewBag.AjaxGetAll = Url.Action("ObtenerTodos", "SubdiarioCobros");
+}
+
+@section Styles {
+    <link href="/css/Views/SubdiarioVentas/index.css?3661" rel="stylesheet" />
+}
+
+@section Filters {
+    <div class="col">
+
+        <div class="row">
+            @Html.FilterPickerDateFor(m => m.FechaDesde, "Fecha Desde", colSize: "col-md-2")
+            @Html.FilterPickerDateFor(m => m.FechaHasta, "Fecha Hasta", colSize: "col-md-2")
+        </div>
+    
+    </div>
+}
+
+@section ToolbarButtons {
+	<button type="button" class="btn btn-primary btGetExcel" title="Excel"><i class="fa fa-file-excel"></i> <span>Excel</span></button>
+	<button type="button" class="btn btn-primary btTotalesImputacion" title="Detalle de Totales por Imputación Contable"><i class="fa fa-badge-dollar"></i> <span>Totales por Cta.Contable</span></button>
+}
+
+@section GridColumns {
+
+	<th></th>
+    <th>Fecha</th>
+    <th>Comp.</th>
+	<th>Numero</th>
+	<th>Cliente</th>
+	<th>CUIT</th>
+    <th>Total</th>
+	<th></th>
+
+}
+
+@section CustomModals {
+
+    <div class="modal fade modalDetalleImputacion" role="dialog" aria-hidden="true">
+        <div class="modal-dialog bounceInRight animated">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Totales de Cuentas Contables por Imputación...</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true" class="zmdi zmdi-close"></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <button type="button" class="btn btn-primary btExcelImputacion" title="Excel"><i class="fa fa-file-excel"></i> <span>Excel</span></button>
+                    <div class="table-responsive">
+                        <table class="table table-bordered mb-4 tableDetailImputacion">
+                            <thead>
+                                <tr>
+                                    <th>Cod.Cuenta</th>
+                                    <th>Cuenta Contable</th>
+                                    <th>Débitos</th>
+                                    <th>Créditos</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" data-dismiss="modal" class="btn btn-default"><i class="fa fa-times"></i> Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+
+@section TemplateTables {
+
+	<div class="templateDetalle table-responsive" style="display:none;">
+		<table class="table table-bordered mb-4" role="grid">
+			<thead>
+				<tr>
+					<th>Cod.</th>
+					<th>Cuenta</th>
+					<th>Importe</th>
+				</tr>
+			</thead>
+			<tbody>
+		
+			</tbody>
+		</table>
+	</div>
+}
+
+@section Scripts {
+    <script src="/js/Views/SubdiarioCobros/index.js?3661"></script>
+}

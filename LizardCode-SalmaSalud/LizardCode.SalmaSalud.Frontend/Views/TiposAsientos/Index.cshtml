@@ -1,0 +1,68 @@
+﻿@using LizardCode.Framework.Application.Models.Repeater;
+@model LizardCode.SalmaSalud.Application.Models.TiposAsientos.TiposAsientosViewModel
+@{
+    Layout = "~/Views/Shared/MaestroLayout.cshtml";
+
+    ViewBag.MainClass = "ABMTiposAsientosView";
+
+    ViewBag.Title = "Mantenimiento de Tipos de Asientos";
+    ViewBag.TitleNew = "Nuevo Tipo de Asiento...";
+    ViewBag.TitleEdit = "Modificar Tipo de Asiento...";
+    ViewBag.TitleRemove = "Eliminar Tipo de Asiento...";
+    ViewBag.ItemMenu = "Tipos de Asientos";
+
+    ViewBag.ButtonNew = true;
+    ViewBag.ButtonEdit = true;
+    ViewBag.ButtonRemove = true;
+
+    ViewBag.AjaxGetAll = Url.Action("ObtenerTodos", "TiposAsientos");
+    ViewBag.AjaxGet = Url.Action("Obtener", "TiposAsientos");
+    ViewBag.AjaxAdd = Url.Action("Nuevo", "TiposAsientos");
+    ViewBag.AjaxUpdate = Url.Action("Modificar", "TiposAsientos");
+    ViewBag.AjaxDelete = Url.Action("Eliminar", "TiposAsientos");
+
+    ViewBag.Tabs = new string[] { "General" };
+}
+
+@section Styles {
+    <link href="/css/Views/TiposAsientos/index.css?3661" rel="stylesheet" />
+}
+
+@section GridColumns {
+
+    <th>ID</th>
+    <th>Descripción</th>
+
+}
+
+@section CrudForm {
+
+    @Html.FormGroupTextBoxFor(m => m.IdTipoAsiento, title: "ID", editingDisabled: true, newVisible: false)
+
+    @Html.FormGroupTextBoxFor(m => m.Descripcion, title: "Descripción", addValidator: true)
+
+    <hr />
+
+
+    <div class="col">
+        <div class="row mb-2">
+            <div class="col-md-6">
+                <h4>Cuentas Contables</h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                @await Component.InvokeAsync("Repeater", new RepeaterViewModel().SetItems(
+                Model.Items,
+            x => new(nameof(x.IdCuentaContable), Model.MaestroCuentasContables)
+            ))
+            </div>
+        </div>
+    </div>
+
+}
+
+
+@section Scripts {
+    <script src="/js/Views/TiposAsientos/index.js?3661"></script>
+}
