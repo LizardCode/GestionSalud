@@ -57,20 +57,6 @@ namespace LizardCode.Framework.Application.Controllers.Base
             return File(fileContents, contentType);
         }
 
-        public override void OnActionExecuting(ActionExecutingContext context)
-        {
-            base.OnActionExecuting(context);
-
-            var forceDomain = "ForceBrandDomain".FromAppSettings<bool>(notFoundException: false);
-            var defaultDomain = "DefaultBrandDomain".FromAppSettings<string>(notFoundException: false) ?? "dawasoft";
-            var domain = GetDomain();
-
-            if (forceDomain)
-                ViewBag.Domain = defaultDomain;
-            else
-                ViewBag.Domain = domain.Contains("localhost") ? defaultDomain : domain;
-        }
-
         private string GetDomain()
         {
             var host = HttpContextHelper.Current.Request.Host.Host;
