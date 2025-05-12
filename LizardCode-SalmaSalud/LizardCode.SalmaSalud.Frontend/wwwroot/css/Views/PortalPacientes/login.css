@@ -392,10 +392,10 @@ body {
     }
 
 .posicion-logo {
-    position: absolute;
+    /*position: absolute;*/
     top: 10%;
     left: 7%;
-    width: 100px;
+    width: 140px;
 }
 
 .btnLink {

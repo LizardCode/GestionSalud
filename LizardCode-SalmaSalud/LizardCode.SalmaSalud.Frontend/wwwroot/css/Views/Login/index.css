@@ -305,8 +305,8 @@ body {
     border-color: #008085;
 }
 .posicion-logo {
-    position: absolute;  
+    /*position: absolute;*/  
     top: 10%;
     left: 20%;
-    width: 182px;
+    width: 140px;
 }

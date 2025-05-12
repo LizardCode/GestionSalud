@@ -163,7 +163,7 @@ var Utils = new (function () {
 	this.modalLoader = function (text) {
 
 		var div = document.createElement('div');
-		div.innerHTML = '<img src="/img/slack.gif" alt="Estamos trabajando en su solicitud" class="modalWaitPeritacion" style="width:100px;">';
+		div.innerHTML = '<img src="/img/mini_loader.gif" alt="Estamos trabajando en su solicitud" class="modalWaitPeritacion" style="width:100px;">';
 
 		swal({
 			text: text,

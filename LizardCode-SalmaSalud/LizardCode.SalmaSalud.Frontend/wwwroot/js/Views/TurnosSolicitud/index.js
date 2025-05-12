@@ -158,20 +158,20 @@ var ABMTurnosSolicitudView = new (function () {
         var sReturn = '';
 
         
-            if (tipoUsuario != enums.TipoUsuario.Recepcion)
-                sReturn = btnHistorial + '&nbsp;';
+        //if (tipoUsuario != enums.TipoUsuario.Recepcion)
+        //    sReturn = btnHistorial + '&nbsp;';
 
-            switch (data.idEstadoTurnoSolicitud) {
+        switch (data.idEstadoTurnoSolicitud) {
 
-                case enums.EstadoTurnoSolicitud.Solicitado:
-                    sReturn += btnCancelar + '&nbsp;' + btnAsignar;
-                    break;
-                case enums.EstadoTurnoSolicitud.Asignado:
-                    sReturn += btnCancelar;
-                    break;                
-                case enums.EstadoTurnoSolicitud.Cancelado:
-                    sReturn += '';
-                    break;
+            case enums.EstadoTurnoSolicitud.Solicitado:
+                sReturn += btnCancelar + '&nbsp;' + btnAsignar;
+                break;
+            case enums.EstadoTurnoSolicitud.Asignado:
+                sReturn += btnCancelar;
+                break;                
+            case enums.EstadoTurnoSolicitud.Cancelado:
+                sReturn += '';
+                break;
         }
 
         return sReturn;
