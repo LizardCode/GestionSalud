@@ -427,3 +427,10 @@ input::-webkit-inner-spin-button {
 input[type=number] {
     -moz-appearance: textfield;
 }
+
+.btn-login {
+    color: #fff !important;
+    background-color: #4CAF50 !important;
+    border-color: #4CAF50;
+    box-shadow: 0 10px 20px -10px #4CAF50;
+}
