@@ -60,7 +60,7 @@ var ABMTurnosSolicitudView = new (function () {
 
         var order = [[1, 'asc']];
 
-        dtView = MaestroLayout.initializeDatatable('idTurnoSolicitud', columns, order, 50);
+        dtView = MaestroLayout.initializeDatatable('idTurnoSolicitud', columns, order, 50, false, false);
 
         //$('input[name^=Provincia]').prop('readonly', true);
         //$('input[name^=Localidad]').prop('readonly', true);
@@ -152,8 +152,8 @@ var ABMTurnosSolicitudView = new (function () {
     function renderAcciones(data, type, row, meta) {
         var tipoUsuario = $('#hidLoggedUserTipo').val();
 
-        var btnCancelar = '<span type="button" class="btn badge badge-danger btnCancelar" title="CANCELAR" data-id-turno-solicitud="' + data.idTurnoSolicitud + '" data-width-class="modal-70" data-ajax-action="/TurnosSolicitud/Cancelar" data-toggle="tooltip" data-placement="top" title="CANCELAR"><i class="fa fa-times"></i></span>';
-        var btnAsignar = '<span type="button" class="btn badge badge-success btnAsignar btAction" title="ASIGNAR" data-id-turno="' + data.idTurno + '" data-ajax-action="/TurnosSolicitud/AsignarView?idTurnoSolicitud=' + data.idTurnoSolicitud + '" data-toggle="tooltip" data-placement="top" title="ASIGNAR"><i class="fa fa-check"></i></span>';
+        var btnCancelar = '<span type="button" class="btn badge badge-danger btnCancelar" title="CANCELAR" data-id-turno-solicitud="' + data.idTurnoSolicitud + '" data-width-class="modal-70" data-ajax-action="/TurnosSolicitud/Cancelar" data-toggle="" data-placement="top" title="CANCELAR"><i class="fa fa-times"></i></span>';
+        var btnAsignar = '<span type="button" class="btn badge badge-success btnAsignar btAction" title="ASIGNAR" data-id-turno="' + data.idTurno + '" data-ajax-action="/TurnosSolicitud/AsignarView?idTurnoSolicitud=' + data.idTurnoSolicitud + '" data-toggle="" data-placement="top" title="ASIGNAR"><i class="fa fa-check"></i></span>';
 
         var sReturn = '';
 

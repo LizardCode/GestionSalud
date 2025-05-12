@@ -1,4 +1,5 @@
-﻿using LizardCode.Framework.Helpers.SendGrid;
+﻿using LizardCode.Framework.Application.Helpers;
+using LizardCode.Framework.Helpers.SendGrid;
 using LizardCode.Framework.Helpers.Utilities;
 using LizardCode.SalmaSalud.Application.Interfaces.Business;
 using System;
@@ -103,7 +104,9 @@ namespace LizardCode.SalmaSalud.Application.Business
 
             var templatePath = "Pacientes:TemplateTurnoAsignado".FromAppSettings<string>(notFoundException: true);
             var template = GetTemplate(templatePath);
+            var host = HttpContextHelper.Current.Request.Host.Host;
 
+            template = template.Replace("[DOMAIN]", host.ToUpperInvariant());
             template = template.Replace("[PACIENTE_NOMBRE]", pacienteNombre.ToUpperInvariant());
             template = template.Replace("[FECHA_ASIGNACION]", fechaAsigancion.ToUpperInvariant());
             template = template.Replace("[ESPECIALIDAD]", especialidad.ToUpperInvariant());
@@ -127,6 +130,9 @@ namespace LizardCode.SalmaSalud.Application.Business
             var templatePath = "Pacientes:TemplateSolicitudTurnoCancelada".FromAppSettings<string>(notFoundException: true);
             var template = GetTemplate(templatePath);
 
+            var host = HttpContextHelper.Current.Request.Host.Host;
+
+            template = template.Replace("[DOMAIN]", host.ToUpperInvariant());
             template = template.Replace("[PACIENTE_NOMBRE]", pacienteNombre.ToUpperInvariant());
             template = template.Replace("[ESPECIALIDAD]", especialidad.ToUpperInvariant());
             //template = template.Replace("[PACIENTE_CODIGO]", codigo);

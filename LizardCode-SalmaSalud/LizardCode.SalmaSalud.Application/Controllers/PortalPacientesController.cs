@@ -208,10 +208,11 @@ namespace LizardCode.SalmaSalud.Application.Controllers
                     return Json(-2, $"Ya se ha enviado un código. Intente solicitar nuevamente en {reqAccessCode} minutos.");
                 }
 
-                //TODO GS: DESACTIVAR
-                var accessCode = await _usuarios.RequestAccessCode(model.User);
+                //var accessCode = await _usuarios.RequestAccessCode(model.User);
+                //return Json(-1, accessCode);
 
-                return Json(-1, accessCode);
+                await _usuarios.RequestAccessCode(model.User);
+                return Json(-1, string.Empty);
             }
             catch (Exception ex)
             {

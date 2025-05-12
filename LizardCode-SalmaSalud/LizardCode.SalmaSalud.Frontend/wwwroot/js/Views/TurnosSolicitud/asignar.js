@@ -27,13 +27,14 @@ var TurnosAsignarView = new (function () {
 
 
         $('#Fecha')
-            .inputmask("99/99/9999 00:00")
+            .inputmask("99/99/9999 99:99")
             .flatpickr({
                 locale: "es",
                 allowInput: true,
-                maxDate: "today",
+                minDate: "today",
                 defaultDate: "today",
                 dateFormat: "d/m/Y H:i",
+                enableTime: true,
                 onClose: function (selectedDates, dateStr, instance) {
                     if (dateStr == "")
                         instance.setDate(moment().format(enums.FormatoFecha.DefaultFormat));

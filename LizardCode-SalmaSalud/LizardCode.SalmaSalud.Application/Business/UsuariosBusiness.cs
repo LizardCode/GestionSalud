@@ -396,7 +396,6 @@ namespace LizardCode.SalmaSalud.Application.Business
 
             await _usersRepository.Update(user);
 
-            //TODO GS: VER DE ACTIVAR ESTOS MÉTODOS            
             await _chatApiBusiness.SendMessageCodigoAcceso(paciente.Telefono, paciente.Nombre, codigoAcceso, user.Vencimiento, paciente.IdPaciente);            
             await _mailBusiness.EnviarMailCodigoAccesoPaciente(codigoAcceso, paciente.Email, paciente.Nombre);
 

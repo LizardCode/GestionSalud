@@ -22,17 +22,20 @@ namespace LizardCode.SalmaSalud.Application.Business
         private readonly ITurnosSolicitudRepository _turnosSolicitudRepository;
         private readonly IPacientesRepository _pacientesRepository;
         private readonly IMailBusiness _mailBusiness;
+        private readonly IChatApiBusiness _chatApiBusiness;
 
         public TurnosSolicitudBusiness(
             ILogger<TurnosSolicitudBusiness> logger,
             IPacientesRepository pacientesRepository,
             ITurnosSolicitudRepository turnosSolicitudRepository,
-            IMailBusiness mailBusiness)
+            IMailBusiness mailBusiness,
+            IChatApiBusiness chatApiBusiness)
         {
             _logger = logger;
             _turnosSolicitudRepository = turnosSolicitudRepository;
             _pacientesRepository = pacientesRepository;
             _mailBusiness = mailBusiness;
+            _chatApiBusiness = chatApiBusiness;
         }
 
         public async Task New(TurnoSolicitudViewModel model)
@@ -197,7 +200,7 @@ namespace LizardCode.SalmaSalud.Application.Business
 
                 tran.Commit();
 
-                _mailBusiness.EnviarMailSolicitudTurnoCanceladaPaciente(turno.Email,
+                await _mailBusiness.EnviarMailSolicitudTurnoCanceladaPaciente(turno.Email,
                                                     turno.Paciente,
                                                     turno.Especialidad);
             }
@@ -233,7 +236,7 @@ namespace LizardCode.SalmaSalud.Application.Business
 
             try
             {
-                //Cancelo el turno
+                //Asigno el turno
                 dbturno.IdEstadoTurnoSolicitud = (int)EstadoTurnoSolicitud.Asignado;
                 dbturno.FechaAsignacion = model.Fecha;
                 dbturno.ObservacionesAsignacion = model.Observaciones;
@@ -243,11 +246,13 @@ namespace LizardCode.SalmaSalud.Application.Business
 
                 tran.Commit();
 
-                _mailBusiness.EnviarMailTurnoAsignadoPaciente(turno.Email,
+                await _mailBusiness.EnviarMailTurnoAsignadoPaciente(turno.Email,
                                                             turno.Paciente,
                                                             model.Fecha?.ToString("dd/MM/yyyy HH:mm"),
                                                             turno.Especialidad,
                                                             model.Observaciones);
+
+                await _chatApiBusiness.SendMessageSolicitudTurnoAsignado(turno.Telefono, model.Fecha.Value, turno.Paciente, turno.Especialidad, turno.IdPaciente);
             }
             catch (Exception ex)
             {
