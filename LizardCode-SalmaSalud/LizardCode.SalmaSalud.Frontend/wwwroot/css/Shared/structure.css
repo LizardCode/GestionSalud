@@ -85,7 +85,7 @@ code { color: #e7515a; }
 }
 .layout-top-spacing { margin-top: 20px; }
 .layout-spacing { padding-bottom: 40px; }
-.layout-px-spacing { padding: 0 20px 0 20px!important; min-height: calc(100vh - 140px)!important; }
+.layout-px-spacing { padding: 10px 20px 0 20px!important; min-height: calc(100vh - 140px)!important; }
 .widget.box .widget-header {
     background: #fff;
     padding: 0px 8px 0px;

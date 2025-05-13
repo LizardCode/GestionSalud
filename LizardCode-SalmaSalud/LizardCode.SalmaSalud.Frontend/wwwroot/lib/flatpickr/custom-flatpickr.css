@@ -4,19 +4,22 @@
     -webkit-box-shadow: 2px 5px 17px 0 rgba(31,45,61,.1);
     box-shadow: 2px 5px 17px 0 rgba(31,45,61,.1);
     border: 1px solid #bfc9d4;
+    z-index: 99999 !important;
 }
 .flatpickr-calendar.open {
     display: inline-block;
-    z-index: 1050;
+    z-index: 1065 !important; 
 }
 .flatpickr-calendar.arrowTop:before {
     border-bottom-color: #ebedf2;
 }
 .flatpickr-calendar:before {
     border-width: 9px;
+    margin: 0 -5px;
 }
 .flatpickr-calendar:after {
     border-width: 0px;
+    margin: 0 -5px;
 }
 .flatpickr-months .flatpickr-prev-month, .flatpickr-months .flatpickr-next-month {
     top: 8%;
@@ -48,7 +51,7 @@
     border-left: none;
     color: #3b3f5c;
     font-size: 15px;
-    padding: 13px 12px;
+    padding: 12px 12px;
     letter-spacing: 1px;
     font-weight: 700;
 }
