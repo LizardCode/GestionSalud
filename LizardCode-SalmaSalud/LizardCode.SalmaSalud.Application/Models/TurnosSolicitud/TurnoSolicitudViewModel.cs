@@ -24,8 +24,8 @@ namespace LizardCode.SalmaSalud.Application.Models.TurnosSolicitud
         [RequiredEx]
         public int IdPaciente { get; set; }
 
-        public int Dia { get; set; }
-        public int IdRangoHorario { get; set; }
+        public List<int> Dias { get; set; }
+        public List<int> RangosHorarios { get; set; }
 
         public string Observaciones { get; set; }
 

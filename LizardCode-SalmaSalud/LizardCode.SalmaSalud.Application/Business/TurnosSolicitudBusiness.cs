@@ -23,20 +23,29 @@ namespace LizardCode.SalmaSalud.Application.Business
         private readonly IPacientesRepository _pacientesRepository;
         private readonly IMailBusiness _mailBusiness;
         private readonly IChatApiBusiness _chatApiBusiness;
+        private readonly ITurnosSolicitudDiasRepository _turnosSolicitudDiasRepository;
+        private readonly ITurnosSolicitudRangosHorariosRepository _turnosSolicitudRangosHorariosRepository;
 
         public TurnosSolicitudBusiness(
             ILogger<TurnosSolicitudBusiness> logger,
             IPacientesRepository pacientesRepository,
             ITurnosSolicitudRepository turnosSolicitudRepository,
             IMailBusiness mailBusiness,
-            IChatApiBusiness chatApiBusiness)
+            IChatApiBusiness chatApiBusiness,
+            ITurnosSolicitudDiasRepository turnosSolicitudDiasRepository,
+            ITurnosSolicitudRangosHorariosRepository turnosSolicitudRangosHorariosRepository)
         {
             _logger = logger;
             _turnosSolicitudRepository = turnosSolicitudRepository;
             _pacientesRepository = pacientesRepository;
             _mailBusiness = mailBusiness;
             _chatApiBusiness = chatApiBusiness;
+            _turnosSolicitudDiasRepository = turnosSolicitudDiasRepository;
+            _turnosSolicitudRangosHorariosRepository = turnosSolicitudRangosHorariosRepository;
         }
+
+        public async Task<Custom.TurnoSolicitudTotales> ObtenerTotalesDashboard()
+            => await _turnosSolicitudRepository.GetTotalesDashboard();
 
         public async Task New(TurnoSolicitudViewModel model)
         {
@@ -44,8 +53,12 @@ namespace LizardCode.SalmaSalud.Application.Business
 
             Validate(solicitud);
 
-            var tran = _uow.BeginTransaction();
+            if (model.Dias.Count == 0 || model.RangosHorarios.Count == 0)
+            {
+                throw new BusinessException("Ingrese un día y horario válido.");
+            }
 
+            var tran = _uow.BeginTransaction();
             try
             {
                 solicitud.FechaSolicitud = DateTime.Now;
@@ -53,6 +66,22 @@ namespace LizardCode.SalmaSalud.Application.Business
                 solicitud.IdEstadoRegistro = (int)EstadoRegistro.Nuevo;
 
                 var id = await _turnosSolicitudRepository.Insert(solicitud, tran);
+
+                foreach(var dia in model.Dias)
+                {
+                    await _turnosSolicitudDiasRepository.Insert(new TurnoSolicitudDia { 
+                                                                                    IdTurnoSolicitud = (int)id, 
+                                                                                    Dia = dia                                                                                    
+                    }, tran);
+                }
+
+                foreach (var rango in model.RangosHorarios)
+                {
+                    await _turnosSolicitudRangosHorariosRepository.Insert(new TurnoSolicitudRangoHorario { 
+                                                                                                        IdTurnoSolicitud = (int)id, 
+                                                                                                        IdRangoHorario = rango 
+                    }, tran);
+                }
 
                 //TODO GS: Enviar mail con la data que se solicitó
                 //_mailBusiness.EnviarMailBienvenidaPaciente(paciente.Email, paciente.Nombre);
@@ -157,8 +186,8 @@ namespace LizardCode.SalmaSalud.Application.Business
             {
                 IdPaciente = model.IdPaciente,
                 IdEspecialidad = model.IdEspecialidad,
-                Dia = model.Dia,
-                IdRangoHorario = model.IdRangoHorario,
+                Dias = model.Dias,
+                RangosHorarios = model.RangosHorarios,
                 Observaciones = model.Observaciones
             };
 
@@ -272,12 +301,6 @@ namespace LizardCode.SalmaSalud.Application.Business
             if (solicitud.IdEspecialidad == 0)
             {
                 throw new BusinessException("Ingrese una Especialidad válida.");
-            }
-
-
-            if (solicitud.Dia == 0 || solicitud.IdRangoHorario == 0)
-            {
-                throw new BusinessException("Ingrese un día y horario válido.");
             }
         }
     }

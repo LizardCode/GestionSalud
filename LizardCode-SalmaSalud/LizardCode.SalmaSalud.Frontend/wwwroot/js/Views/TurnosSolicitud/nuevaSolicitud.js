@@ -17,8 +17,8 @@
         $('[data-toggle="tooltip"]').tooltip();
 
         $('#IdEspecialidad').select2();
-        $('#Dia').select2();
-        $('#IdRangoHorario').select2();
+        $('#Dias').select2();
+        $('#RangosHorarios').select2();
     }
 
     function bindControlsEvents() {

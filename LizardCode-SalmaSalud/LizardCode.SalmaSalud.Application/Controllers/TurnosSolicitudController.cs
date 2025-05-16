@@ -11,6 +11,7 @@ using LizardCode.SalmaSalud.Application.Models.TurnosSolicitud;
 using LizardCode.SalmaSalud.Domain.Enums;
 using System.Linq;
 using System.Threading.Tasks;
+using System;
 
 namespace LizardCode.SalmaSalud.Application.Controllers
 {
@@ -139,6 +140,22 @@ namespace LizardCode.SalmaSalud.Application.Controllers
             //await RemoveTurnosCache(model.IdTurnoSolicitud);
 
             return Json(true);
+        }
+
+        [Authorize]
+        public async Task<IActionResult> ObtenerTotalesDashboard()
+        {
+            var totalAfiliados = (await _lookupsBusiness.GetAllPacientes()).Count;
+            var totales = await _turnosSolicitudBusiness.ObtenerTotalesDashboard();
+
+            return Json(() => new
+            {
+                totalAfiliados,
+                total = totales.Total,
+                solicitados = totales.Solicitados,
+                asignados = totales.Asignados,
+                cancelados = totales.Cancelados
+            });
         }
     }
 }

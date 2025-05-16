@@ -23,5 +23,6 @@ namespace LizardCode.SalmaSalud.Application.Interfaces.Repositories
 
         Task<Domain.EntitiesCustom.TurnoSolicitud> GetCustomById(int idTurnoSolicitud, IDbTransaction transaction = null);
         Task<List<TurnoSolicitud>> GetTurnosByIdPaciente(int idPaciente, IDbTransaction transaction = null);
+        Task<TurnoSolicitudTotales> GetTotalesDashboard();
     }
 }

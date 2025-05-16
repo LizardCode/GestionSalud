@@ -53,8 +53,10 @@ var ABMTurnosSolicitudView = new (function () {
             { data: 'paciente' },
             { data: 'documento' },
             { data: 'especialidad' },
+            { data: 'dias' },
+            { data: 'rangos' },
             { data: null, render: renderEstado },
-            { data: 'fechaAsignacion', render: DataTableEx.renders.date },
+            { data: 'fechaAsignacion', render: DataTableEx.renders.dateTime },
             { data: null, orderable: false, searchable: false, class: 'text-center', render: renderAcciones }
         ];
 

@@ -37,9 +37,9 @@
 
                                 @Html.FormGroupDropDownListFor(m => m.IdEspecialidad, Model.MaestroEspecialidades, "Especialidad", fieldCss: "select2-field validate especialidad")
 
-                                @Html.FormGroupDropDownListFor(m => m.Dia, Model.MaestroDias, "Día", fieldCss: "select2-field validate dia")
+                                @Html.FormGroupDropDownListFor(m => m.Dias, Model.MaestroDias, "Días de preferencia", fieldCss: "select2-field validate dia", multiple: true)
 
-                                @Html.FormGroupDropDownListFor(m => m.IdRangoHorario, Model.MaestroRangosHorarios, "Rango Horario", fieldCss: "select2-field validate rangoHorario")
+                                @Html.FormGroupDropDownListFor(m => m.RangosHorarios, Model.MaestroRangosHorarios, "Rangos Horarios de preferencia", fieldCss: "select2-field validate rangoHorario", multiple: true)
 
                                 </div>
                             </div>

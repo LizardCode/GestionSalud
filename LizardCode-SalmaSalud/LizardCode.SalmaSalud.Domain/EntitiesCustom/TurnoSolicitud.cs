@@ -17,5 +17,8 @@ namespace LizardCode.SalmaSalud.Domain.EntitiesCustom
         public string Telefono { get; set; }
         public string Email { get; set; }
         public string Documento { get; set; }
+
+        public string Dias { get; set; }
+        public string Rangos { get; set; }
     }
 }

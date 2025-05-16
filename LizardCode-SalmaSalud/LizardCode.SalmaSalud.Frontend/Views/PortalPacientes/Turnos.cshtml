@@ -73,6 +73,11 @@
                                         <p>@turno.ObservacionesAsignacion</p>
                                     </div>
                                 </div>
+                                <div class="row alert alert-secondary">
+                                    <div class="col">
+                                        <b>Preferencias: </b>@turno.Dias @turno.Rangos
+                                    </div>
+                                </div>
                                 @if (turno.IdEstadoTurnoSolicitud == (int)EstadoTurnoSolicitud.Solicitado)
                                 {
                                     <div class="row">

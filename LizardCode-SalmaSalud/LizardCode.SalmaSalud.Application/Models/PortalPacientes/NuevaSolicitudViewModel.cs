@@ -1,5 +1,6 @@
 ﻿using LizardCode.Framework.Application.Common.Annotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Collections.Generic;
 
 namespace LizardCode.SalmaSalud.Application.Models.PortalPacientes
 {
@@ -10,8 +11,8 @@ namespace LizardCode.SalmaSalud.Application.Models.PortalPacientes
         [RequiredEx]
         public int IdEspecialidad { get; set; }
 
-        public int Dia { get; set; }
-        public int IdRangoHorario { get; set; }
+        public List<int> Dias { get; set; }
+        public List<int> RangosHorarios { get; set; }
 
         public string Observaciones { get; set; }
 

@@ -19,21 +19,20 @@
         buildControls();
         bindControlsEvents();
 
-        //initTotales();
+        initTotales();
         //initDataTables();
     };
 
     function initTotales() {
-        Ajax.GetJson(RootPath + 'Turnos/ObtenerTotalesDashboard')
+        Ajax.GetJson(RootPath + 'TurnosSolicitud/ObtenerTotalesDashboard')
             .done(function (data) {
 
-                $('.chart-agendados').attr("data-percentage", 100 - data.porcentajeAgendados);
-                $('.bTurnosAgendados').html(data.agendadosHoy + '/' + data.totalHoy);
+                $('.vAfiliados').html(data.totalAfiliados);
+                $('.vSolicitados').html(data.solicitados);
+                $('.vAsignados').html(data.asignados);
+                $('.vCancelados').html(data.cancelados);
 
-                $('.chart-confirmados').attr("data-percentage", 100 - data.porcentajeConfirmados);
-                $('.bTurnosConfirmados').html(data.confirmadosManiana + '/' + data.agendadosManiana);
-
-                initCharts();
+                //initCharts();
             })
             .fail(Ajax.ShowError);
 

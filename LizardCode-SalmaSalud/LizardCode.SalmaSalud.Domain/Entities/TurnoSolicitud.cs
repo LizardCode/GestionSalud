@@ -11,8 +11,6 @@ namespace LizardCode.SalmaSalud.Domain.Entities
         public virtual DateTime FechaSolicitud { get; set; }
         public virtual int IdPaciente { get; set; }
         public virtual int IdEspecialidad { get; set; }
-        public virtual int Dia { get; set; }
-        public virtual int IdRangoHorario { get; set; }
         public virtual string Observaciones { get; set; }
         public virtual int IdEstadoTurnoSolicitud { get; set; }
         public virtual DateTime? FechaAsignacion { get; set; }

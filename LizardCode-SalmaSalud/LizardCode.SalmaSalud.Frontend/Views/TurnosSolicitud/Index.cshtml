@@ -55,6 +55,8 @@
     <th>Paciente</th>
     <th>Documento</th>
     <th>Especialidad</th>
+    <th>Días</th>
+    <th>Rangos</th>
     <th>Estado</th>
     <th>Fecha Turno</th>
     <th></th>
@@ -67,9 +69,9 @@
         
     @Html.FormGroupDropDownListFor(m => m.IdEspecialidad, Model.MaestroEspecialidades, "Especialidad", fieldCss: "select2-field validate especialidad")
 
-    @Html.FormGroupDropDownListFor(m => m.Dia, Model.MaestroDias, "Día", fieldCss: "select2-field validate dia")
+    @Html.FormGroupDropDownListFor(m => m.Dias, Model.MaestroDias, "Preferencia de día/s ", fieldCss: "select2-field validate dia", multiple: true)
 
-    @Html.FormGroupDropDownListFor(m => m.IdRangoHorario, Model.MaestroRangosHorarios, "Rango Horario", fieldCss: "select2-field validate rangoHorario")
+    @Html.FormGroupDropDownListFor(m => m.RangosHorarios, Model.MaestroRangosHorarios, "Preferencia de Rango/s Horario/s", fieldCss: "select2-field validate rangoHorario", multiple: true)
 
 }
 
