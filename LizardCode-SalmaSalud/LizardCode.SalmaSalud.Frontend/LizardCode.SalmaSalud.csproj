@@ -4,8 +4,8 @@
 	<LangVersion>preview</LangVersion>
     <TargetFramework>net8.0</TargetFramework>
     <RootNamespace>LizardCode.SalmaSalud</RootNamespace>
-    <Version>1.1.132.5</Version>
-    <FileVersion>1.1.132.5</FileVersion>
+    <Version>1.1.136.1</Version>
+    <FileVersion>1.1.136.1</FileVersion>
     <Configurations>Release;Debug</Configurations>
   </PropertyGroup>
 

@@ -6,8 +6,8 @@
 	var clase = Model.IdEvolucion > 0 ? "ODONTOGRAMA_CONSULTA_hdnIdEvolucion" : "ODONTOGRAMA_hdnIdEvolucion";
 }
 
-@*<link href="/css/Views/Odontograma/index.css?1325" rel="stylesheet" />*@
-<link href="@Url.Content("~/css/Views/Odontograma/index.css?1325")" rel="stylesheet" type="text/css" />
+@*<link href="/css/Views/Odontograma/index.css?1361" rel="stylesheet" />*@
+<link href="@Url.Content("~/css/Views/Odontograma/index.css?1361")" rel="stylesheet" type="text/css" />
 
 @Html.HiddenFor(m => m.IdEvolucion, new { @class = clase, @name = clase, @id = clase})
 <div class="container">
@@ -133,9 +133,9 @@
 </script>
 @if (Model.IdEvolucion == 0)
 {
-	<script src="/js/Views/Odontograma/index.js?1325"></script>
+	<script src="/js/Views/Odontograma/index.js?1361"></script>
 }
 else
 {
-	<script src="/js/Views/Odontograma/indexConsulta.js?1325"></script>
+	<script src="/js/Views/Odontograma/indexConsulta.js?1361"></script>
 }
