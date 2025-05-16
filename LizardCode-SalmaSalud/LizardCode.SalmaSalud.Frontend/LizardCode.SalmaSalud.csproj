@@ -4,8 +4,8 @@
 	<LangVersion>preview</LangVersion>
     <TargetFramework>net8.0</TargetFramework>
     <RootNamespace>LizardCode.SalmaSalud</RootNamespace>
-    <Version>1.1.366.1</Version>
-    <FileVersion>1.1.366.1</FileVersion>
+    <Version>1.1.132.5</Version>
+    <FileVersion>1.1.132.5</FileVersion>
     <Configurations>Release;Debug</Configurations>
   </PropertyGroup>
 
@@ -47,7 +47,7 @@
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="if $(ConfigurationName) == Release (&#xD;&#xA;   $(SolutionDir)..\Dawa-Utilities\MVC-Versioning\StaticFilesVersionUpdater.exe $(ProjectDir)&#xD;&#xA;)" />
+    <Exec Command="if $(ConfigurationName) == Release (&#xD;&#xA;   $(SolutionDir)..\LizardCode-Utilities\MVC-Versioning\StaticFilesVersionUpdater.exe $(ProjectDir)&#xD;&#xA;)" />
   </Target>
 
 	<Target Name="RemoveSettingsFiles" AfterTargets="AfterPublish">
@@ -60,19 +60,19 @@
 			<FilesToMove Include="$(PublishUrl)\**\*.*" />
 		</ItemGroup>
 		<Exec Command="@echo ### Creando carpeta para comprimir..." EchoOff="true" />
-		<Copy SourceFiles="@(FilesToMove)" DestinationFolder="$(PublishUrl)\zipfolder\dtc\%(RecursiveDir)" />
+		<Copy SourceFiles="@(FilesToMove)" DestinationFolder="$(PublishUrl)\zipfolder\salma\%(RecursiveDir)" />
 	</Target>
 
 	<Target Name="InflateZip" AfterTargets="AfterPublish">
 		<Exec Command="@echo ### Comprimiendo..." EchoOff="true" />
-		<ZipDirectory SourceDirectory="$(PublishUrl)\zipfolder" DestinationFile="$(PublishUrl)..\dtc.zip" Overwrite="true" />
+		<ZipDirectory SourceDirectory="$(PublishUrl)\zipfolder" DestinationFile="$(PublishUrl)..\salma.zip" Overwrite="true" />
 	</Target>
 
-	<Target Name="RemoveOutput" AfterTargets="AfterPublish">
+	<!--<Target Name="RemoveOutput" AfterTargets="AfterPublish">
 		<Exec Command="@echo ### Eliminando carpeta '$(PublishUrl)'..." EchoOff="true" />
 		<Exec Command="@echo ##############################################################################" EchoOff="true" />
 		<RemoveDir Directories="$(PublishUrl)" />
-	</Target>
+	</Target>-->
 
 	<ProjectExtensions>
 		<VisualStudio>
