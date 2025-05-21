@@ -38,41 +38,8 @@ namespace LizardCode.SalmaSalud.Application.Business
 
         public async Task<Usuario> SignIn(HttpContext context, LoginViewModel model)
         {
-            if (model.User.IsNull() || model.Pass.IsNull())
-            {
-                throw new ArgumentNullException(nameof(model.User));
-            }
+            var user = await ValidateLogin(model);
 
-            var login = model.User.Trim().ToLower();
-
-            var users = await _usersRepository.GetAll<Domain.Entities.Usuario>();
-            var user = users.FirstOrDefault(user => user.Login == login);
-
-            if (user == null)
-            {
-                throw new UserNotFoundException();
-            }
-
-            if (!user.BlankToken.IsNull())
-            {
-                throw new UserNotActivatedException();
-            }
-
-            if (!user.Password.Equals(Cryptography.HashPassword(model.Pass, Convert.FromBase64String(user.PasswordSalt))))
-            {
-                throw new LoginFailedException();
-            }
-
-            if (!user.Admin && !CheckGeneralAccess())
-            {
-                throw new PermissionException(PermisoError.SinPermiso);
-            }
-
-            if (user.Vencimiento < DateTime.Now)
-            {
-                throw new PasswordExpiredException();
-            }
-            
             var empresas = await _empresasRepository.GetAllByIdUser(user.IdUsuario);
 
             string profesional = string.Empty;
@@ -200,7 +167,6 @@ namespace LizardCode.SalmaSalud.Application.Business
 
             context.Session.SetString($"LizardCode.SalmaSalud.{userCookie}", JsonConvert.SerializeObject(sessionUser));
             
-
             await SetAuditoriaLogin(model, user.IdUsuario, sessionUser.IdEmpresa, context.Request.GetIP());
 
             var tipoUsuario = ((TipoUsuario)user.IdTipoUsuario).Description();
@@ -268,6 +234,46 @@ namespace LizardCode.SalmaSalud.Application.Business
                 Resolucion = model.Resolucion,
                 IP = IP
             });
+        }
+
+        public async Task<Domain.Entities.Usuario> ValidateLogin(LoginViewModel model)
+        {
+            if (model.User.IsNull() || model.Pass.IsNull())
+            {
+                throw new ArgumentNullException(nameof(model.User));
+            }
+
+            var login = model.User.Trim().ToLower();
+
+            var users = await _usersRepository.GetAll<Domain.Entities.Usuario>();
+            var user = users.FirstOrDefault(user => user.Login == login);
+
+            if (user == null)
+            {
+                throw new UserNotFoundException();
+            }
+
+            if (!user.BlankToken.IsNull())
+            {
+                throw new UserNotActivatedException();
+            }
+
+            if (!user.Password.Equals(Cryptography.HashPassword(model.Pass, Convert.FromBase64String(user.PasswordSalt))))
+            {
+                throw new LoginFailedException();
+            }
+
+            if (!user.Admin && !CheckGeneralAccess())
+            {
+                throw new PermissionException(PermisoError.SinPermiso);
+            }
+
+            if (user.Vencimiento < DateTime.Now)
+            {
+                throw new PasswordExpiredException();
+            }
+
+            return user;
         }
     }
 }

@@ -47,7 +47,7 @@ namespace LizardCode.SalmaSalud.Application.Business
         public async Task<Custom.TurnoSolicitudTotales> ObtenerTotalesDashboard()
             => await _turnosSolicitudRepository.GetTotalesDashboard();
 
-        public async Task New(TurnoSolicitudViewModel model)
+        public async Task<int> New(TurnoSolicitudViewModel model)
         {
             var solicitud = _mapper.Map<TurnoSolicitud>(model);
 
@@ -94,6 +94,8 @@ namespace LizardCode.SalmaSalud.Application.Business
                 tran.Rollback();
                 throw new InternalException();
             }
+
+            return solicitud.IdTurnoSolicitud;
         }
 
         public async Task<TurnoSolicitudViewModel> Get(int idSolicitud)
@@ -180,7 +182,7 @@ namespace LizardCode.SalmaSalud.Application.Business
             //await _pacientesRepository.Update(paciente);
         }
 
-        public async Task Solicitar(NuevaSolicitudViewModel model)
+        public async Task<int> Solicitar(NuevaSolicitudViewModel model)
         {
             var newModel = new TurnoSolicitudViewModel
             {
@@ -191,13 +193,13 @@ namespace LizardCode.SalmaSalud.Application.Business
                 Observaciones = model.Observaciones
             };
 
-            await New(newModel);
+            return await New(newModel);
         }
 
         public async Task<List<Custom.TurnoSolicitud>> GetTurnosPaciente()
             => await _turnosSolicitudRepository.GetTurnosByIdPaciente(_permissionsBusiness.Value.User.IdPaciente);
 
-        public async Task Cancelar(CancelarViewModel model)
+        public async Task Cancelar(CancelarViewModel model, Paciente paciente = null)
         {
             var turno = await _turnosSolicitudRepository.GetCustomById(model.IdTurnoSolicitud);
             if (turno == null)
@@ -205,9 +207,19 @@ namespace LizardCode.SalmaSalud.Application.Business
                 throw new BusinessException("Solicitud inexistente");
             }
 
-            if (_permissionsBusiness.Value.User.IdPaciente > 0 && _permissionsBusiness.Value.User.IdPaciente != turno.IdPaciente)
+            if (paciente != null)
             {
-                throw new UnauthorizedAccessException("El turno no pertence al paciente.");
+                if (paciente.IdPaciente != turno.IdPaciente)
+                {
+                    throw new UnauthorizedAccessException("El turno no pertence al paciente.");
+                }
+            }
+            else
+            { 
+                if (_permissionsBusiness.Value.User.IdPaciente > 0 && _permissionsBusiness.Value.User.IdPaciente != turno.IdPaciente)
+                {
+                    throw new UnauthorizedAccessException("El turno no pertence al paciente.");
+                }
             }
 
             if (turno.IdEstadoTurnoSolicitud == (int)EstadoTurnoSolicitud.Cancelado)

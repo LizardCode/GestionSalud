@@ -1,7 +1,7 @@
 ﻿using Dapper.DataTables.Models;
 using LizardCode.SalmaSalud.Application.Models.PortalPacientes;
 using LizardCode.SalmaSalud.Application.Models.TurnosSolicitud;
-using LizardCode.SalmaSalud.Domain.EntitiesCustom;
+using LizardCode.SalmaSalud.Domain.Entities;
 using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
@@ -13,13 +13,13 @@ namespace LizardCode.SalmaSalud.Application.Interfaces.Business
     {
         Task<TurnoSolicitudViewModel> Get(int idTurnoSolicitud);
         Task<DataTablesResponse<Custom.TurnoSolicitud>> GetAll(DataTablesRequest request);
-        Task<List<TurnoSolicitud>> GetTurnosPaciente();
-        Task New(TurnoSolicitudViewModel model);
+        Task<List<Custom.TurnoSolicitud>> GetTurnosPaciente();
+        Task<int> New(TurnoSolicitudViewModel model);
         Task Remove(int idTurnoSolicitud);
-        Task Solicitar(NuevaSolicitudViewModel model);
+        Task<int> Solicitar(NuevaSolicitudViewModel model);
         Task Update(TurnoSolicitudViewModel model);
-        Task Cancelar(CancelarViewModel model);
+        Task Cancelar(CancelarViewModel model, Paciente paciente);
         Task Asignar(AsignarViewModel model);
-        Task<TurnoSolicitudTotales> ObtenerTotalesDashboard();
+        Task<Custom.TurnoSolicitudTotales> ObtenerTotalesDashboard();
     }
 }

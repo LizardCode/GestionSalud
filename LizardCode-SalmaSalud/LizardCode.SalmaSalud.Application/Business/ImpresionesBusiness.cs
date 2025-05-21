@@ -16,7 +16,6 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using QRCoder;
-using LizardCode.SalmaSalud.Application.Controllers;
 
 namespace LizardCode.SalmaSalud.Application.Business
 {

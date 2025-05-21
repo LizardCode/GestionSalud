@@ -23,6 +23,8 @@ namespace LizardCode.Framework.Application.Common.Enums
         [Description("PACIENTE")]
         Paciente = 9,
         [Description("PROFESIONAL_EXTERNO")]
-        ProfesionalExterno = 10
+        ProfesionalExterno = 10,
+        [Description("API")]
+        API = 11
     }
 }

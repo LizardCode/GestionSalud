@@ -20,7 +20,8 @@ enums.TipoUsuario = {
     Profesional: 7,
     Recepcion: 8,
     Paciente: 9,
-    ProfesionalExterno: 10
+    ProfesionalExterno: 10,
+    API: 11
 }
 
 enums.MaskConstraintType = {

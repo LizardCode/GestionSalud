@@ -15,11 +15,11 @@ namespace LizardCode.SalmaSalud.Infrastructure
 {
     public static class Injection
     {
-        public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
+        public static IServiceCollection AddInfrastructure(this IServiceCollection services)
         {
-            services.AddTransient((provider) => GetDbConnectionFactory(configuration, httpContextAccessor));
             services.AddScoped<IDbContext, DbContext>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddTransient<IDbConnectionFactory, DbConnectionFactory>();
 
             services.AddDapperDataTables<IDbContext>();
             services.AddTransient<IAlicuotasRepository, AlicuotasRepository>();
@@ -169,26 +169,6 @@ namespace LizardCode.SalmaSalud.Infrastructure
             services.AddScoped<IBlockchainService,BlockchainService>();
 
             return services;
-        }
-
-        private static IDbConnectionFactory GetDbConnectionFactory(IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
-        {
-            var url = httpContextAccessor.HttpContext.Request.Host.Host;
-            var subdomain = url.Split('.').First();
-            var key = subdomain switch
-            {
-                "magnetica" => "magnetica",
-                "demo" => "demo",
-                "basicos" => "basicos",
-                "gestionff" => "gestionff",
-                "dawasoft" => "dawasoft",
-                "info2010" => "info2010",
-                "numeral1" => "numeral1",
-
-                _ => "DefaultConnection"
-            };
-
-            return new DbConnectionFactory(configuration, key);
         }
     }
 }

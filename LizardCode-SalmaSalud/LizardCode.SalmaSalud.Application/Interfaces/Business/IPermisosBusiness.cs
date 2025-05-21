@@ -13,5 +13,6 @@ namespace LizardCode.SalmaSalud.Application.Interfaces.Business
         bool CheckGeneralAccess();
         Usuario UserSession(string user);
         Task<Usuario> SignInPacientes(HttpContext context, LoginViewModel model);
+        Task<Domain.Entities.Usuario> ValidateLogin(LoginViewModel model);
     }
 }

@@ -93,7 +93,7 @@ namespace LizardCode.SalmaSalud
             Extensions.Configure(Configuration, _httpContextAccessor, null);
 
             services.AddApplication(Configuration);
-            services.AddInfrastructure(Configuration, _httpContextAccessor);
+            services.AddInfrastructure();
         }
 
         public void Configure(
