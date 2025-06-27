@@ -13,6 +13,7 @@ namespace LizardCode.SalmaSalud.API.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [Authorize(AuthenticationSchemes = "ApiKeyScheme,Bearer")]
     public class TurnosSolicitudController : Controller
     {
         private IEspecialidadesRepository _especialidadesRepository;
@@ -26,8 +27,7 @@ namespace LizardCode.SalmaSalud.API.Controllers
             this._pacientesBusiness = pacientesBusiness;
         }
 
-        [HttpGet("~/especialidades")]
-        [Authorize]
+        [HttpGet("~/especialidades")]        
         public async Task<IActionResult> Especialidades()
         {
             var especialidades = await _especialidadesRepository.GetAll<Especialidades>();
@@ -36,7 +36,6 @@ namespace LizardCode.SalmaSalud.API.Controllers
         }
 
         [HttpGet("~/dias")]
-        [Authorize]
         public async Task<IActionResult> Dias()
         {
             var dias = Utilities.EnumToDictionary<Dias>();
@@ -45,7 +44,6 @@ namespace LizardCode.SalmaSalud.API.Controllers
         }
 
         [HttpGet("~/rangos-horarios")]
-        [Authorize]
         public async Task<IActionResult> RangosHorarios()
         {
             var rangos = Utilities.EnumToDictionary<RangoHorario>();
@@ -54,7 +52,6 @@ namespace LizardCode.SalmaSalud.API.Controllers
         }
 
         [HttpPost("~/solicitar")]
-        [Authorize]
         public async Task<IActionResult> Solicitar(SolicitarModel model)
         {
             var idSolicitud = 0;
@@ -84,7 +81,6 @@ namespace LizardCode.SalmaSalud.API.Controllers
         }
 
         [HttpPost("~/cancelar")]
-        [Authorize]
         public async Task<IActionResult> Cancelar(CancelarModel model)
         {
             try 

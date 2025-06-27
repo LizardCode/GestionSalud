@@ -3,7 +3,7 @@ using System.Text;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 
-namespace LizardCode.SalmaSalud.API.Infrastructure;
+namespace LizardCode.SalmaSalud.API.Infrastructure.JWT;
 
 public class TokenProvider(IConfiguration configuration)
 {

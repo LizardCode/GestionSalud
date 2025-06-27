@@ -1,5 +1,3 @@
-
-using LizardCode.SalmaSalud.API.Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -9,6 +7,9 @@ using LizardCode.SalmaSalud.Application;
 using LizardCode.SalmaSalud.Infrastructure;
 using LizardCode.Framework.Helpers.Utilities;
 using LizardCode.Framework.Application.Helpers;
+using LizardCode.SalmaSalud.API.Infrastructure.ApiKey;
+using Microsoft.Net.Http.Headers;
+using LizardCode.SalmaSalud.API.Infrastructure.JWT;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,7 +29,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateIssuer = false,
             ValidateIssuerSigningKey = true,
         };
-    });
+    })
+    .AddScheme<ApiKeySchemeOptions, ApiKeySchemeHandler>("ApiKeyScheme", options => { });
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -65,6 +67,31 @@ builder.Services.AddSwaggerGen(o =>
                 };
 
     o.AddSecurityRequirement(securityRequirement);
+
+    o.AddSecurityDefinition("ApiKey", new OpenApiSecurityScheme
+    {
+        Description = "ApiKey must appear in header",
+        Type = SecuritySchemeType.ApiKey,
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Scheme = "ApiKeyScheme"
+    });
+
+    var key = new OpenApiSecurityScheme()
+    {
+        Reference = new OpenApiReference
+        {
+            Type = ReferenceType.SecurityScheme,
+            Id = "ApiKey"
+        },
+        In = ParameterLocation.Header
+    };
+
+    var requirement = new OpenApiSecurityRequirement
+                    {
+                             { key, new List<string>() }
+                    };
+    o.AddSecurityRequirement(requirement);
 });
 
 builder.Services.AddSingleton<TokenProvider>();

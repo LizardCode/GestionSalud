@@ -1,4 +1,4 @@
-﻿using LizardCode.SalmaSalud.API.Infrastructure;
+﻿using LizardCode.SalmaSalud.API.Infrastructure.JWT;
 using LizardCode.SalmaSalud.API.Models;
 using LizardCode.SalmaSalud.Application.Interfaces.Business;
 using Microsoft.AspNetCore.Mvc;
