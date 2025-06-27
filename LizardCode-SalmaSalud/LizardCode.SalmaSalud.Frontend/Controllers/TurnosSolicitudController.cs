@@ -74,8 +74,8 @@ namespace LizardCode.SalmaSalud.Controllers
         [Authorize(Roles = "ADMIN, RECEPCION")]
         public async Task<JsonResult> Obtener(int id)
         {
-            var usuario = await _turnosSolicitudBusiness.Get(id);
-            return Json(() => usuario);
+            var solicitud = await _turnosSolicitudBusiness.Get(id);
+            return Json(() => solicitud);
         }
 
         //[HttpPost]
@@ -121,9 +121,13 @@ namespace LizardCode.SalmaSalud.Controllers
         [Authorize(Roles = "ADMIN, RECEPCION")]
         public async Task<IActionResult> AsignarView(int idTurnoSolicitud)
         {
+            var solicitud = await _turnosSolicitudBusiness.GetCustomById(idTurnoSolicitud);
+
             var model = new AsignarViewModel
             {
-                IdTurnoSolicitud = idTurnoSolicitud
+                IdTurnoSolicitud = idTurnoSolicitud,
+                Dias = solicitud.Dias,
+                Rangos = solicitud.Rangos
             };
 
             return View("Asignar", model);

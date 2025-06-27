@@ -15,5 +15,8 @@ namespace LizardCode.SalmaSalud.Application.Models.TurnosSolicitud
         public DateTime? Fecha { get; set; }
 
         public string Observaciones { get; set; }
+
+        public string Dias { get; set; }
+        public string Rangos { get; set; }
     }
 }

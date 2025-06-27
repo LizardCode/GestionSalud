@@ -28,6 +28,12 @@
                 </div>*@
                 <div class="card-body">
 
+                    <div class="row alert alert-primary m-2">
+                        <div class="col">
+                            <b>Preferencias del paciente: </b>@Model.Dias / @Model.Rangos
+                        </div>
+                    </div>
+
                     @using (Html.AjaxBeginForm((string)ViewBag.AjaxAsignar, (string)ViewBag.MainClass, begin: "ajaxAsignarBegin", success: "ajaxAsignarSuccess", failure: "ajaxAsignarFailure", css: "frmAsignar"))
                     {
                         @Html.HiddenFor(m => m.IdTurnoSolicitud, new { @class = "hdnIdTurno" })

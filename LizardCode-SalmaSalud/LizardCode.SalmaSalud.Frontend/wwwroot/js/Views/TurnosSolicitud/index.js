@@ -60,7 +60,7 @@ var ABMTurnosSolicitudView = new (function () {
             { data: null, orderable: false, searchable: false, class: 'text-center', render: renderAcciones }
         ];
 
-        var order = [[1, 'asc']];
+        var order = [[0, 'desc']];
 
         dtView = MaestroLayout.initializeDatatable('idTurnoSolicitud', columns, order, 50, false, false);
 

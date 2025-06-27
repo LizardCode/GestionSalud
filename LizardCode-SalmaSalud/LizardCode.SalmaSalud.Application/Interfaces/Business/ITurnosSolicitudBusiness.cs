@@ -21,5 +21,6 @@ namespace LizardCode.SalmaSalud.Application.Interfaces.Business
         Task Cancelar(CancelarViewModel model, Paciente paciente);
         Task Asignar(AsignarViewModel model);
         Task<Custom.TurnoSolicitudTotales> ObtenerTotalesDashboard();
+        Task<Custom.TurnoSolicitud> GetCustomById(int idSolicitud);
     }
 }
