@@ -2,26 +2,22 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-# Copy solution and project files
-COPY LizardCode-SalmaSalud/*.sln ./
-COPY LizardCode-SalmaSalud/LizardCode.SalmaSalud.API/*.csproj ./LizardCode.SalmaSalud.API/
-COPY LizardCode-SalmaSalud/LizardCode.SalmaSalud.Application/*.csproj ./LizardCode.SalmaSalud.Application/
-COPY LizardCode-SalmaSalud/LizardCode.SalmaSalud.Infrastructure/*.csproj ./LizardCode.SalmaSalud.Infrastructure/
-COPY LizardCode-SalmaSalud/LizardCode.SalmaSalud.Domain/*.csproj ./LizardCode.SalmaSalud.Domain/
-COPY LizardCode-SalmaSalud/LizardCode.SalmaSalud.Services/*.csproj ./LizardCode.SalmaSalud.Services/
-COPY LizardCode-Framework/Helpers/LizardCode.Framework.Helpers.Utilities/*.csproj ./LizardCode-Framework/Helpers/LizardCode.Framework.Helpers.Utilities/
+# Copy all source code first
+COPY . ./
 
-# Restore dependencies
+# Set working directory to the solution folder
+WORKDIR /src/LizardCode-SalmaSalud
+
+# Create a temporary fixed solution file with correct paths
+RUN sed 's|\.\.\\LizardCode-Framework\\|..\\LizardCode-Framework\\|g' LizardCode.SalmaSalud.sln > LizardCode.SalmaSalud.Fixed.sln
+
+# Try to restore using the API project directly (safer approach)
 RUN dotnet restore LizardCode.SalmaSalud.API/LizardCode.SalmaSalud.API.csproj
 
-# Copy all source code
-COPY LizardCode-SalmaSalud/ ./
-COPY LizardCode-Framework/ ./LizardCode-Framework/
-
-# Build the application
+# Build the API project
 RUN dotnet build LizardCode.SalmaSalud.API/LizardCode.SalmaSalud.API.csproj -c Release -o /app/build
 
-# Publish the application
+# Publish the API project
 RUN dotnet publish LizardCode.SalmaSalud.API/LizardCode.SalmaSalud.API.csproj -c Release -o /app/publish
 
 # Use .NET 8 runtime for running
