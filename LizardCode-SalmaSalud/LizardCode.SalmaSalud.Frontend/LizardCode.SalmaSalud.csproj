@@ -46,27 +46,60 @@
     </Content>
   </ItemGroup>
 
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="if $(ConfigurationName) == Release (&#xD;&#xA;   $(SolutionDir)..\LizardCode-Utilities\MVC-Versioning\StaticFilesVersionUpdater.exe $(ProjectDir)&#xD;&#xA;)" />
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(Configuration)' == 'Release'">
+      <!-- Para Windows -->
+      <Exec Command="../LizardCode-Utilities/MVC-Versioning/StaticFilesVersionUpdater.exe $(ProjectDir)" 
+            ContinueOnError="true" 
+            Condition="'$(OS)' == 'Windows_NT'" />
+      
+      <!-- Para macOS/Linux - usando dotnet para ejecutar el dll -->
+      <Exec Command="dotnet ../LizardCode-Utilities/MVC-Versioning/StaticFilesVersionUpdater.dll $(ProjectDir)" 
+            ContinueOnError="true" 
+            Condition="'$(OS)' == 'Unix' and Exists('../LizardCode-Utilities/MVC-Versioning/StaticFilesVersionUpdater.dll')" />
   </Target>
 
-	<Target Name="RemoveSettingsFiles" AfterTargets="AfterPublish">
-		<Exec Command="@echo ### Eliminando archivos de configuracion..." EchoOff="true" />
-		<Delete Files="$(PublishUrl)\appsettings.json" />
-	</Target>
+  <Target Name="RemoveSettingsFiles" AfterTargets="AfterPublish">
+      <!-- Para macOS/Linux -->
+      <Exec Command="echo ### Eliminando archivos de configuracion..." 
+            Condition="'$(OS)' == 'Unix'" />
+      
+      <!-- Para Windows -->
+      <Exec Command="@echo ### Eliminando archivos de configuracion..." 
+            EchoOff="true" 
+            Condition="'$(OS)' == 'Windows_NT'" />
+      
+      <Delete Files="$(PublishUrl)\appsettings.json" />
+  </Target>
 
-	<Target Name="MoveFiles" AfterTargets="AfterPublish">
-		<ItemGroup>
-			<FilesToMove Include="$(PublishUrl)\**\*.*" />
-		</ItemGroup>
-		<Exec Command="@echo ### Creando carpeta para comprimir..." EchoOff="true" />
-		<Copy SourceFiles="@(FilesToMove)" DestinationFolder="$(PublishUrl)\zipfolder\salma\%(RecursiveDir)" />
-	</Target>
+<Target Name="MoveFiles" AfterTargets="AfterPublish">
+    <PropertyGroup>
+        <PublishPath Condition="'$(PublishDir)' != ''">$(PublishDir)</PublishPath>
+        <PublishPath Condition="'$(PublishDir)' == '' and '$(PublishUrl)' != ''">$(PublishUrl)</PublishPath>
+        <PublishPath Condition="'$(PublishPath)' == ''">$(OutputPath)publish\</PublishPath>
+    </PropertyGroup>
+    
+    <ItemGroup>
+        <FilesToMove Include="$(PublishPath)**\*.*" />
+    </ItemGroup>
+    
+    <Message Text="### Usando PublishPath: $(PublishPath)" Importance="high" />
+    <Message Text="### Creando carpeta para comprimir..." Importance="high" />
+    
+    <Copy SourceFiles="@(FilesToMove)" DestinationFolder="$(PublishPath)zipfolder\salma\%(RecursiveDir)" />
+</Target>
 
-	<Target Name="InflateZip" AfterTargets="AfterPublish">
-		<Exec Command="@echo ### Comprimiendo..." EchoOff="true" />
-		<ZipDirectory SourceDirectory="$(PublishUrl)\zipfolder" DestinationFile="$(PublishUrl)..\salma.zip" Overwrite="true" />
-	</Target>
+<Target Name="InflateZip" AfterTargets="MoveFiles">
+    <PropertyGroup>
+        <PublishPath Condition="'$(PublishDir)' != ''">$(PublishDir)</PublishPath>
+        <PublishPath Condition="'$(PublishDir)' == '' and '$(PublishUrl)' != ''">$(PublishUrl)</PublishPath>
+        <PublishPath Condition="'$(PublishPath)' == ''">$(OutputPath)publish\</PublishPath>
+    </PropertyGroup>
+    
+    <Message Text="### Comprimiendo..." Importance="high" />
+    <ZipDirectory SourceDirectory="$(PublishPath)zipfolder" 
+                  DestinationFile="$(PublishPath)..\salma.zip" 
+                  Overwrite="true" />
+</Target>
 
 	<!--<Target Name="RemoveOutput" AfterTargets="AfterPublish">
 		<Exec Command="@echo ### Eliminando carpeta '$(PublishUrl)'..." EchoOff="true" />
