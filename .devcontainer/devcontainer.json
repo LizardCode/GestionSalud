@@ -1,0 +1,24 @@
+{
+	"name": "GestionSalud Development Environment",
+	"build": {
+		"dockerfile": "Dockerfile"
+	},
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"ms-dotnettools.csharp",
+				"ms-dotnettools.csdevkit"
+			],
+			"settings": {
+				"dotnet.completion.showCompletionItemsFromUnimportedNamespaces": true,
+				"editor.formatOnSave": true,
+				"files.exclude": {
+					"**/bin": true,
+					"**/obj": true
+				}
+			}
+		}
+	},
+	"forwardPorts": [5000, 5034, 7293],
+	"remoteUser": "vscode"
+}
