@@ -15,6 +15,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using LizardCode.SalmaSalud.Domain.Enums;
+using Entities = LizardCode.SalmaSalud.Domain.Entities;
 
 namespace LizardCode.SalmaSalud.Application.Business
 {
@@ -24,15 +26,17 @@ namespace LizardCode.SalmaSalud.Application.Business
         private readonly IEmpresasRepository _empresasRepository;
         private readonly IAuditoriaLoginRepository _auditoriaLoginRepository;
         private readonly IProfesionalesRepository _profesionalesRepository;
+        private readonly IPacientesRepository _pacientesRepository;
 
         public Usuario User => DetectUser();
 
-        public PermisosBusiness(IUsuariosRepository usersRepository, IEmpresasRepository empresasRepository, IAuditoriaLoginRepository auditoriaLoginRepository, IProfesionalesRepository profesionalesRepository)
+        public PermisosBusiness(IUsuariosRepository usersRepository, IEmpresasRepository empresasRepository, IAuditoriaLoginRepository auditoriaLoginRepository, IProfesionalesRepository profesionalesRepository, IPacientesRepository pacientesRepository)
         {
             _usersRepository = usersRepository;
             _empresasRepository = empresasRepository;
             _auditoriaLoginRepository = auditoriaLoginRepository;
             _profesionalesRepository = profesionalesRepository;
+            _pacientesRepository = pacientesRepository;
 
         }
 
@@ -141,6 +145,10 @@ namespace LizardCode.SalmaSalud.Application.Business
             //{
             //    throw new PermissionException(PermisoError.SinPermiso);
             //}
+
+            var paciente = await _pacientesRepository.GetById<Entities.Paciente>(user.IdPaciente.Value);
+            if (paciente.IdEstadoRegistro == (int)EstadoRegistro.Eliminado || !paciente.Habilitado)
+                throw new BusinessException($"El usuario no se encuentra activo.");
 
             var empresas = await _empresasRepository.GetAllByIdUser(user.IdUsuario);
 

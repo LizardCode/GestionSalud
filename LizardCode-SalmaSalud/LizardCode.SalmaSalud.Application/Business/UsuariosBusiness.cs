@@ -376,7 +376,7 @@ namespace LizardCode.SalmaSalud.Application.Business
                 throw new BusinessException("El usuario no es un paciente");
 
             var paciente = await _pacientesRepository.GetById<Paciente>(user.IdPaciente.Value);
-            if (paciente.IdEstadoRegistro == (int)EstadoRegistro.Eliminado)
+            if (paciente.IdEstadoRegistro == (int)EstadoRegistro.Eliminado || !paciente.Habilitado)
                 throw new BusinessException($"El usuario no se encuentra activo.");
 
             if (user.Vencimiento > DateTime.Now)
