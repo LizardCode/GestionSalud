@@ -1,0 +1,22 @@
+{
+    "sqltools.connections": [
+        {
+            "connectionTimeout": 15,
+            "mssqlOptions": {
+                "appName": "SQLTools",
+                "useUTC": true,
+                "encrypt": true,
+                "trustServerCertificate": true,
+                "abortTransactionOnError": false
+            },
+            "previewLimit": 50,
+            "server": "165.227.253.200",
+            "port": 1433,
+            "driver": "MSSQL",
+            "name": "salmasalud-db",
+            "database": "SALMA_SALUD",
+            "username": "salmasaludLogin",
+            "password": "dvCMFRoTwyk8JD-2uJ9Z*tG"
+        }
+    ]
+}

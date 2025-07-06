@@ -1,0 +1,196 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "🚀 API - Development",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build-api",
+            "program": "${workspaceFolder}/LizardCode-SalmaSalud/LizardCode.SalmaSalud.API/bin/Debug/net8.0/LizardCode.SalmaSalud.API.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/LizardCode-SalmaSalud/LizardCode.SalmaSalud.API",
+            "stopAtEntry": false,
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "\\bNow listening on:\\s+(https?://\\S+)",
+                "uriFormat": "%s/swagger"
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development",
+                "ASPNETCORE_URLS": "https://localhost:7293;http://localhost:5034"
+            },
+            "sourceFileMap": {
+                "/Views": "${workspaceFolder}/Views"
+            },
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "🚀 API - Production",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build-api-release",
+            "program": "${workspaceFolder}/LizardCode-SalmaSalud/LizardCode.SalmaSalud.API/bin/Release/net8.0/LizardCode.SalmaSalud.API.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/LizardCode-SalmaSalud/LizardCode.SalmaSalud.API",
+            "stopAtEntry": false,
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "\\bNow listening on:\\s+(https?://\\S+)",
+                "uriFormat": "%s/swagger"
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Production",
+                "ASPNETCORE_URLS": "https://localhost:7293;http://localhost:5034"
+            },
+            "sourceFileMap": {
+                "/Views": "${workspaceFolder}/Views"
+            },
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "🌐 Frontend - Development",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build-frontend",
+            "program": "${workspaceFolder}/LizardCode-SalmaSalud/LizardCode.SalmaSalud.Frontend/bin/Debug/net8.0/LizardCode.SalmaSalud.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/LizardCode-SalmaSalud/LizardCode.SalmaSalud.Frontend",
+            "stopAtEntry": false,
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development",
+                "ASPNETCORE_URLS": "http://localhost:5000"
+            },
+            "sourceFileMap": {
+                "/Views": "${workspaceFolder}/LizardCode-SalmaSalud/LizardCode.SalmaSalud.Frontend/Views"
+            },
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "🌐 Frontend - Production",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build-frontend-release",
+            "program": "${workspaceFolder}/LizardCode-SalmaSalud/LizardCode.SalmaSalud.Frontend/bin/Release/net8.0/LizardCode.SalmaSalud.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/LizardCode-SalmaSalud/LizardCode.SalmaSalud.Frontend",
+            "stopAtEntry": false,
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Production",
+                "ASPNETCORE_URLS": "http://localhost:5000"
+            },
+            "sourceFileMap": {
+                "/Views": "${workspaceFolder}/LizardCode-SalmaSalud/LizardCode.SalmaSalud.Frontend/Views"
+            },
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "🔗 Full Stack - Development",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build-solution",
+            "program": "${workspaceFolder}/LizardCode-SalmaSalud/LizardCode.SalmaSalud.Frontend/bin/Debug/net8.0/LizardCode.SalmaSalud.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/LizardCode-SalmaSalud/LizardCode.SalmaSalud.Frontend",
+            "stopAtEntry": false,
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development",
+                "ASPNETCORE_URLS": "http://localhost:5000"
+            },
+            "sourceFileMap": {
+                "/Views": "${workspaceFolder}/LizardCode-SalmaSalud/LizardCode.SalmaSalud.Frontend/Views"
+            },
+            "console": "integratedTerminal",
+            "compounds": [
+                "🚀 API - Development"
+            ]
+        },
+        {
+            "name": "🔧 Appointments Service - Development",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build-appointments-service",
+            "program": "${workspaceFolder}/LizardCode-SalmaSalud/LizadCode.SalmaSalud.Services/LizadCode.SalmaSalud.Appointments.Service/LizardCode.SalmaSalud.Appointments.Service/bin/Debug/net8.0/LizardCode.SalmaSalud.Appointments.Service.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/LizardCode-SalmaSalud/LizadCode.SalmaSalud.Services/LizadCode.SalmaSalud.Appointments.Service/LizardCode.SalmaSalud.Appointments.Service",
+            "stopAtEntry": false,
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "\\bNow listening on:\\s+(https?://\\S+)",
+                "uriFormat": "%s/swagger"
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development",
+                "ASPNETCORE_URLS": "https://localhost:7001;http://localhost:5001"
+            },
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "🔔 Notifications Service - Development",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build-notifications-service",
+            "program": "${workspaceFolder}/LizardCode-SalmaSalud/LizadCode.SalmaSalud.Services/LizadCode.SalmaSalud.Notifications.Service/LizardCode.SalmaSalud.Notifications.Service/bin/Debug/net8.0/LizardCode.SalmaSalud.Notifications.Service.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/LizardCode-SalmaSalud/LizadCode.SalmaSalud.Services/LizadCode.SalmaSalud.Notifications.Service/LizardCode.SalmaSalud.Notifications.Service",
+            "stopAtEntry": false,
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "\\bNow listening on:\\s+(https?://\\S+)",
+                "uriFormat": "%s/swagger"
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development",
+                "ASPNETCORE_URLS": "https://localhost:7002;http://localhost:5002"
+            },
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "🔍 .NET Core Attach",
+            "type": "coreclr",
+            "request": "attach",
+            "processId": "${command:pickProcess}"
+        }
+    ],
+    "compounds": [
+        {
+            "name": "🚀 Full Microservices - Development",
+            "configurations": [
+                "🚀 API - Development",
+                "🌐 Frontend - Development",
+                "🔧 Appointments Service - Development",
+                "🔔 Notifications Service - Development"
+            ],
+            "stopAll": true,
+            "presentation": {
+                "hidden": false,
+                "group": "microservices",
+                "order": 1
+            }
+        },
+        {
+            "name": "🌐 Frontend + API - Development",
+            "configurations": [
+                "🌐 Frontend - Development",
+                "🚀 API - Development"
+            ],
+            "stopAll": true,
+            "presentation": {
+                "hidden": false,
+                "group": "frontend",
+                "order": 2
+            }
+        }
+    ]
+}
