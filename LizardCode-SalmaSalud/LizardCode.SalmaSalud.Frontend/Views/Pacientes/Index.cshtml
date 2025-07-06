@@ -30,6 +30,7 @@
 @section ToolbarButtons {
 
     @* <button type="button" class="btn btn-secondary btHistoriaClinica" title="Historia Clínica" disabled><i class="fa fa-search"></i> VER HISTORIA CLÍNICA</button> *@
+    <button type="button" class="btn btn-warning btView" title="Ver" disabled><i class="fa fa-eye"></i> Consultar</button>
 }
 
 @*
@@ -49,6 +50,7 @@
     <th>Afiliado Nro.</th>
     <th>Teléfono</th>
     <th>Email</th>
+    <th>Habilitado</th>
 
 }
 
@@ -80,6 +82,8 @@
     @Html.FormGroupTextBoxFor(m => m.Telefono, title: "Teléfono Móvil", addValidator: true)
 
     @Html.FormGroupTextBoxFor(m => m.Email, title: "Email", fieldCss: "form-control lowercase", addValidator: true)
+
+    @Html.FormGroupCheckboxFor(m => m.Habilitado, title: "¿Habilitado?", colSize: "col-md-12")
 
 }
 

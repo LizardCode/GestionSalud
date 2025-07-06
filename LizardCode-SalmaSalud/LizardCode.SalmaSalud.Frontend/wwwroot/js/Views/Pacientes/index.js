@@ -17,6 +17,7 @@ var ABMPacientesView = new (function () {
     var btHistoriaClinica;
 
     var openingEditDialog = false;
+    var isViewDialog = false;
 
     this.init = function () {
 
@@ -27,6 +28,7 @@ var ABMPacientesView = new (function () {
         btEdit = $('.toolbar-actions button.btEdit', mainClass);
         btRemove = $('.toolbar-actions button.btRemove', mainClass);
         btHistoriaClinica = $('.toolbar-actions button.btHistoriaClinica', mainClass);
+        btView = $('.toolbar-actions button.btView', mainClass);
 
         MaestroLayout.init();
 
@@ -54,7 +56,8 @@ var ABMPacientesView = new (function () {
             { data: 'documento' },
             { data: 'financiadorNro' },
             { data: 'telefono' },
-            { data: 'email' }
+            { data: 'email' },
+            { data: null, render: renderHabilitado, class: 'text-center' },
         ];
 
         var order = [[1, 'asc']];
@@ -69,6 +72,7 @@ var ABMPacientesView = new (function () {
     function bindControlEvents() {
 
         btHistoriaClinica.on('click', historiaClinicaDialog);
+        btView.on('click', viewDialog);
 
         $('select[name$="IdFinanciador"]').on('change', function (e) {
             reloadPlanes(e);
@@ -97,6 +101,7 @@ var ABMPacientesView = new (function () {
         btHistoriaClinica.prop('disabled', true);
         btEdit.prop('disabled', true);
         btRemove.prop('disabled', true);
+        btView.prop('disabled', true);
 
         if (dataArray === undefined || dataArray === null)
             return;
@@ -105,13 +110,8 @@ var ABMPacientesView = new (function () {
             btHistoriaClinica.prop('disabled', tipoUsuario == enums.TipoUsuario.Recepcion);    
             btEdit.prop('disabled', tipoUsuario == enums.TipoUsuario.Profesional);
             btRemove.prop('disabled', tipoUsuario != enums.TipoUsuario.Administrador);
+            btView.prop('disabled', false);
         }
-        else if (dataArray.length > 1) {
-            btHistoriaClinica.prop('disabled', true);
-            btEdit.prop('disabled', true);
-            btRemove.prop('disabled', true);
-        }
-
     }
 
     function editDialogOpening($form, entity) {
@@ -129,12 +129,34 @@ var ABMPacientesView = new (function () {
 
         $form.find('#Telefono_Edit').val(entity.telefono);
         $form.find('#Email_Edit').val(entity.email);
+        $form.find('#Habilitado_Edit').prop('checked', entity.habilitado);
 
         reloadPlanes(null, $form.find('#IdFinanciador_Edit'), entity.idFinanciadorPlan);
 
         if (!entity.idFinanciador) {
             $('#SinCobertura_Edit').prop('checked', true).trigger('change');
         }
+
+        if (isViewDialog) {
+            $form.find('input[type=text]').attr("disabled", true);
+            $form.find('input[type=checkbox]').attr("disabled", true);
+            $('.btSave').hide();
+        } else {
+            $form.find('input[type=text]').attr("disabled", false);
+            $form.find('input[type=checkbox]').attr("disabled", false);
+            $("#IdPaciente_Edit").attr("disabled", true);
+            $('.btSave').show();
+        }
+
+        isViewDialog = false;
+    }
+
+    function renderHabilitado(data, type, row) {
+
+        if (row.habilitado)
+            return '<span class="badge badge-pills badge-success font10"><i class="fa fa-check"></i></span>';
+        else
+            return '<span class="badge badge-pills badge-danger font10"><i class="fa fa-times"></i></span>';
     }
 
     function renderFinanciador(data, type, row) {
@@ -201,6 +223,12 @@ var ABMPacientesView = new (function () {
         var action = '/Pacientes/HistoriaClinicaView?id=' + idPaciente + '&showResumenPaciente=true';
 
         Modals.loadAnyModal('historiaClinicaDialog', 'modal-95', action, function () {}, function () {});
+    }
+
+    function viewDialog() {
+
+        isViewDialog = true;
+        $('.btEdit').click();
     }
 
     function tabChanged(dialog, $form, index, name) {

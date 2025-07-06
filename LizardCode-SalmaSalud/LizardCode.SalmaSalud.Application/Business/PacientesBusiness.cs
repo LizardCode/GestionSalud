@@ -74,7 +74,7 @@ namespace LizardCode.SalmaSalud.Application.Business
                     paciente.IdTipoTelefono = (int)TipoTelefono.Movil;
                     paciente.Nombre = paciente.Nombre.ToUpper().Trim();
                     paciente.Nacionalidad = paciente.Nacionalidad?.ToUpper().Trim();
-                    paciente.Email = paciente.Email.ToLower().Trim();
+                    paciente.Email = paciente.Email.ToLower().Trim();                    
                     paciente.IdEstadoRegistro = (int)EstadoRegistro.Nuevo;
 
                     var id = await _pacientesRepository.Insert(paciente, tran);

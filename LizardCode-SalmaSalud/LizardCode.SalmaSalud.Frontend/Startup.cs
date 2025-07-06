@@ -79,7 +79,7 @@ namespace LizardCode.SalmaSalud
                 .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
                 {
-                    options.LoginPath = new PathString("/Login");
+                    options.LoginPath = new PathString("/portal-pacientes/login");
                     options.ExpireTimeSpan = TimeSpan.FromHours(8);
                     options.AccessDeniedPath = new PathString("/General/Restricted");
                 });

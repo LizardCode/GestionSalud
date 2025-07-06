@@ -103,6 +103,9 @@ namespace LizardCode.SalmaSalud.Controllers
         [Authorize(Roles = "ADMIN, RECEPCION")]
         public async Task<JsonResult> ValidarFinanciadorNro(string financiadorNro, int? idPaciente)
         {
+            if (string.IsNullOrEmpty(financiadorNro))
+                return Json(true);
+
             var results = await _pacientesBusiness.ValidarNroFinanciador(financiadorNro, idPaciente);
             return Json(results.IsNull() ? true : results);
         }

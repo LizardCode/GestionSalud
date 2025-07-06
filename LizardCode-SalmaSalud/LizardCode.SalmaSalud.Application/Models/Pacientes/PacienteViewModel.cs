@@ -36,7 +36,7 @@ namespace LizardCode.SalmaSalud.Application.Models.Pacientes
         //[RequiredEx]
         public int? IdFinanciadorPlan { get; set; }
 
-        [RequiredEx]
+        //[RequiredEx]
         [Remote("ValidarFinanciadorNro", "Pacientes", AdditionalFields = "IdPaciente", ErrorMessage = "Ya existe un paciente para el nro. de Afiliado ingresado.", HttpMethod = "POST")]
         public string FinanciadorNro { get; set; }
 
@@ -54,6 +54,8 @@ namespace LizardCode.SalmaSalud.Application.Models.Pacientes
         [RequiredEx]
         [AlphaNumericConstraint(AlphaNumConstraintType.AlphaPlusCharset, charset: "_.-@")]
         public string Email { get; set; }
+
+        public bool Habilitado { get; set; }
 
         #region Filtros
 
