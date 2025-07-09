@@ -176,6 +176,7 @@ namespace LizardCode.SalmaSalud.Application.Business
                 dbPaciente.Nacionalidad = paciente.Nacionalidad?.ToUpper().Trim();
                 dbPaciente.Email = paciente.Email.ToLower().Trim();
                 dbPaciente.Telefono = paciente.Telefono.ToLower().Trim();
+                dbPaciente.Habilitado = paciente.Habilitado;
 
                 if (model.SinCobertura)
                 {

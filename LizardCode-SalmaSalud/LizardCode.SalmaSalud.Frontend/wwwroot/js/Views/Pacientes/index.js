@@ -144,6 +144,8 @@ var ABMPacientesView = new (function () {
         } else {
             $form.find('input[type=text]').attr("disabled", false);
             $form.find('input[type=checkbox]').attr("disabled", false);
+
+            $("#Documento_Edit").attr("disabled", true);
             $("#IdPaciente_Edit").attr("disabled", true);
             $('.btSave').show();
         }
