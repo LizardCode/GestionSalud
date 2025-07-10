@@ -181,7 +181,7 @@ namespace LizardCode.SalmaSalud.Application.Business
 
             using (var client = new SmtpClient())
             {
-                await client.ConnectAsync(host, port, SecureSocketOptions.StartTls);
+                await client.ConnectAsync(host, port, SecureSocketOptions.Auto);
                 await client.AuthenticateAsync(from, pass);
                 await client.SendAsync(message);
                 await client.DisconnectAsync(true);
