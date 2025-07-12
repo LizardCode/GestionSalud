@@ -4,6 +4,7 @@ using LizardCode.Framework.Helpers.Utilities;
 using LizardCode.SalmaSalud.Application.Interfaces.Business;
 using MailKit.Net.Smtp;
 using MailKit.Security;
+using Microsoft.Extensions.Logging;
 using MimeKit;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,14 @@ namespace LizardCode.SalmaSalud.Application.Business
 {
     public class MailBusiness : IMailBusiness
     {
+
+        private readonly ILogger<MailBusiness> _logger;
+
+        public MailBusiness(ILogger<MailBusiness> logger)
+        { 
+            _logger = logger;
+        }
+
         public async Task EnviarMailBienvenidaPaciente(string pacienteEmail, string pacienteNombre)
         {
             var templatePath = "Pacientes:TemplateBienvenida".FromAppSettings<string>(notFoundException: true);
@@ -132,7 +141,9 @@ namespace LizardCode.SalmaSalud.Application.Business
             var useSMTP = "useSMTP".FromAppSettings<bool>(notFoundException: false, defaultValue: false);
             if (useSMTP)
             {
-                await SendSMTPMail(to, subject, bodyMessage);
+                //Dejamos que el mail quede flotando en el server...
+                _ = Task.Run(async () => { await SendSMTPMail(to, subject, bodyMessage); });
+                
             }
             else
             {
@@ -166,25 +177,35 @@ namespace LizardCode.SalmaSalud.Application.Business
 
         private async Task SendSMTPMail(string to, string subject, string bodyMessage)
         {
-            var host = "SMTP:Host".FromAppSettings<string>(notFoundException: true);
-            var port = "SMTP:Port".FromAppSettings<int>(notFoundException: true);
+            var host = "SMTP:Host".FromAppSettings<string>(notFoundException: false);
+            var port = "SMTP:Port".FromAppSettings<int>(notFoundException: false);
 
-            var from = "SMTP:From".FromAppSettings<string>(notFoundException: true);
-            var fromName = "SMTP:FromName".FromAppSettings<string>(notFoundException: true);
-            var pass = "SMTP:Pass".FromAppSettings<string>(notFoundException: true);
+            try
+            { 
+                var from = "SMTP:From".FromAppSettings<string>(notFoundException: true);
+                var fromName = "SMTP:FromName".FromAppSettings<string>(notFoundException: true);
+                var pass = "SMTP:Pass".FromAppSettings<string>(notFoundException: true);
 
-            var message = new MimeMessage();
-            message.From.Add(new MailboxAddress(fromName, from));
-            message.To.Add(new MailboxAddress("", to));
-            message.Subject = subject;
-            message.Body = new TextPart("plain") { Text = bodyMessage };
+                var message = new MimeMessage();
+                message.From.Add(new MailboxAddress(fromName, from));
+                message.To.Add(new MailboxAddress("", to));
+                message.Subject = subject;
 
-            using (var client = new SmtpClient())
+                var bodyBuilder = new BodyBuilder();
+                bodyBuilder.HtmlBody = bodyMessage;
+                message.Body = bodyBuilder.ToMessageBody();
+
+                using (var client = new SmtpClient())
+                {
+                    await client.ConnectAsync(host, port, SecureSocketOptions.Auto);
+                    await client.AuthenticateAsync(from, pass);
+                    await client.SendAsync(message);
+                    await client.DisconnectAsync(true);
+                }
+            }
+            catch (Exception ex) 
             {
-                await client.ConnectAsync(host, port, SecureSocketOptions.Auto);
-                await client.AuthenticateAsync(from, pass);
-                await client.SendAsync(message);
-                await client.DisconnectAsync(true);
+                _logger.LogError(ex, string.Format("Error enviando Mail vía SMTP. Host: {0}. Port: {1}. Subject: {2}.", host, port, subject));   
             }
         }
 
