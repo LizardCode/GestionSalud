@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Custom = LizardCode.SalmaSalud.Domain.EntitiesCustom;
+using System.Linq;
 
 namespace LizardCode.SalmaSalud.Application.Business
 {
@@ -126,6 +127,15 @@ namespace LizardCode.SalmaSalud.Application.Business
             {
                 var date = DateTime.ParseExact(filters["FechaHasta"].ToString(), "dd/MM/yyyy", null);
                 builder.Append($"AND FechaSolicitud <= {date.AddDays(1)}");
+            }
+
+            if (filters.ContainsKey("FechaAsigDesde") && filters["FechaAsigDesde"].ToString() != "__/__/____")
+                builder.Append($"AND FechaAsignacion >= {DateTime.ParseExact(filters["FechaAsigDesde"].ToString(), "dd/MM/yyyy", null)}");
+
+            if (filters.ContainsKey("FechaAsigHasta") && filters["FechaAsigHasta"].ToString() != "__/__/____")
+            {
+                var date = DateTime.ParseExact(filters["FechaAsigHasta"].ToString(), "dd/MM/yyyy", null);
+                builder.Append($"AND FechaAsignacion <= {date.AddDays(1)}");
             }
 
             foreach (var item in builder.Parameters)
@@ -282,6 +292,8 @@ namespace LizardCode.SalmaSalud.Application.Business
                 dbturno.FechaAsignacion = model.Fecha;
                 dbturno.ObservacionesAsignacion = model.Observaciones;
                 dbturno.IdEstadoRegistro = (int)EstadoRegistro.Modificado;
+                dbturno.IdProfesional = model.IdProfesional > 0 ? model.IdProfesional : null;
+                dbturno.IdUsuarioAsignacion = _permissionsBusiness.Value.User.Id;
 
                 await _turnosSolicitudRepository.Update(dbturno, tran);
 
@@ -294,6 +306,55 @@ namespace LizardCode.SalmaSalud.Application.Business
                                                             model.Observaciones);
 
                 await _chatApiBusiness.SendMessageSolicitudTurnoAsignado(turno.Telefono, model.Fecha.Value, turno.Paciente, turno.Especialidad, turno.IdPaciente);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, null);
+                tran.Rollback();
+                throw new InternalException();
+            }
+        }
+
+        public async Task Nuevo(NuevoViewModel model)
+        {
+            var paciente = await _turnosSolicitudRepository.GetById<Paciente>(model.IdPaciente);
+            if (paciente == null )
+            {
+                throw new BusinessException("No se encontró el paciente.");
+            }
+
+            //TODO: Validaciones de cliente...
+            var tran = _uow.BeginTransaction();
+
+            try
+            {
+                var solicitud = new TurnoSolicitud
+                {
+                    IdPaciente = model.IdPaciente,
+                    IdProfesional = model.IdProfesional > 0 ? model.IdProfesional : null,
+                    FechaSolicitud = DateTime.Now,
+                    Observaciones = "Solicitado de forma presencial",
+                    FechaAsignacion = model.Fecha,
+                    IdEspecialidad = model.IdEspecialidad,
+                    IdEstadoRegistro = (int)EstadoRegistro.Nuevo,
+                    IdEstadoTurnoSolicitud = (int)EstadoTurnoSolicitud.Asignado,
+                    IdUsuarioAsignacion = _permissionsBusiness.Value.User.Id,
+                    ObservacionesAsignacion = model.Observaciones
+                };
+
+                await _turnosSolicitudRepository.Insert(solicitud, tran);
+
+                tran.Commit();
+
+                var especialidad = (await _lookupsBusiness.Value.GetAllEspecialidades()).FirstOrDefault(f=> f.IdEspecialidad == model.IdEspecialidad).Descripcion;
+
+                await _mailBusiness.EnviarMailTurnoAsignadoPaciente(paciente.Email,
+                                                            paciente.Nombre,
+                                                            model.Fecha?.ToString("dd/MM/yyyy HH:mm"),
+                                                            especialidad,
+                                                            model.Observaciones);
+
+                await _chatApiBusiness.SendMessageSolicitudTurnoAsignado(paciente.Telefono, model.Fecha.Value, paciente.Nombre, especialidad, paciente.IdPaciente);
             }
             catch (Exception ex)
             {

@@ -74,24 +74,24 @@ namespace LizardCode.SalmaSalud.Application.Business
             try
             {
                 //Busco si ya no Existe el Profesional en otra Empresa
-                var dbProfesional = await _ProfesionalesRepository.GetProfesionalByCUIT(profesional.CUIT.ToUpper().Trim(), tran);
+                Profesional dbProfesional = null; // await _ProfesionalesRepository.GetProfesionalByCUIT(profesional.CUIT.ToUpper().Trim(), tran);
 
                 if (dbProfesional == default)
                 {
-                    if (model.ExentoIIBB)
-                    {
+                    //if (model.ExentoIIBB)
+                    //{
                         profesional.NroIBr = string.Empty;
-                    }
-                    else
-                    {
-                        profesional.NroIBr = profesional.NroIBr?.ToUpper().Trim() ?? string.Empty;
-                    }
+                    //}
+                    //else
+                    //{
+                    //    profesional.NroIBr = profesional.NroIBr?.ToUpper().Trim() ?? string.Empty;
+                    //}
 
                     profesional.Nombre = profesional.Nombre.ToUpper().Trim();
-                    profesional.IdTipoIVA = profesional.IdTipoIVA;
-                    profesional.CUIT = profesional.CUIT.ToUpper().Trim();
+                    profesional.IdTipoIVA = 1; // profesional.IdTipoIVA;
+                    profesional.CUIT = string.Empty; //profesional.CUIT.ToUpper().Trim();
                     profesional.Email = profesional.Email.ToLower().Trim();
-                    profesional.Direccion = profesional.Direccion.ToUpper().Trim();
+                    profesional.Direccion = profesional.Direccion?.ToUpper().Trim() ?? string.Empty;
                     profesional.CodigoPostal = profesional.CodigoPostal?.ToUpper().Trim() ?? string.Empty;
                     profesional.Piso = profesional.Piso?.ToUpper().Trim() ?? string.Empty;
                     profesional.Departamento = profesional.Departamento?.ToUpper().Trim() ?? string.Empty;
@@ -99,9 +99,9 @@ namespace LizardCode.SalmaSalud.Application.Business
                     profesional.Provincia = profesional.Provincia?.ToUpper().Trim() ?? string.Empty;
                     profesional.IdEstadoRegistro = (int)EstadoRegistro.Nuevo;
 
-                    profesional.PolizaNumero = model.PolizaNumero;
-                    profesional.PolizaAseguradora = model.PolizaAseguradora;
-                    profesional.PolizaVencimiento = model.PolizaVencimiento;
+                    profesional.PolizaNumero = string.Empty; //model.PolizaNumero;
+                    profesional.PolizaAseguradora = string.Empty; //model.PolizaAseguradora;
+                    profesional.PolizaVencimiento = DateTime.Now; //model.PolizaVencimiento;
 
                     //FIRMA
                     if (model.Firma != null)
@@ -124,14 +124,14 @@ namespace LizardCode.SalmaSalud.Application.Business
                 }
                 else
                 {
-                    if (model.ExentoIIBB)
-                    {
+                    //if (model.ExentoIIBB)
+                    //{
                         dbProfesional.NroIBr = string.Empty;
-                    }
-                    else
-                    {
-                        dbProfesional.NroIBr = profesional.NroIBr?.ToUpper().Trim() ?? string.Empty;
-                    }
+                    //}
+                    //else
+                    //{
+                    //    dbProfesional.NroIBr = profesional.NroIBr?.ToUpper().Trim() ?? string.Empty;
+                    //}
 
                     dbProfesional.Nombre = profesional.Nombre.ToUpper().Trim();
                     dbProfesional.IdTipoIVA = profesional.IdTipoIVA;
@@ -247,20 +247,20 @@ namespace LizardCode.SalmaSalud.Application.Business
 
             try
             {
-                if (model.ExentoIIBB)
-                {
-                    dbProfesional.NroIBr = string.Empty;
-                }
-                else
-                {
-                    dbProfesional.NroIBr = profesional.NroIBr?.ToUpper().Trim() ?? string.Empty;
-                }
+                //if (model.ExentoIIBB)
+                //{
+                //    dbProfesional.NroIBr = string.Empty;
+                //}
+                //else
+                //{
+                dbProfesional.NroIBr = profesional.NroIBr?.ToUpper().Trim() ?? string.Empty;
+                //}
 
                 dbProfesional.Nombre = profesional.Nombre.ToUpper().Trim();
-                dbProfesional.CUIT = profesional.CUIT.ToUpper().Trim();
-                dbProfesional.IdTipoIVA = profesional.IdTipoIVA;
+                dbProfesional.CUIT = string.Empty; // profesional.CUIT.ToUpper().Trim();
+                dbProfesional.IdTipoIVA = 1; // profesional.IdTipoIVA;
                 dbProfesional.Email = profesional.Email.ToLower().Trim();
-                dbProfesional.Direccion = profesional.Direccion.ToUpper().Trim();
+                dbProfesional.Direccion = profesional.Direccion?.ToUpper().Trim() ?? string.Empty;
                 dbProfesional.CodigoPostal = profesional.CodigoPostal?.ToUpper().Trim() ?? string.Empty;
                 dbProfesional.Piso = profesional.Piso?.ToUpper().Trim() ?? string.Empty;
                 dbProfesional.Departamento = profesional.Departamento?.ToUpper().Trim() ?? string.Empty;
@@ -270,7 +270,7 @@ namespace LizardCode.SalmaSalud.Application.Business
 
                 dbProfesional.PolizaNumero = profesional.PolizaNumero;
                 dbProfesional.PolizaAseguradora = profesional.PolizaAseguradora;
-                dbProfesional.PolizaVencimiento = profesional.PolizaVencimiento;
+                dbProfesional.PolizaVencimiento = DateTime.Now; // profesional.PolizaVencimiento;
 
                 dbProfesional.CantidadSobreturnos = profesional.CantidadSobreturnos; 
                 dbProfesional.TurnosIntervalo = profesional.TurnosIntervalo;
@@ -347,7 +347,7 @@ namespace LizardCode.SalmaSalud.Application.Business
         {
             if (profesional.Nombre.IsNull())
             {
-                throw new BusinessException("Ingrese el Nombre de Fantasia para Profesional");
+                throw new BusinessException("Ingrese el Nombre del Profesional");
             }
 
             if (profesional.Matricula.IsNull() && profesional.MatriculaProvincial.IsNull())
@@ -355,10 +355,10 @@ namespace LizardCode.SalmaSalud.Application.Business
                 throw new BusinessException("Ingrese una matrícula para el Profesional");
             }
 
-            if (profesional.CUIT.IsNull() && profesional.IdTipoIVA != (int)TipoIVA.ConsumidorFinal)
-            {
-                throw new BusinessException("Ingrese un CUIT Válido");
-            }
+            //if (profesional.CUIT.IsNull() && profesional.IdTipoIVA != (int)TipoIVA.ConsumidorFinal)
+            //{
+            //    throw new BusinessException("Ingrese un CUIT Válido");
+            //}
 
             if (profesional.Telefono.IsNull())
             {
@@ -370,10 +370,10 @@ namespace LizardCode.SalmaSalud.Application.Business
                 throw new BusinessException("Ingrese un E-Mail para el Profesional");
             }
 
-            if (profesional.Direccion.IsNull())
-            {
-                throw new BusinessException("Ingrese un Dirección para el Profesional");
-            }
+            //if (profesional.Direccion.IsNull())
+            //{
+            //    throw new BusinessException("Ingrese un Dirección para el Profesional");
+            //}
         }
 
         public async Task<string> ValidarNroCUIT(string cuit, int? idProfesional)

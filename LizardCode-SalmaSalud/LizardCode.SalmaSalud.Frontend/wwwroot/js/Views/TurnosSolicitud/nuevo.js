@@ -1,9 +1,10 @@
 ﻿/* Script AsignarTurnos */
+
 /* eslint eqeqeq: 0 */
 /* eslint no-extra-parens: 0 */
 var BUSQUEDA_DOCUMENTO_PACIENTE = 0;
 
-var TurnosAsignarView = new (function () {
+var TurnosNuevoView = new (function () {
     var self = this;
 
     this.init = function () {
@@ -14,8 +15,10 @@ var TurnosAsignarView = new (function () {
 
     function buildControls() {
 
-        Utils.rebuildValidator($('.frmAsignar'), ':hidden:not(.validate):not(.validate :hidden), .no-validate');
+        Utils.rebuildValidator($('.frmNuevo'), ':hidden:not(.validate):not(.validate :hidden), .no-validate');
 
+        $('.paciente').select2();
+        $('.especialidad').select2();
         $('.profesional').select2();
     }
 
@@ -23,7 +26,7 @@ var TurnosAsignarView = new (function () {
 
         $('.btSave')
             .on('click', function () {
-                asignar($('.frmAsignar'));
+                nuevo($('.frmNuevo'));
             });
 
 
@@ -45,7 +48,7 @@ var TurnosAsignarView = new (function () {
             });
     }
 
-    function asignar($form) {
+    function nuevo($form) {
 
         if (!$form.valid())
             return;
@@ -55,12 +58,12 @@ var TurnosAsignarView = new (function () {
 
     };
 
-    this.ajaxAsignarBegin = function (context, arguments) {
+    this.ajaxNuevoBegin = function (context, arguments) {
 
         //Utils.modalLoader();
     }
 
-    this.ajaxAsignarSuccess = function (context) {
+    this.ajaxNuevoSuccess = function (context) {
         Utils.modalClose();
 
         //$('.turnosDialog').modal('hide');
@@ -71,7 +74,7 @@ var TurnosAsignarView = new (function () {
 
     }
 
-    this.ajaxAsignarFailure = function (context) {
+    this.ajaxNuevoFailure = function (context) {
         Utils.modalClose();
 
         Ajax.ShowError(context);
@@ -79,7 +82,7 @@ var TurnosAsignarView = new (function () {
 });
 
 $(function () {
-    TurnosAsignarView.init();
+    TurnosNuevoView.init();
 });
 
-//# sourceURL=asignar.js
+//# sourceURL=nuevo.js

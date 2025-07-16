@@ -8,10 +8,8 @@ using System.Threading.Tasks;
 
 namespace LizardCode.SalmaSalud.Application.Models.TurnosSolicitud
 {
-    public class AsignarViewModel
+    public class NuevoViewModel
     {
-        public int IdTurnoSolicitud { get; set; }
-
         [RequiredEx]
         public DateTime? Fecha { get; set; }
 
@@ -23,5 +21,13 @@ namespace LizardCode.SalmaSalud.Application.Models.TurnosSolicitud
         [RequiredEx]
         public int IdProfesional { get; set; }
         public SelectList MaestroProfesionales { get; set; }
+
+        [RequiredEx]
+        public int IdPaciente { get; set; }
+        public SelectList MaestroPacientes { get; set; }
+
+        [RequiredEx]
+        public int IdEspecialidad { get; set; }
+        public SelectList MaestroEspecialidades { get; set; }
     }
 }

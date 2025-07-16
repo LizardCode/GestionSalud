@@ -29,7 +29,7 @@
 
 @section ToolbarButtons {
 
-    @* <button type="button" class="btn btn-secondary btHistoriaClinica" title="Historia Clínica" disabled><i class="fa fa-search"></i> VER HISTORIA CLÍNICA</button> *@
+    <button type="button" class="btn btn-primary btNuevoTurno" title="Nuevo Turno"><i class="fa fa-plus"></i> ASIGNAR NUEVO TURNO</button>
 }
 
 @section Filters {
@@ -38,11 +38,17 @@
         <div class="row">
             @Html.FilterDropDownListFor(m => m.IdEspecialidad, Model.MaestroEspecialidades, "Especialidad", colSize: "col-md-4")
             @Html.FilterDropDownListFor(m => m.IdPaciente, Model.MaestroPacientes, "Paciente", colSize: "col-md-4")
+            @Html.FilterDropDownListFor(m => m.IdProfesional, Model.MaestroProfesionales, "Profesional", colSize: "col-md-4")
         </div>
 
         <div class="row">
-            @Html.FilterPickerDateFor(m => m.FechaDesde, "Fecha Desde", value: Model.FechaDesde.ToString("dd/MM/yyyy"), colSize: "col-md-2")
-            @Html.FilterPickerDateFor(m => m.FechaHasta, "Fecha Hasta", value: Model.FechaHasta.ToString("dd/MM/yyyy"), colSize: "col-md-2")
+            @Html.FilterPickerDateFor(m => m.FechaDesde, "Fecha Sol. Desde", value: Model.FechaDesde?.ToString("dd/MM/yyyy"), colSize: "col-md-2")
+            @Html.FilterPickerDateFor(m => m.FechaHasta, "Fecha Sol. Hasta", value: Model.FechaHasta?.ToString("dd/MM/yyyy"), colSize: "col-md-2")            
+        </div>
+
+        <div class="row">
+            @Html.FilterPickerDateFor(m => m.FechaAsigDesde, "Fecha Asig. Desde", colSize: "col-md-2")
+            @Html.FilterPickerDateFor(m => m.FechaAsigHasta, "Fecha Asig. Hasta", colSize: "col-md-2")
         </div>
 
     </div>
@@ -59,6 +65,7 @@
     <th>Rangos</th>
     <th>Estado</th>
     <th>Fecha Turno</th>
+    <th>Profesional</th>
     <th></th>
 
 }
@@ -72,7 +79,6 @@
     @Html.FormGroupDropDownListFor(m => m.Dias, Model.MaestroDias, "Preferencia de día/s ", fieldCss: "select2-field validate dia", multiple: true)
 
     @Html.FormGroupDropDownListFor(m => m.RangosHorarios, Model.MaestroRangosHorarios, "Preferencia de Rango/s Horario/s", fieldCss: "select2-field validate rangoHorario", multiple: true)
-
 }
 
 @section Scripts {

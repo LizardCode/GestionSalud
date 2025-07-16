@@ -1,10 +1,10 @@
 ﻿@using System.Text.RegularExpressions
-@model LizardCode.SalmaSalud.Application.Models.TurnosSolicitud.AsignarViewModel
+@model LizardCode.SalmaSalud.Application.Models.TurnosSolicitud.NuevoViewModel
 @{
     Layout = null;
 
-    ViewBag.AjaxAsignar = Url.Action("Asignar", "TurnosSolicitud");
-    ViewBag.MainClass = "TurnosAsignarView";
+    ViewBag.AjaxNuevo = Url.Action("Nuevo", "TurnosSolicitud");
+    ViewBag.MainClass = "TurnosNuevoView";
 }
 
 <style>
@@ -14,7 +14,7 @@
 </style>
 
 <div class="modal-header">
-    <h5 class="modal-title">Asignar Turno</h5>
+    <h5 class="modal-title">Nuevo Turno</h5>
     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true" class="fa fa-times"></span>
     </button>
@@ -27,20 +27,16 @@
                 <h6 class="card-title"><i class="fa fa-calendar"></i>  </h6>
                 </div>*@
                 <div class="card-body">
-
-                    <div class="row alert alert-primary m-2">
-                        <div class="col">
-                            <b>Preferencias del paciente: </b>@Model.Dias / @Model.Rangos
-                        </div>
-                    </div>
-
-                    @using (Html.AjaxBeginForm((string)ViewBag.AjaxAsignar, (string)ViewBag.MainClass, begin: "ajaxAsignarBegin", success: "ajaxAsignarSuccess", failure: "ajaxAsignarFailure", css: "frmAsignar"))
+                    @using (Html.AjaxBeginForm((string)ViewBag.AjaxNuevo, (string)ViewBag.MainClass, begin: "ajaxNuevoBegin", success: "ajaxNuevoSuccess", failure: "ajaxNuevoFailure", css: "frmNuevo"))
                     {
-                        @Html.HiddenFor(m => m.IdTurnoSolicitud, new { @class = "hdnIdTurno" })
                         <div class="col">
+                            @Html.FormGroupDropDownListFor(m => m.IdPaciente, Model.MaestroPacientes, "Pacientes", fieldCss: "select2-field validate paciente")
+
+                            @Html.FormGroupDropDownListFor(m => m.IdEspecialidad, Model.MaestroEspecialidades, "Especialidades", fieldCss: "select2-field validate especialidad")
+
                             @Html.FormGroupPickerDateFor(m => m.Fecha, title: "", placeholder: "Fecha Turno", colSize: "col-md-6", addValidator: true, editingDisabled: false)
 
-                            @Html.FormGroupDropDownListFor(m => m.IdProfesional, Model.MaestroProfesionales, "Profesional", fieldCss: "select2-field profesional")
+                            @Html.FormGroupDropDownListFor(m => m.IdProfesional, Model.MaestroProfesionales, "Profesional", fieldCss: "select2-field validate profesional")
 
                             <div class="row">
                                 @Html.FormGroupTextAreaFor(m => m.Observaciones, title: "Observaciones", rows: 4)
@@ -59,4 +55,4 @@
 </div>
 
 
-<script src="/js/Views/TurnosSolicitud/asignar.js?1361"></script>
+<script src="/js/Views/TurnosSolicitud/nuevo.js?1361"></script>

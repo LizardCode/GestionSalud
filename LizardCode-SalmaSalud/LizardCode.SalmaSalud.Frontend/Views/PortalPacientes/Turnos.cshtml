@@ -60,24 +60,31 @@
                         <div id="@string.Format("collapse{0}", i)" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
                             <div class="card-body" id="@string.Format("turnosBody{0}", i)">
                                 <div class="row alert alert-secondary">
-                                    <div class="col">
+                                    <div class="col-2">
                                         <b>Fecha Solicitud: </b>
                                         <p>@turno.FechaSolicitud.ToString("dd/MM HH:mm")</p>
                                     </div>
-                                    <div class="col">
+                                    <div class="col-2">
                                         <b>Fecha Asignada: </b>
                                         <p>@turno.FechaAsignacion?.ToString("dd/MM HH:mm")</p>
+                                    </div>
+                                    <div class="col-8">
+                                        <b>Profesional: </b>
+                                        <p>@turno.Profesional</p>
                                     </div>
                                     <div class="col">
                                         <b>Observaciones: </b>
                                         <p>@turno.ObservacionesAsignacion</p>
                                     </div>
                                 </div>
+                                @if (!string.IsNullOrEmpty(@turno.Dias) && !string.IsNullOrEmpty(@turno.Rangos))
+                                {
                                 <div class="row alert alert-secondary">
                                     <div class="col">
-                                        <b>Preferencias: </b>@turno.Dias @turno.Rangos
+                                        <b>Preferencias enviadas: </b>@turno.Dias @turno.Rangos
                                     </div>
                                 </div>
+                                }
                                 @if (turno.IdEstadoTurnoSolicitud == (int)EstadoTurnoSolicitud.Solicitado)
                                 {
                                     <div class="row">

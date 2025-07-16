@@ -33,8 +33,10 @@ namespace LizardCode.SalmaSalud.Controllers
             var dias = Utilities.EnumToDictionary<Dias>();
             var rangos = Utilities.EnumToDictionary<RangoHorario>();
 
-            var especialidades= (await _lookupsBusiness.GetAllEspecialidades()).ToList();
+            var especialidades = (await _lookupsBusiness.GetAllEspecialidades()).ToList();
             var pacientes = (await _lookupsBusiness.GetAllPacientes()).ToList();
+
+            var profesionales = (await _lookupsBusiness.GetAllProfesionales(_permisosBusiness.User.IdEmpresa)).ToList();
 
             var model = new TurnoSolicitudViewModel
             {
@@ -48,7 +50,10 @@ namespace LizardCode.SalmaSalud.Controllers
                     .ToDropDownList(k => k.IdPaciente, t => t.Nombre, descriptionIncludesKey: false),
 
                 MaestroEspecialidades = especialidades
-                    .ToDropDownList(k => k.IdEspecialidad, t => t.Descripcion, descriptionIncludesKey: false)
+                    .ToDropDownList(k => k.IdEspecialidad, t => t.Descripcion, descriptionIncludesKey: false),
+
+                MaestroProfesionales = profesionales
+                    .ToDropDownList(k => k.IdProfesional, t => t.Nombre, descriptionIncludesKey: false)
             };
 
             return ActivateMenuItem(model: model);
@@ -123,11 +128,16 @@ namespace LizardCode.SalmaSalud.Controllers
         {
             var solicitud = await _turnosSolicitudBusiness.GetCustomById(idTurnoSolicitud);
 
+            var profesionales = (await _lookupsBusiness.GetAllProfesionales(_permisosBusiness.User.IdEmpresa)).ToList();
+
             var model = new AsignarViewModel
             {
                 IdTurnoSolicitud = idTurnoSolicitud,
                 Dias = solicitud.Dias,
-                Rangos = solicitud.Rangos
+                Rangos = solicitud.Rangos,
+
+                MaestroProfesionales = profesionales
+                    .ToDropDownList(k => k.IdProfesional, t => t.Nombre, descriptionIncludesKey: false)
             };
 
             return View("Asignar", model);
@@ -160,6 +170,41 @@ namespace LizardCode.SalmaSalud.Controllers
                 asignados = totales.Asignados,
                 cancelados = totales.Cancelados
             });
+        }
+
+        [Authorize(Roles = "ADMIN, RECEPCION")]
+        public async Task<IActionResult> NuevoTurnoView()
+        {
+            var profesionales = (await _lookupsBusiness.GetAllProfesionales(_permisosBusiness.User.IdEmpresa)).ToList();
+            var pacientes = (await _lookupsBusiness.GetAllPacientes()).ToList();
+            var especialidades = (await _lookupsBusiness.GetAllEspecialidades()).ToList();
+
+            var model = new NuevoViewModel
+            {
+                MaestroProfesionales = profesionales
+                    .ToDropDownList(k => k.IdProfesional, t => t.Nombre, descriptionIncludesKey: false),
+
+                MaestroPacientes = pacientes
+                    .ToDropDownList(k => k.IdPaciente, t => t.Nombre, descriptionIncludesKey: false),
+
+                MaestroEspecialidades = especialidades
+                    .ToDropDownList(k => k.IdEspecialidad, t => t.Descripcion, descriptionIncludesKey: false)
+            };
+
+            return View("Nuevo", model);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "ADMIN, RECEPCION")]
+        public async Task<JsonResult> Nuevo(NuevoViewModel model)
+        {
+            await _turnosSolicitudBusiness.Nuevo(model);
+
+            var cacheKey = _cacheKey_TURNOS + _permisosBusiness.User.Login;
+            _memoryCache.Remove(cacheKey);
+            //await RemoveTurnosCache(model.IdTurnoSolicitud);
+
+            return Json(true);
         }
     }
 }

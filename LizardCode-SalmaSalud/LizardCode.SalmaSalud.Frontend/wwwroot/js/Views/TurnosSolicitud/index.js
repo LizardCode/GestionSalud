@@ -14,7 +14,7 @@ var ABMTurnosSolicitudView = new (function () {
     var btEdit;
     var btRemove;
 
-    var btHistoriaClinica;
+    var btNuevoTurno;
 
     var openingEditDialog = false;
 
@@ -26,7 +26,7 @@ var ABMTurnosSolicitudView = new (function () {
         btNew = $('.toolbar-actions button.btNew', mainClass);
         btEdit = $('.toolbar-actions button.btEdit', mainClass);
         btRemove = $('.toolbar-actions button.btRemove', mainClass);
-        //btHistoriaClinica = $('.toolbar-actions button.btHistoriaClinica', mainClass);
+        btNuevoTurno = $('.toolbar-actions button.btNuevoTurno', mainClass);
 
         MaestroLayout.init();
 
@@ -57,6 +57,7 @@ var ABMTurnosSolicitudView = new (function () {
             { data: 'rangos' },
             { data: null, render: renderEstado },
             { data: 'fechaAsignacion', render: DataTableEx.renders.dateTime },
+            { data: 'profesional' },
             { data: null, orderable: false, searchable: false, class: 'text-center', render: renderAcciones }
         ];
 
@@ -71,7 +72,7 @@ var ABMTurnosSolicitudView = new (function () {
 
     function bindControlEvents() {
 
-        //btHistoriaClinica.on('click', historiaClinicaDialog);
+        btNuevoTurno.on('click', nuevoTurnoDialog);
 
         //$('select[name$="IdFinanciador"]').on('change', function (e) {
         //    reloadPlanes(e);
@@ -177,6 +178,13 @@ var ABMTurnosSolicitudView = new (function () {
         }
 
         return sReturn;
+    }
+
+    function nuevoTurnoDialog() {
+
+        var action = '/TurnosSolicitud/NuevoTurnoView';
+
+        Modals.loadAnyModal('nuevoTurnoDialog', 'modal-70', action, function () { }, function () { });
     }
 
     function doAction() {

@@ -33,11 +33,13 @@ namespace LizardCode.SalmaSalud.Infrastructure.Repositories
                                     Dias,
                                     Rangos,
 	                                ets.descripcion as Estado,
-	                                ets.clase as EstadoClase
+	                                ets.clase as EstadoClase,
+                                    ISNULL(PRO.Nombre, '') as Profesional
                                 FROM TurnosSolicitud ts
                                 INNER JOIN Pacientes p ON p.IdPaciente = ts.idPaciente
                                 INNER JOIN Especialidades e ON e.IdEspecialidad = ts.idEspecialidad
                                 INNER JOIN EstadoTurnoSolicitud ets ON ets.idEstadoTurnoSolicitud = TS.idEstadoTurnoSolicitud 
+                                LEFT JOIN Profesionales PRO ON PRO.idProfesional = TS.idProfesional
                                 LEFT JOIN (
                                     SELECT idTurnoSolicitud, 
 		                                    STRING_AGG(CASE Dia WHEN 1 THEN 'LU' WHEN 2 THEN 'MA' WHEN 3 THEN 'MI' WHEN 4 THEN 'JU' WHEN 5 THEN 'VI' WHEN 6 THEN 'SA' ELSE 'DO' END, ', ') AS Dias
@@ -80,11 +82,13 @@ namespace LizardCode.SalmaSalud.Infrastructure.Repositories
                     Dias,
                     Rangos,
 	                ets.descripcion as Estado,
-	                ets.clase as EstadoClase
+	                ets.clase as EstadoClase,
+                    ISNULL(PRO.Nombre, '') as Profesional
                 FROM TurnosSolicitud ts
                 INNER JOIN Pacientes p ON p.IdPaciente = ts.idPaciente
                 INNER JOIN Especialidades e ON e.IdEspecialidad = ts.idEspecialidad
                 INNER JOIN EstadoTurnoSolicitud ets ON ets.idEstadoTurnoSolicitud = TS.idEstadoTurnoSolicitud 
+                LEFT JOIN Profesionales PRO ON PRO.idProfesional = TS.idProfesional
                 LEFT JOIN (
                     SELECT idTurnoSolicitud, 
 		                    STRING_AGG(CASE Dia WHEN 1 THEN 'LU' WHEN 2 THEN 'MA' WHEN 3 THEN 'MI' WHEN 4 THEN 'JU' WHEN 5 THEN 'VI' WHEN 6 THEN 'SA' ELSE 'DO' END, ', ') AS Dias

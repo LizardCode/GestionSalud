@@ -34,11 +34,17 @@ namespace LizardCode.SalmaSalud.Application.Models.TurnosSolicitud
 
         public SelectList MaestroEspecialidades { get; set; }
         public SelectList MaestroPacientes { get; set; }
+        public SelectList MaestroProfesionales { get; set; }
+
+        public int IdProfesional { get; set; }
 
         #region Filtros
 
-        public DateTime FechaDesde { get; set; }
-        public DateTime FechaHasta { get; set; }
+        public DateTime? FechaDesde { get; set; }
+        public DateTime? FechaHasta { get; set; }
+
+        public DateTime? FechaAsigDesde { get; set; }
+        public DateTime? FechaAsigHasta { get; set; }
 
         public int IdEstadoTurnoSolicitud { get; set; }
 

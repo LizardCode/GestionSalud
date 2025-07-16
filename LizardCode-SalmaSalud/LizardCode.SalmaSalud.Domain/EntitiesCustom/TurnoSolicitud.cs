@@ -20,5 +20,7 @@ namespace LizardCode.SalmaSalud.Domain.EntitiesCustom
 
         public string Dias { get; set; }
         public string Rangos { get; set; }
+
+        public string Profesional { get; set; }
     }
 }

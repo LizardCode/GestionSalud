@@ -17,5 +17,6 @@ namespace LizardCode.SalmaSalud.Domain.Entities
         public virtual string ObservacionesAsignacion { get; set; }
         public virtual int IdUsuarioAsignacion { get; set; }
         public virtual int IdEstadoRegistro { get; set; }
+        public virtual int? IdProfesional { get; set; }        
     }
 }

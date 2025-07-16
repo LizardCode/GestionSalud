@@ -39,21 +39,21 @@ namespace LizardCode.SalmaSalud.Application.Models.Profesionales
 
         public string Especialidad { get; set; }
 
-        [RequiredEx]
-        public int IdTipoIVA { get; set; }
+        //[RequiredEx]
+        //public int IdTipoIVA { get; set; }
 
-        public string TipoIVA { get; set; }
+        //public string TipoIVA { get; set; }
 
         [RequiredEx]
         public List<int?> Empresas { get; set; }
 
-        [RequiredEx]
-        [MaskConstraint(MaskConstraintType.Custom, blocks: "[2,8,1]", delimiters: "-", numericOnly: true)]
-        [Remote("ValidarNroCUIT", "Profesionales", AdditionalFields = "IdProfesional", ErrorMessage = "Error en el Nro de CUIT Ingresado", HttpMethod = "POST")]
-        public string CUIT { get; set; }
+        //[RequiredEx]
+        //[MaskConstraint(MaskConstraintType.Custom, blocks: "[2,8,1]", delimiters: "-", numericOnly: true)]
+        //[Remote("ValidarNroCUIT", "Profesionales", AdditionalFields = "IdProfesional", ErrorMessage = "Error en el Nro de CUIT Ingresado", HttpMethod = "POST")]
+        //public string CUIT { get; set; }
 
-        [AutoNumericConstraint(AutoNumericConstraintType.Currency, currencySymbol: "", decimalCharacter: ",", digitGroupSeparator: ".")]
-        public string NroIBr { get; set; }
+        //[AutoNumericConstraint(AutoNumericConstraintType.Currency, currencySymbol: "", decimalCharacter: ",", digitGroupSeparator: ".")]
+        //public string NroIBr { get; set; }
 
         [RequiredEx]
         public int IdTipoTelefono { get; set; }
@@ -68,43 +68,43 @@ namespace LizardCode.SalmaSalud.Application.Models.Profesionales
         [AlphaNumericConstraint(AlphaNumConstraintType.AlphaPlusCharset, charset: "_.-@")]
         public string Email { get; set; }
 
-        [RequiredEx]
-        [StringLengthEx(200)]
-        public string Direccion { get; set; }
+        //[RequiredEx]
+        //[StringLengthEx(200)]
+        //public string Direccion { get; set; }
 
-        [StringLengthEx(15)]
-        public string CodigoPostal { get; set; }
+        //[StringLengthEx(15)]
+        //public string CodigoPostal { get; set; }
 
-        [StringLengthEx(2)]
-        [AlphaNumericConstraint(AlphaNumConstraintType.AlphaNumeric)]
-        public string Piso { get; set; }
+        //[StringLengthEx(2)]
+        //[AlphaNumericConstraint(AlphaNumConstraintType.AlphaNumeric)]
+        //public string Piso { get; set; }
 
-        [StringLengthEx(4)]
-        [AlphaNumericConstraint(AlphaNumConstraintType.AlphaNumeric)]
-        public string Departamento { get; set; }
+        //[StringLengthEx(4)]
+        //[AlphaNumericConstraint(AlphaNumConstraintType.AlphaNumeric)]
+        //public string Departamento { get; set; }
 
-        [StringLengthEx(50)]
-        public string Localidad { get; set; }
+        //[StringLengthEx(50)]
+        //public string Localidad { get; set; }
 
-        [StringLengthEx(50)]
-        public string Provincia { get; set; }
+        //[StringLengthEx(50)]
+        //public string Provincia { get; set; }
 
-        [RequiredEx]
-        public double Latitud { get; set; }
+        //[RequiredEx]
+        //public double Latitud { get; set; }
 
-        [RequiredEx]
-        public double Longitud { get; set; }
+        //[RequiredEx]
+        //public double Longitud { get; set; }
 
-        [RequiredEx]
-        public string PolizaNumero { get; set; }
+        //[RequiredEx]
+        //public string PolizaNumero { get; set; }
 
-        [RequiredEx]
-        public string PolizaAseguradora { get; set; }
+        //[RequiredEx]
+        //public string PolizaAseguradora { get; set; }
 
-        [RequiredEx]
-        public DateTime PolizaVencimiento { get; set; }
+        //[RequiredEx]
+        //public DateTime PolizaVencimiento { get; set; }
 
-        public bool ExentoIIBB { get; set; }
+        //public bool ExentoIIBB { get; set; }
 
 
         #region Filtros

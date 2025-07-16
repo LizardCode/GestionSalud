@@ -20,7 +20,7 @@
     ViewBag.AjaxUpdate = Url.Action("Modificar", "Profesionales");
     ViewBag.AjaxDelete = Url.Action("Eliminar", "Profesionales");
 
-    ViewBag.Tabs = new string[] { "General", "Datos Profesional", "Turnos", "Dirección", "Firma" };
+    ViewBag.Tabs = new string[] { "General", "Datos Profesional" };
     ViewBag.FormMultipart = true;
 }
 
@@ -33,7 +33,7 @@
 
 @section ToolbarButtons {
         
-    <button type="button" class="btn btn-primary btAgenda" title="Definir Agenda" disabled><i class="fas fa-calendar"></i> <span>Agenda</span></button>
+    @* <button type="button" class="btn btn-primary btAgenda" title="Definir Agenda" disabled><i class="fas fa-calendar"></i> <span>Agenda</span></button> *@
 }
 
 @section Filters {
@@ -87,23 +87,23 @@
 
     @*<div class="col">
         <div class="row">*@
-            @Html.FormGroupButtonGroupFor(m => m.CUIT, buttonCss: "btnCUIT", buttonText: "AFIP", title: "C.U.I.T.", addValidator: true, position: "append", colSize: "col-md-6")
+            @* @Html.FormGroupButtonGroupFor(m => m.CUIT, buttonCss: "btnCUIT", buttonText: "AFIP", title: "C.U.I.T.", addValidator: true, position: "append", colSize: "col-md-6")
 
-            @Html.FormGroupDropDownListFor(m => m.IdTipoIVA, Model.MaestroTipoIVA, "Tipo de IVA", fieldCss: "select2-field tipoIVA", addValidator: true, colSize: "col-md-6")
+            @Html.FormGroupDropDownListFor(m => m.IdTipoIVA, Model.MaestroTipoIVA, "Tipo de IVA", fieldCss: "select2-field tipoIVA", addValidator: true, colSize: "col-md-6") *@
         @*</div>
     </div>    *@
 
     @*<div class="col">
         <div class="row">*@
-            @Html.FormGroupCheckboxFor(m => m.ExentoIIBB, title: "Exento IIBB", colSize: "col-md-5 mt-4")
+            @* @Html.FormGroupCheckboxFor(m => m.ExentoIIBB, title: "Exento IIBB", colSize: "col-md-5 mt-4")
 
-            @Html.FormGroupTextBoxFor(m => m.NroIBr, title: "N° de Ingresos Brutos", addValidator: true, colSize: "col-md-7", fieldCss: "form-control nroIBr")
+            @Html.FormGroupTextBoxFor(m => m.NroIBr, title: "N° de Ingresos Brutos", addValidator: true, colSize: "col-md-7", fieldCss: "form-control nroIBr") *@
         @*</div>
     </div>*@
 
     <hr />
 
-    <div class="col">
+    @* <div class="col">
         <div class="row">
             @Html.FormGroupTextBoxFor(m => m.PolizaNumero, title: "Nro. Póliza", addValidator: true, colSize: "col-md-6")
 
@@ -111,11 +111,10 @@
         </div>
     </div>
 
-    @Html.FormGroupTextBoxFor(m => m.PolizaAseguradora, title: "Aseguradora", addValidator: true)
+    @Html.FormGroupTextBoxFor(m => m.PolizaAseguradora, title: "Aseguradora", addValidator: true) *@
 }
 
-@section CrudTab02 {
-    @*@Html.FormGroupTextBoxFor(m => m.CantidadSobreturnos, title: "Cant. Sobreturnos por día", addValidator: true, colSize: "col-md-4", fieldCss: "form-control text-right")*@
+@* @section CrudTab02 {
 
     <div class="col">
         <div class="row">
@@ -126,9 +125,9 @@
             <i class="fas fa-info-circle p-2 fa-info-dashboard" data-toggle="tooltip" data-placement="right" title="" data-original-title="Duración de cada turno. En caso de ser 0, se tomará el predeterminado de la especialidad."></i>
         </div>
     </div>
-}
+} *@
 
-@section CrudTab03 {
+@* @section CrudTab02 {
 
     @Html.HiddenFor(m => m.Latitud)
     @Html.HiddenFor(m => m.Longitud)
@@ -144,9 +143,9 @@
     @Html.FormGroupTextBoxFor(m => m.Localidad, title: "Localidad", colSize: "col-md-5")
 
     @Html.FormGroupTextBoxFor(m => m.CodigoPostal, title: "Código Postal", colSize: "col-md-2")
-}
+} *@
 
-@section CrudTab04 {
+@* @section CrudTab04 {
 
     <div class="col">
         <div class="alert alert-info text-center" role="alert">
@@ -160,7 +159,6 @@
         <div class="row">
             <div class="form-group field col-md-12">
                 <label class="form-label" for="Firma">Firma</label>
-                @*<span class="desc"></span>*@
                 <div class="controls">
                     <input accept="image/jpeg,image/gif,image/png" class="form-control firmaInput" data-buttontext="Buscar" data-iconname="fas fa-folder-open" id="Firma" name="Firma" type="file">
                 </div>
@@ -177,7 +175,7 @@
             </div>
         </div>
     </div>
-}
+} *@
 
 @section Scripts {
 
