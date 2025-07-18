@@ -25,5 +25,7 @@ namespace LizardCode.SalmaSalud.Domain.Entities
 
         public DateTime? UltimaAtencion { get; set; }
         public bool Habilitado { get; set; }
+
+        public int? IdNacionalidad { get; set; }
     }
 }

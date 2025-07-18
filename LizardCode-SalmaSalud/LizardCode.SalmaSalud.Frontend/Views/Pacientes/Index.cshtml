@@ -70,7 +70,9 @@
         </div>
     </div>
     
-    @Html.FormGroupTextBoxFor(m => m.Nacionalidad, title: "Nacionalidad", addValidator: true)
+    @Html.FormGroupDropDownListFor(m => m.IdNacionalidad, Model.MaestroNacionalidades, "Nacionalidad", fieldCss: "select2-field nacionalidad")
+
+    @* @Html.FormGroupTextBoxFor(m => m.Nacionalidad, title: "Nacionalidad", addValidator: true) *@
 
     @* @Html.FormGroupCheckboxFor(m => m.SinCobertura, title: "Sin Cobertura")
     

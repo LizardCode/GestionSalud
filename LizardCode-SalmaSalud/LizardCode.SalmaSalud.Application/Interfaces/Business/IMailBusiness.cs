@@ -12,5 +12,6 @@ namespace LizardCode.SalmaSalud.Application.Interfaces.Business
         Task EnviarMailRecetasPaciente(string pacienteEmail, string pacienteNombre, Dictionary<string, string> recetas);
         Task EnviarMailSolicitudTurnoCanceladaPaciente(string pacienteEmail, string pacienteNombre, string especialidad);
         Task EnviarMailTurnoAsignadoPaciente(string pacienteEmail, string pacienteNombre, string fechaAsigancion, string especialidad, string observaciones);
+        Task EnviarMailTurnoReAsignadoPaciente(string pacienteEmail, string pacienteNombre, string fechaAsigancion, string especialidad, string observaciones);
     }
 }

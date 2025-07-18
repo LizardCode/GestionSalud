@@ -67,6 +67,8 @@ var ABMPacientesView = new (function () {
         $('input[name^=Provincia]').prop('readonly', true);
         $('input[name^=Localidad]').prop('readonly', true);
         $('input[name^=CodigoPostal]').prop('readonly', true);
+
+        $('select[name^="IdNacionalidad"]').select2({ allowClear: true });
     }
 
     function bindControlEvents() {
@@ -130,6 +132,7 @@ var ABMPacientesView = new (function () {
         $form.find('#Telefono_Edit').val(entity.telefono);
         $form.find('#Email_Edit').val(entity.email);
         $form.find('#Habilitado_Edit').prop('checked', entity.habilitado);
+        $form.find('#IdNacionalidad_Edit').select2('val', entity.idNacionalidad);
 
         reloadPlanes(null, $form.find('#IdFinanciador_Edit'), entity.idFinanciadorPlan);
 
@@ -140,10 +143,12 @@ var ABMPacientesView = new (function () {
         if (isViewDialog) {
             $form.find('input[type=text]').attr("disabled", true);
             $form.find('input[type=checkbox]').attr("disabled", true);
+            $form.find('select').attr("disabled", true);
             $('.btSave').hide();
         } else {
             $form.find('input[type=text]').attr("disabled", false);
             $form.find('input[type=checkbox]').attr("disabled", false);
+            $form.find('select').attr("disabled", false);
 
             $("#Documento_Edit").attr("disabled", true);
             $("#IdPaciente_Edit").attr("disabled", true);

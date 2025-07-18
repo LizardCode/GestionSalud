@@ -156,6 +156,39 @@ namespace LizardCode.SalmaSalud.Controllers
             return Json(true);
         }
 
+        [Authorize(Roles = "ADMIN, RECEPCION")]
+        public async Task<IActionResult> ReAsignarView(int idTurnoSolicitud)
+        {
+            var solicitud = await _turnosSolicitudBusiness.GetCustomById(idTurnoSolicitud);
+
+            var profesionales = (await _lookupsBusiness.GetAllProfesionales(_permisosBusiness.User.IdEmpresa)).ToList();
+
+            var model = new ReAsignarViewModel
+            {
+                IdTurnoSolicitud = idTurnoSolicitud,
+                Dias = solicitud.Dias,
+                Rangos = solicitud.Rangos,
+
+                MaestroProfesionales = profesionales
+                    .ToDropDownList(k => k.IdProfesional, t => t.Nombre, descriptionIncludesKey: false)
+            };
+
+            return View("ReAsignar", model);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "ADMIN, RECEPCION")]
+        public async Task<JsonResult> ReAsignar(ReAsignarViewModel model)
+        {
+            await _turnosSolicitudBusiness.ReAsignar(model);
+
+            var cacheKey = _cacheKey_TURNOS + _permisosBusiness.User.Login;
+            _memoryCache.Remove(cacheKey);
+            //await RemoveTurnosCache(model.IdTurnoSolicitud);
+
+            return Json(true);
+        }
+
         [Authorize]
         public async Task<IActionResult> ObtenerTotalesDashboard()
         {

@@ -55,7 +55,7 @@ var ABMTurnosSolicitudView = new (function () {
             { data: 'especialidad' },
             { data: 'dias' },
             { data: 'rangos' },
-            { data: null, render: renderEstado },
+            { data: null, render: renderEstado, class: 'text-center' },
             { data: 'fechaAsignacion', render: DataTableEx.renders.dateTime },
             { data: 'profesional' },
             { data: null, orderable: false, searchable: false, class: 'text-center', render: renderAcciones }
@@ -157,6 +157,7 @@ var ABMTurnosSolicitudView = new (function () {
 
         var btnCancelar = '<span type="button" class="btn badge badge-danger btnCancelar" title="CANCELAR" data-id-turno-solicitud="' + data.idTurnoSolicitud + '" data-width-class="modal-70" data-ajax-action="/TurnosSolicitud/Cancelar" data-toggle="" data-placement="top" title="CANCELAR"><i class="fa fa-times"></i></span>';
         var btnAsignar = '<span type="button" class="btn badge badge-success btnAsignar btAction" title="ASIGNAR" data-id-turno="' + data.idTurno + '" data-ajax-action="/TurnosSolicitud/AsignarView?idTurnoSolicitud=' + data.idTurnoSolicitud + '" data-toggle="" data-placement="top" title="ASIGNAR"><i class="fa fa-check"></i></span>';
+        var btnReAsignar = '<span type="button" class="btn badge badge-warning btnReAsignar btAction" title="RE-ASIGNAR" data-id-turno="' + data.idTurno + '" data-ajax-action="/TurnosSolicitud/ReAsignarView?idTurnoSolicitud=' + data.idTurnoSolicitud + '" data-toggle="" data-placement="top" title="RE-ASIGNAR"><i class="fa fa-check"></i></span>';
 
         var sReturn = '';
 
@@ -170,11 +171,14 @@ var ABMTurnosSolicitudView = new (function () {
                 sReturn += btnCancelar + '&nbsp;' + btnAsignar;
                 break;
             case enums.EstadoTurnoSolicitud.Asignado:
-                sReturn += btnCancelar;
+                sReturn += btnCancelar + '&nbsp;' + btnReAsignar;
                 break;                
             case enums.EstadoTurnoSolicitud.Cancelado:
                 sReturn += '';
                 break;
+            case enums.EstadoTurnoSolicitud.ReAsignado:
+                sReturn += btnCancelar + '&nbsp;' + btnReAsignar;
+                break;                
         }
 
         return sReturn;

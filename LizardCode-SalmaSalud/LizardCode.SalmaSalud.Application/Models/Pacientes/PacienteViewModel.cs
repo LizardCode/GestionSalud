@@ -28,7 +28,8 @@ namespace LizardCode.SalmaSalud.Application.Models.Pacientes
         public string Documento { get; set; }
 
         [RequiredEx]
-        public string Nacionalidad { get; set; }
+        public int IdNacionalidad { get; set; }
+        //public string Nacionalidad { get; set; }
 
         //[RequiredEx]
         public int? IdFinanciador { get; set; }
@@ -68,6 +69,7 @@ namespace LizardCode.SalmaSalud.Application.Models.Pacientes
 
         public SelectList MaestroTipoTelefono { get; set; }
         public SelectList MaestroFinanciadores { get; set; }
+        public SelectList MaestroNacionalidades { get; set; }
 
         public DateTime? UltimaAtencion { get; set; }
     }

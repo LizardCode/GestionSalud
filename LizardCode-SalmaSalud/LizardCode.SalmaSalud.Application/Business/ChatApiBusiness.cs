@@ -436,6 +436,25 @@ namespace LizardCode.SalmaSalud.Application.Business
 
         }
 
+        public async Task SendMessageSolicitudTurnoReAsignado(string telefono, DateTime fechaTurno, string paciente, string especialidad, int? idPaciente = null, IDbTransaction transaction = null)
+        {
+            var message = string.Format("Estimado *{0}*. Hemos ReAgendado un turno para la especialidad *{1}* para el *{2}* a las *{3}*. ",
+                                paciente,
+                                especialidad,
+                                fechaTurno.ToString("dd/MM/yyyy"),
+                                fechaTurno.ToString("HH:mm"));
+
+            //message += " " + GetPortalText();
+
+            await SendMessage(EventosChatApi.TurnoAsignado,
+                                            "549" + telefono,
+                                            message,
+                                            _permissionsBusiness.Value.User.IdEmpresa,
+                                            idPaciente,
+                                transaction);
+
+        }
+
         private string GetPortalText()
         {
             var host = HttpContextHelper.Current.Request.Host;

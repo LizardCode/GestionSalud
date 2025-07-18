@@ -44,6 +44,7 @@ namespace LizardCode.SalmaSalud.Application.Business
         private readonly IPacientesRepository _pacientesRepository;
         private readonly IVademecumRepository _vademecumRepository;
         private readonly ITiposTurnoRepository _tiposTurnoRepository;
+        private readonly INacionalidadesRepository _nacionalidadesRepository;
 
         public LookupsBusiness(
             IUsuariosRepository usuariosRepository,
@@ -77,7 +78,8 @@ namespace LizardCode.SalmaSalud.Application.Business
             IConsultoriosRepository consultoriosRepository,
             IPacientesRepository pacientesRepository,
             IVademecumRepository vademecumRepository,
-            ITiposTurnoRepository tiposTurnoRepository)
+            ITiposTurnoRepository tiposTurnoRepository,
+            INacionalidadesRepository nacionalidadesRepository)
         {   
             _usuariosRepository = usuariosRepository;
             _clientesRepository = clientesRepository;
@@ -111,6 +113,7 @@ namespace LizardCode.SalmaSalud.Application.Business
             _pacientesRepository = pacientesRepository;
             _vademecumRepository = vademecumRepository;
             _tiposTurnoRepository = tiposTurnoRepository;
+            _nacionalidadesRepository = nacionalidadesRepository;
         }
 
         public async Task<IList<Usuario>> GetAllUsuariosByIdEmpresaLookup(int idEmpresa) =>
@@ -340,7 +343,11 @@ namespace LizardCode.SalmaSalud.Application.Business
 
             return vademecums;
         }
+
         public async Task<IList<Domain.Entities.TiposTurno>> GetTiposTurno() =>
             await _tiposTurnoRepository.GetAll<Domain.Entities.TiposTurno>();
+
+        public async Task<IList<Domain.Entities.Nacionalidad>> GetNacionalidades() =>
+            await _nacionalidadesRepository.GetAll<Domain.Entities.Nacionalidad>();
     }
 }

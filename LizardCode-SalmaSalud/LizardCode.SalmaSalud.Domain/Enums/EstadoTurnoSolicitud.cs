@@ -14,6 +14,8 @@ namespace LizardCode.SalmaSalud.Domain.Enums
         [Description("Asignado")]
         Asignado,
         [Description("Cancelado")]
-        Cancelado
+        Cancelado,
+        [Description("Re-Asignado")]
+        ReAsignado
     }
 }

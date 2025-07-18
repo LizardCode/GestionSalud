@@ -73,9 +73,10 @@ namespace LizardCode.SalmaSalud.Application.Business
 
                     paciente.IdTipoTelefono = (int)TipoTelefono.Movil;
                     paciente.Nombre = paciente.Nombre.ToUpper().Trim();
-                    paciente.Nacionalidad = paciente.Nacionalidad?.ToUpper().Trim();
+                    //paciente.Nacionalidad = paciente.Nacionalidad?.ToUpper().Trim();
                     paciente.Email = paciente.Email.ToLower().Trim();                    
                     paciente.IdEstadoRegistro = (int)EstadoRegistro.Nuevo;
+                    paciente.IdNacionalidad = model.IdNacionalidad == 0 ? null : model.IdNacionalidad;
 
                     var id = await _pacientesRepository.Insert(paciente, tran);
 
@@ -103,9 +104,10 @@ namespace LizardCode.SalmaSalud.Application.Business
                     dbPaciente.IdTipoTelefono = (int)TipoTelefono.Movil;
                     dbPaciente.Telefono = paciente.Telefono;
                     dbPaciente.Nombre = paciente.Nombre.ToUpper().Trim();
-                    dbPaciente.Nacionalidad = paciente.Nacionalidad?.ToUpper().Trim();
+                    //dbPaciente.Nacionalidad = paciente.Nacionalidad?.ToUpper().Trim();
                     dbPaciente.Email = paciente.Email.ToLower().Trim();
                     dbPaciente.IdEstadoRegistro = (int)EstadoRegistro.Modificado;
+                    dbPaciente.IdNacionalidad = model.IdNacionalidad == 0 ? null : model.IdNacionalidad;
 
                     await _pacientesRepository.Update(dbPaciente, tran);
 
@@ -173,10 +175,11 @@ namespace LizardCode.SalmaSalud.Application.Business
                 dbPaciente.Telefono = paciente.Telefono;
                 dbPaciente.FechaNacimiento = paciente.FechaNacimiento;
                 dbPaciente.Nombre = paciente.Nombre.ToUpper().Trim();
-                dbPaciente.Nacionalidad = paciente.Nacionalidad?.ToUpper().Trim();
+                //dbPaciente.Nacionalidad = paciente.Nacionalidad?.ToUpper().Trim();
                 dbPaciente.Email = paciente.Email.ToLower().Trim();
                 dbPaciente.Telefono = paciente.Telefono.ToLower().Trim();
                 dbPaciente.Habilitado = paciente.Habilitado;
+                dbPaciente.IdNacionalidad = paciente.IdNacionalidad == 0 ? null : paciente.IdNacionalidad;
 
                 if (model.SinCobertura)
                 {

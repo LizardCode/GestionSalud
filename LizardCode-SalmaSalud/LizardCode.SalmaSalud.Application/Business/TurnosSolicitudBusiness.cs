@@ -276,7 +276,7 @@ namespace LizardCode.SalmaSalud.Application.Business
                 throw new UnauthorizedAccessException("El turno no pertence al paciente.");
             }
 
-            if (turno.IdEstadoTurnoSolicitud == (int)EstadoTurno.Cancelado)
+            if (turno.IdEstadoTurnoSolicitud != (int)EstadoTurnoSolicitud.Solicitado)
             {
                 throw new BusinessException("La solicitud no se encuentra en un estado válido.");
             }
@@ -306,6 +306,59 @@ namespace LizardCode.SalmaSalud.Application.Business
                                                             model.Observaciones);
 
                 await _chatApiBusiness.SendMessageSolicitudTurnoAsignado(turno.Telefono, model.Fecha.Value, turno.Paciente, turno.Especialidad, turno.IdPaciente);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, null);
+                tran.Rollback();
+                throw new InternalException();
+            }
+        }
+
+        public async Task ReAsignar(ReAsignarViewModel model)
+        {
+            var turno = await _turnosSolicitudRepository.GetCustomById(model.IdTurnoSolicitud);
+            if (turno == null)
+            {
+                throw new BusinessException("Solicitud inexistente");
+            }
+
+            if (_permissionsBusiness.Value.User.IdPaciente > 0 && _permissionsBusiness.Value.User.IdPaciente != turno.IdPaciente)
+            {
+                throw new UnauthorizedAccessException("El turno no pertence al paciente.");
+            }
+
+            if (turno.IdEstadoTurnoSolicitud != (int)EstadoTurnoSolicitud.Asignado
+                && turno.IdEstadoTurnoSolicitud != (int)EstadoTurnoSolicitud.ReAsignado)
+            {
+                throw new BusinessException("La solicitud no se encuentra en un estado válido.");
+            }
+
+            //TODO: Validaciones de cliente...
+            var dbturno = await _turnosSolicitudRepository.GetById<TurnoSolicitud>(model.IdTurnoSolicitud);
+            var tran = _uow.BeginTransaction();
+
+            try
+            {
+                //Asigno el turno
+                dbturno.IdEstadoTurnoSolicitud = (int)EstadoTurnoSolicitud.ReAsignado;
+                dbturno.FechaAsignacion = model.Fecha;
+                dbturno.ObservacionesAsignacion = model.Observaciones;
+                dbturno.IdEstadoRegistro = (int)EstadoRegistro.Modificado;
+                dbturno.IdProfesional = model.IdProfesional > 0 ? model.IdProfesional : null;
+                dbturno.IdUsuarioAsignacion = _permissionsBusiness.Value.User.Id;
+
+                await _turnosSolicitudRepository.Update(dbturno, tran);
+
+                tran.Commit();
+
+                await _mailBusiness.EnviarMailTurnoReAsignadoPaciente(turno.Email,
+                                                            turno.Paciente,
+                                                            model.Fecha?.ToString("dd/MM/yyyy HH:mm"),
+                                                            turno.Especialidad,
+                                                            model.Observaciones);
+
+                await _chatApiBusiness.SendMessageSolicitudTurnoReAsignado(turno.Telefono, model.Fecha.Value, turno.Paciente, turno.Especialidad, turno.IdPaciente);
             }
             catch (Exception ex)
             {

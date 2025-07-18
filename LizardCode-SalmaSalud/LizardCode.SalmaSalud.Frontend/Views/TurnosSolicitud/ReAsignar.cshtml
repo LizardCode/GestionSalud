@@ -1,10 +1,10 @@
 ﻿@using System.Text.RegularExpressions
-@model LizardCode.SalmaSalud.Application.Models.TurnosSolicitud.AsignarViewModel
+@model LizardCode.SalmaSalud.Application.Models.TurnosSolicitud.ReAsignarViewModel
 @{
     Layout = null;
 
-    ViewBag.AjaxAsignar = Url.Action("Asignar", "TurnosSolicitud");
-    ViewBag.MainClass = "TurnosAsignarView";
+    ViewBag.AjaxReAsignar = Url.Action("ReAsignar", "TurnosSolicitud");
+    ViewBag.MainClass = "TurnosReAsignarView";
 }
 
 <style>
@@ -14,7 +14,7 @@
 </style>
 
 <div class="modal-header">
-    <h5 class="modal-title">Asignar Turno</h5>
+    <h5 class="modal-title">Re-Asignar Turno</h5>
     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true" class="fa fa-times"></span>
     </button>
@@ -27,7 +27,6 @@
                 <h6 class="card-title"><i class="fa fa-calendar"></i>  </h6>
                 </div>*@
                 <div class="card-body">
-
                     @if (!string.IsNullOrEmpty(Model.Dias) && !string.IsNullOrEmpty(Model.Rangos))
                     {
                         <div class="row alert alert-primary m-2">
@@ -36,7 +35,8 @@
                             </div>
                         </div>
                     }
-                    @using (Html.AjaxBeginForm((string)ViewBag.AjaxAsignar, (string)ViewBag.MainClass, begin: "ajaxAsignarBegin", success: "ajaxAsignarSuccess", failure: "ajaxAsignarFailure", css: "frmAsignar"))
+
+                    @using (Html.AjaxBeginForm((string)ViewBag.AjaxReAsignar, (string)ViewBag.MainClass, begin: "ajaxReAsignarBegin", success: "ajaxReAsignarSuccess", failure: "ajaxReAsignarFailure", css: "frmReAsignar"))
                     {
                         @Html.HiddenFor(m => m.IdTurnoSolicitud, new { @class = "hdnIdTurno" })
                         <div class="col">
@@ -57,8 +57,8 @@
 
 <div class="modal-footer">
     <button type="button" data-dismiss="modal" class="btn btn-default"><i class="fa fa-times"></i> CERRAR</button>
-    <button type="button" class="btn btn-success btSave"><i class="fa fa-check"></i> ASIGNAR</button>
+    <button type="button" class="btn btn-success btSave"><i class="fa fa-check"></i> RE ASIGNAR</button>
 </div>
 
 
-<script src="/js/Views/TurnosSolicitud/asignar.js?1361"></script>
+<script src="/js/Views/TurnosSolicitud/reasignar.js?1362"></script>

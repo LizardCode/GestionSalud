@@ -30,6 +30,7 @@ namespace LizardCode.SalmaSalud.Controllers
         {
             var tiposTelefonos = Utilities.EnumToDictionary<TipoTelefono>();
             var financiadores = (await _lookupsBusiness.GetAllFinanciadores()).ToList();
+            var nacionalidades = (await _lookupsBusiness.GetNacionalidades()).ToList();
 
             var model = new PacienteViewModel
             {
@@ -37,7 +38,10 @@ namespace LizardCode.SalmaSalud.Controllers
                     .ToDropDownList(descriptionIncludesKey: false),
 
                 MaestroFinanciadores = financiadores
-                    .ToDropDownList(k => k.IdFinanciador, t => t.Nombre, descriptionIncludesKey: false)
+                    .ToDropDownList(k => k.IdFinanciador, t => t.Nombre, descriptionIncludesKey: false),
+
+                MaestroNacionalidades = nacionalidades
+                    .ToDropDownList(k => k.IdNacionalidad, t => t.Descripcion, descriptionIncludesKey: false)
             };
 
             return ActivateMenuItem(model: model);

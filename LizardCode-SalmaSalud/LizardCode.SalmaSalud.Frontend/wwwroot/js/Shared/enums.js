@@ -287,5 +287,6 @@ enums.EstadoPedidoLaboratorio = {
 enums.EstadoTurnoSolicitud = {
     Solicitado: 1,
     Asignado: 2,
-    Cancelado: 3
+    Cancelado: 3,
+    ReAsignado: 4
 };

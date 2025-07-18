@@ -25,6 +25,7 @@ namespace LizardCode.SalmaSalud.Application.Interfaces.Business
         Task SendMessageLlamar(string telefono, string consultorio, string paciente, string profesional, int? idPaciente = null, IDbTransaction transaction = null);
         Task SendMessageSobreTurnoAsignado(string telefono, DateTime fechaTurno, string paciente, string profesional, string especialidad, int? idPaciente = null, IDbTransaction transaction = null);
         Task SendMessageSolicitudTurnoAsignado(string telefono, DateTime fechaTurno, string paciente, string especialidad, int? idPaciente = null, IDbTransaction transaction = null);
+        Task SendMessageSolicitudTurnoReAsignado(string telefono, DateTime fechaTurno, string paciente, string especialidad, int? idPaciente = null, IDbTransaction transaction = null);
         Task SendMessageTurnoAsignado(string telefono, DateTime fechaTurno, string nombre, string profesional, string especialidad, int? idPaciente = null, IDbTransaction transaction = null);
         Task SendMessageTurnoCancelado(string telefono, DateTime fechaTurno, string paciente, string profesional, string especialidad, int? idPaciente = null, IDbTransaction transaction = null);
         Task SendMessageTurnoCancelado(string telefono, DateTime fechaTurno, string paciente, string profesional, string especialidad, string motivo, int? idPaciente = null, IDbTransaction transaction = null);

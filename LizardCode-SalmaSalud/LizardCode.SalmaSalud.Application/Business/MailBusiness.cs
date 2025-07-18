@@ -101,6 +101,25 @@ namespace LizardCode.SalmaSalud.Application.Business
             await SendMail(pacienteEmail, "Turno Asignado", template, pacienteNombre);
         }
 
+        public async Task EnviarMailTurnoReAsignadoPaciente(string pacienteEmail, string pacienteNombre, string fechaAsigancion, string especialidad, string observaciones)
+        {
+            var templatePath = "Pacientes:TemplateTurnoReAsignado".FromAppSettings<string>(notFoundException: true);
+            var template = GetTemplate(templatePath);
+            var host = HttpContextHelper.Current.Request.Host.Host;
+
+            template = template.Replace("[DOMAIN]", host.ToUpperInvariant());
+            template = template.Replace("[PACIENTE_NOMBRE]", pacienteNombre.ToUpperInvariant());
+            template = template.Replace("[FECHA_ASIGNACION]", fechaAsigancion.ToUpperInvariant());
+            template = template.Replace("[ESPECIALIDAD]", especialidad.ToUpperInvariant());
+            template = template.Replace("[OBSERVACIONES]", observaciones);
+            //template = template.Replace("[PACIENTE_CODIGO]", codigo);
+
+            //var code = await new SendGridMail().SendSingleEmail(apiKey, from, fromName, "Turno Asignado",
+            //                                            pacienteEmail, pacienteNombre, template, null, null);
+
+            await SendMail(pacienteEmail, "Turno Re-Asignado", template, pacienteNombre);
+        }
+
         public async Task EnviarMailSolicitudTurnoCanceladaPaciente(string pacienteEmail, string pacienteNombre, string especialidad)
         {
             var templatePath = "Pacientes:TemplateSolicitudTurnoCancelada".FromAppSettings<string>(notFoundException: true);
