@@ -1,9 +1,11 @@
-﻿using Dapper.DataTables.Interfaces;
+﻿using Dapper;
+using Dapper.DataTables.Interfaces;
 using Dapper.DataTables.Models;
 using DapperQueryBuilder;
 using LizardCode.Framework.Application.Interfaces.Context;
 using LizardCode.SalmaSalud.Application.Interfaces.Repositories;
 using LizardCode.SalmaSalud.Domain.Enums;
+using NPOI.SS.Formula.Functions;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -135,9 +137,9 @@ namespace LizardCode.SalmaSalud.Infrastructure.Repositories
         {
             FormattableString sql = $@"SELECT * FROM (
                                         SELECT COUNT(*) as Total,
-		                                        SUM(CASE WHEN [idEstadoTurnoSolicitud] = 1 THEN 1 ELSE 0 END) Solicitados, 
-                                                SUM(CASE WHEN [idEstadoTurnoSolicitud] = 2 THEN 1 ELSE 0 END) Asignados,
-		                                        SUM(CASE WHEN [idEstadoTurnoSolicitud] = 3 THEN 1 ELSE 0 END) Cancelados
+		                                        SUM(CASE WHEN [idEstadoTurnoSolicitud] = {(int)EstadoTurnoSolicitud.Solicitado} THEN 1 ELSE 0 END) Solicitados, 
+                                                SUM(CASE WHEN [idEstadoTurnoSolicitud] = {(int)EstadoTurnoSolicitud.Asignado} OR [idEstadoTurnoSolicitud] = {(int)EstadoTurnoSolicitud.ReAsignado} THEN 1 ELSE 0 END) Asignados,
+		                                        SUM(CASE WHEN [idEstadoTurnoSolicitud] = {(int)EstadoTurnoSolicitud.Cancelado} THEN 1 ELSE 0 END) Cancelados
                                         FROM TurnosSolicitud
                                     ) AS vwTotales ";
 
@@ -145,6 +147,42 @@ namespace LizardCode.SalmaSalud.Infrastructure.Repositories
                 .QueryBuilder(sql);
 
             return await builder.QuerySingleAsync<Custom.TurnoSolicitudTotales>();
+        }
+
+        //public async Task<List<Custom.TurnosSolicitudDashboard>> GetTurnosSolicitudDashboard(IDbTransaction transaction = null)
+        //{        
+        //    FormattableString sql = $@"SELECT SUM(CASE WHEN CAST(fechaAsignacion as date) = CAST(getdate() as date) AND (idEstadoTurnoSolicitud = {(int)EstadoTurnoSolicitud.Asignado} OR idEstadoTurnoSolicitud = {(int)EstadoTurnoSolicitud.ReAsignado}) THEN 1 ELSE 0 END) as AsigandosHoy,
+	       //                                    SUM(CASE WHEN idEstadoTurnoSolicitud = {(int)EstadoTurnoSolicitud.Asignado} OR idEstadoTurnoSolicitud = {(int)EstadoTurnoSolicitud.ReAsignado} THEN 1 ELSE 0 END) as AsignadosMes,
+	       //                                    SUM(CASE WHEN idEstadoTurnoSolicitud = {(int)EstadoTurnoSolicitud.Cancelado} THEN 1 ELSE 0 END) as CanceladosMes,
+	       //                                    ISNULL(P.Nombre, '[SIN ASIGNAR]') AS Profesional
+        //                                FROM TurnosSolicitud TS
+        //                                LEFT JOIN Profesionales P ON (TS.idProfesional = P.IdProfesional)
+        //                                WHERE ((idEstadoTurnoSolicitud = {(int)EstadoTurnoSolicitud.Asignado} OR idEstadoTurnoSolicitud = {(int)EstadoTurnoSolicitud.ReAsignado}) AND MONTH(fechaAsignacion) = MONTH(GETDATE()))
+	       //                                 OR (idEstadoTurnoSolicitud = {(int)EstadoTurnoSolicitud.Cancelado} AND (MONTH(fechaSolicitud) = MONTH(GETDATE()) OR MONTH(fechaAsignacion) = MONTH(GETDATE())))
+        //                                GROUP BY P.Nombre, P.idProfesional";
+
+        //    var builder = _context.Connection
+        //        .QueryBuilder(sql);
+
+        //    var results = await builder.QueryAsync<Custom.TurnosSolicitudDashboard>(transaction);
+
+        //    return results.AsList();
+        //}
+
+        public DataTablesCustomQuery GetTurnosSolicitudDashboard()
+        {
+            FormattableString sql = $@"SELECT SUM(CASE WHEN CAST(fechaAsignacion as date) = CAST(getdate() as date) AND (idEstadoTurnoSolicitud = {(int)EstadoTurnoSolicitud.Asignado} OR idEstadoTurnoSolicitud = {(int)EstadoTurnoSolicitud.ReAsignado}) THEN 1 ELSE 0 END) as AsigandosHoy,
+	                                           SUM(CASE WHEN idEstadoTurnoSolicitud = {(int)EstadoTurnoSolicitud.Asignado} OR idEstadoTurnoSolicitud = {(int)EstadoTurnoSolicitud.ReAsignado} THEN 1 ELSE 0 END) as AsignadosMes,
+	                                           SUM(CASE WHEN idEstadoTurnoSolicitud = {(int)EstadoTurnoSolicitud.Cancelado} THEN 1 ELSE 0 END) as CanceladosMes,
+	                                           ISNULL(P.Nombre, '[SIN ASIGNAR]') AS Profesional
+                                        FROM TurnosSolicitud TS
+                                        LEFT JOIN Profesionales P ON (TS.idProfesional = P.IdProfesional)
+                                        WHERE ((idEstadoTurnoSolicitud = {(int)EstadoTurnoSolicitud.Asignado} OR idEstadoTurnoSolicitud = {(int)EstadoTurnoSolicitud.ReAsignado}) AND MONTH(fechaAsignacion) = MONTH(GETDATE()))
+	                                        OR (idEstadoTurnoSolicitud = {(int)EstadoTurnoSolicitud.Cancelado} AND (MONTH(fechaSolicitud) = MONTH(GETDATE()) OR MONTH(fechaAsignacion) = MONTH(GETDATE())))
+                                        GROUP BY P.Nombre, P.idProfesional";
+            var builder = _context.Connection.QueryBuilder(sql);
+
+            return base.GetAllCustomQuery(builder);
         }
     }
 }

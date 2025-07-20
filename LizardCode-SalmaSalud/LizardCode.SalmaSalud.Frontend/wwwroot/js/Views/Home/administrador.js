@@ -1,5 +1,10 @@
 ﻿var DashboardView = new (function () {
 
+    var defaultDom =
+        "<'dt--top-section'<l><f>>" +
+        "<'table-responsive'tr>" +
+        "<'dt--bottom-section d-flex flex-row-reverse'<'dt--pages-count  mb-sm-0 mb-3'i><'dt--pagination'p>>";
+
     //#region Init
 
     var dtTurnosHoy = null;
@@ -20,7 +25,7 @@
         bindControlsEvents();
 
         initTotales();
-        //initDataTables();
+        initDataTables();
     };
 
     function initTotales() {
@@ -185,6 +190,36 @@
     }
 
     //#endregion
+
+    function initDataTables() {
+        dtTiposDeCambio = $('.dtTurnosSolicitud')
+            .DataTableEx({
+
+                ajax: {
+                    url: RootPath + '/TurnosSolicitud/TurnosSolicitudDashboard',
+                    type: 'POST',
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        Ajax.ShowError(xhr, xhr.statusText, thrownError);
+                    },
+                    callback: function (xhr) {
+                        Ajax.ShowError(xhr, xhr.statusText, '');
+                    }
+                },
+                processing: true,
+                serverSide: true,
+                pageLength: 15,
+                lengthChange: false,
+                dom: defaultDom,
+                columns: [
+                    { data: 'profesional', width: '70%' },
+                    { data: 'asignadosHoy', width: '10%', class: 'text-center' },
+                    { data: 'asignadosMes', width: '10%', class: 'text-center' },
+                    { data: 'canceladosMes', width: '10%', class: 'text-center' }
+                ],
+                order: [[0, 'ASC']],
+                onDraw: datatableDraw
+            });
+    };
 });
 
 $(function () {

@@ -239,5 +239,13 @@ namespace LizardCode.SalmaSalud.Controllers
 
             return Json(true);
         }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<JsonResult> TurnosSolicitudDashboard([FromForm] DataTablesRequest request)
+        {
+            var results = await _turnosSolicitudBusiness.TurnosSolicitudDashboard(request);
+            return Json(results);
+        }
     }
 }

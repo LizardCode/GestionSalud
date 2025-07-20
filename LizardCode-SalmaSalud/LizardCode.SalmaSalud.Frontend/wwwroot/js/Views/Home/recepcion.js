@@ -1,5 +1,10 @@
 ﻿var DashboardView = new (function () {
 
+    var defaultDom =
+        "<'dt--top-section'<l><f>>" +
+        "<'table-responsive'tr>" +
+        "<'dt--bottom-section d-flex flex-row-reverse'<'dt--pages-count  mb-sm-0 mb-3'i><'dt--pagination'p>>";
+
     //#region Init
 
     var dtTurnosHoy = null;
@@ -20,7 +25,7 @@
         bindControlsEvents();
 
         initTotales();
-        //initDataTables();
+        initDataTables();
     };
 
     function initTotales() {
@@ -31,8 +36,6 @@
                 $('.vSolicitados').html(data.solicitados);
                 $('.vAsignados').html(data.asignados);
                 $('.vCancelados').html(data.cancelados);
-
-                //initCharts();
             })
             .fail(Ajax.ShowError);
 
@@ -45,34 +48,12 @@
             .fail(Ajax.ShowError);
     }
 
-    function initCharts() {
-        var donutCharts = $(".donut-chart-js");
-
-        if (donutCharts.length > 0) {
-            $.each(donutCharts, function (index, item) {
-                var donutChartPercentage = $(item).attr("data-percentage");
-                var donutChartRadio = $(item).find(".donut-chart").attr("r");
-                var donutChartValue =
-                    ((100 - Number(donutChartPercentage)) *
-                        (6.28 * Number(donutChartRadio))) /
-                    100;
-
-                $(item)
-                    .find(".donut-chart-value")
-                    .html(donutChartPercentage + "%");
-                $(item)
-                    .find("circle.donut-chart")
-                    .css("stroke-dashoffset", donutChartValue);
-            });
-        }
-    }
-
     function initDataTables() {
-        dtTurnosHoy = $('.dtTurnosHoy')
+        dtTiposDeCambio = $('.dtTurnosSolicitud')
             .DataTableEx({
 
                 ajax: {
-                    url: RootPath + '/Turnos/ObtenerProximosTurnos',
+                    url: RootPath + '/TurnosSolciitud/TurnosSolicitudDashboard',
                     type: 'POST',
                     error: function (xhr, ajaxOptions, thrownError) {
                         Ajax.ShowError(xhr, xhr.statusText, thrownError);
@@ -83,61 +64,17 @@
                 },
                 processing: true,
                 serverSide: true,
-                pageLength: 3,
-                paging: false,
+                pageLength: 15,
                 lengthChange: false,
-                dom: domTurnos,
-
-                /*select: { style: selectionStyle, info: (selectionStyle === 'os') },*/
+                dom: defaultDom,
                 columns: [
-                    { data: null, width: '5%', orderable: false, render: renderHora },
-                    { data: null, orderable: false, width: '20%', render: renderPaciente },
-                    { data: null, width: '10%', orderable: false, render: renderEstadoTurno },
-                    { data: null, orderable: false, width: '15%', render: renderProfesional },
-                    { data: null, orderable: false, width: '15%', render: renderCobertura },
-                    { data: 'fechaInicio', visible: false },
-                    { data: 'fechaRecepcion', visible: false }
+                    { data: 'profesional', width: '70%' },
+                    { data: 'asignadosHoy', width: '10%', class: 'text-center' },
+                    { data: 'asignadosMes', width: '10%', class: 'text-center' },
+                    { data: 'canceladosMes', width: '10%', class: 'text-center' }
                 ],
-                order: [[6, 'ASC']],
-
-                //onSelected: datatableSelectedRow,
-                onDraw: datatableDraw,
-                //onInit: datatableInit
-            });
-
-        dtMensajesHoy = $('.dtMensajesHoy')
-            .DataTableEx({
-
-                ajax: {
-                    url: RootPath + '/AuditoriasChatApi/ObtenerUltimosMensajes',
-                    type: 'POST',
-                    error: function (xhr, ajaxOptions, thrownError) {
-                        Ajax.ShowError(xhr, xhr.statusText, thrownError);
-                    },
-                    callback: function (xhr) {
-                        Ajax.ShowError(xhr, xhr.statusText, '');
-                    }
-                },
-                processing: true,
-                serverSide: true,
-                pageLength: 10,
-                paging: false,
-                lengthChange: false,
-                dom: domMensajes,
-
-                /*select: { style: selectionStyle, info: (selectionStyle === 'os') },*/
-                columns: [
-                    { data: 'fecha', render: DataTableEx.renders.dateTimeSecs, orderable: false },
-                    { data: 'paciente', orderable: false },
-                    { data: 'telefono', orderable: false },
-                    { data: null, orderable: false, searchable: false, class: 'text-center', render: renderEstadoMensaje },
-                    { data: 'idAuditoria', visible: false }
-                ],
-                order: [[4, 'DESC']],
-
-                //onSelected: datatableSelectedRow,
-                onDraw: datatableDraw,
-                //onInit: datatableInit
+                order: [[0, 'ASC']],
+                onDraw: datatableDraw
             });
     };
 

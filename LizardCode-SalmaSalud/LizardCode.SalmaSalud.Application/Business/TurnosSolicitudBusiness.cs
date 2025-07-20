@@ -429,5 +429,13 @@ namespace LizardCode.SalmaSalud.Application.Business
                 throw new BusinessException("Ingrese una Especialidad válida.");
             }
         }
+
+        public async Task<DataTablesResponse<Custom.TurnosSolicitudDashboard>> TurnosSolicitudDashboard(DataTablesRequest request)
+        {
+            var customQuery = _turnosSolicitudRepository.GetTurnosSolicitudDashboard();
+            var builder = _dbContext.Connection.QueryBuilder();
+
+            return await _dataTablesService.Resolve<Custom.TurnosSolicitudDashboard>(request, customQuery.Sql, customQuery.Parameters, staticWhere: builder.Sql);
+        }
     }
 }
