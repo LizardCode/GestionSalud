@@ -36,7 +36,7 @@ jobs:
       run: dotnet build LizardCode-SalmaSalud/LizardCode.SalmaSalud.sln --no-restore --configuration Release
 
     - name: Publish application
-      run: dotnet publish LizardCode-SalmaSalud/LizardCode.SalmaSalud.Frontend/LizardCode.SalmaSalud.Frontend.csproj --no-build --configuration Release --output ./publish
+      run: dotnet publish LizardCode-SalmaSalud/LizardCode.SalmaSalud.Frontend/LizardCode.SalmaSalud.csproj --no-build --configuration Release --output ./publish
 
     - name: Run tests
       run: dotnet test LizardCode-SalmaSalud/LizardCode.SalmaSalud.sln --no-build --configuration Release --verbosity normal
