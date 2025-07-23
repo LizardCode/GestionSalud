@@ -1,0 +1,89 @@
+name: Frontend CI/CD
+
+on:
+  push:
+    branches: [ master ]
+    paths:
+      - 'LizardCode-SalmaSalud/LizardCode.SalmaSalud.Frontend/**'
+  pull_request:
+    branches: [ master ]
+    paths:
+      - 'LizardCode-SalmaSalud/LizardCode.SalmaSalud.Frontend/**'
+
+env:
+  REGISTRY: registry.digitalocean.com
+  IMAGE_NAME: gestionsalud-frontend
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    environment: 
+      name: ${{ github.ref == 'refs/heads/master' && 'production' || 'development' }}
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup .NET 8
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Restore dependencies
+      run: dotnet restore LizardCode-SalmaSalud/LizardCode.SalmaSalud.sln
+
+    - name: Build solution
+      run: dotnet build LizardCode-SalmaSalud/LizardCode.SalmaSalud.sln --no-restore --configuration Release
+
+    - name: Publish application
+      run: dotnet publish LizardCode-SalmaSalud/LizardCode.SalmaSalud.Frontend/LizardCode.SalmaSalud.Frontend.csproj --no-build --configuration Release --output ./publish
+
+    - name: Run tests
+      run: dotnet test LizardCode-SalmaSalud/LizardCode.SalmaSalud.sln --no-build --configuration Release --verbosity normal
+
+    - name: Log in to DigitalOcean Container Registry
+      uses: docker/login-action@v3
+      with:
+        registry: ${{ env.REGISTRY }}
+        username: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+        password: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+
+    - name: Extract metadata
+      id: meta
+      uses: docker/metadata-action@v5
+      with:
+        images: ${{ env.REGISTRY }}/${{ secrets.DIGITALOCEAN_REGISTRY_NAME }}
+        tags: |
+          type=ref,event=branch
+          type=ref,event=pr
+          type=sha,prefix={{branch}}-
+          type=raw,value=latest,enable={{is_default_branch}}
+
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        file: LizardCode-SalmaSalud/LizardCode.SalmaSalud.Frontend/Dockerfile
+        push: true
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+        build-args: |
+          ASPNETCORE_ENVIRONMENT=${{ github.ref == 'refs/heads/master' && 'Production' || 'Development' }}
+
+    - name: Production deployment notification
+      if: github.ref == 'refs/heads/master'
+      run: |
+        echo "🚀 Production Frontend image pushed successfully!"
+        echo "Environment: Production"
+        echo "Image: ${{ steps.meta.outputs.tags }}"
+        echo "Ready for production deployment"
+
+    - name: Development deployment notification
+      if: github.ref != 'refs/heads/master'
+      run: |
+        echo "🔧 Development Frontend image pushed successfully!"
+        echo "Environment: Development"
+        echo "Image: ${{ steps.meta.outputs.tags }}"
+        echo "Ready for development deployment"
