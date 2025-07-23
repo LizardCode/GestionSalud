@@ -70,7 +70,7 @@ jobs:
         cache-from: type=gha
         cache-to: type=gha,mode=max
         build-args: |
-          ASPNETCORE_ENVIRONMENT=${{ github.ref == 'refs/heads/master' && 'Production' || 'Development' }}
+          ASPNETCORE_ENVIRONMENT=${{ github.ref == 'refs/heads/master' && 'production' || 'development' }}
 
     - name: Production deployment notification
       if: github.ref == 'refs/heads/master'
