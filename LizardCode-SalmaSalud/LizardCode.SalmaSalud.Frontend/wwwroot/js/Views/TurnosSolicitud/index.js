@@ -157,7 +157,7 @@ var ABMTurnosSolicitudView = new (function () {
 
         var btnCancelar = '<span type="button" class="btn badge badge-danger btnCancelar" title="CANCELAR" data-id-turno-solicitud="' + data.idTurnoSolicitud + '" data-width-class="modal-70" data-ajax-action="/TurnosSolicitud/Cancelar" data-toggle="" data-placement="top" title="CANCELAR"><i class="fa fa-times"></i></span>';
         var btnAsignar = '<span type="button" class="btn badge badge-success btnAsignar btAction" title="ASIGNAR" data-id-turno="' + data.idTurno + '" data-ajax-action="/TurnosSolicitud/AsignarView?idTurnoSolicitud=' + data.idTurnoSolicitud + '" data-toggle="" data-placement="top" title="ASIGNAR"><i class="fa fa-check"></i></span>';
-        var btnReAsignar = '<span type="button" class="btn badge badge-warning btnReAsignar btAction" title="RE-ASIGNAR" data-id-turno="' + data.idTurno + '" data-ajax-action="/TurnosSolicitud/ReAsignarView?idTurnoSolicitud=' + data.idTurnoSolicitud + '" data-toggle="" data-placement="top" title="RE-ASIGNAR"><i class="fa fa-check"></i></span>';
+        var btnReAsignar = '<span type="button" class="btn badge badge-warning btnReAsignar btAction" title="RE-ASIGNAR" data-id-turno="' + data.idTurno + '" data-ajax-action="/TurnosSolicitud/ReAsignarView?idTurnoSolicitud=' + data.idTurnoSolicitud + '" data-toggle="" data-placement="top" title="RE-ASIGNAR"><i class="fa fa-redo"></i></span>';
 
         var sReturn = '';
 
@@ -188,7 +188,7 @@ var ABMTurnosSolicitudView = new (function () {
 
         var action = '/TurnosSolicitud/NuevoTurnoView';
 
-        Modals.loadAnyModal('nuevoTurnoDialog', 'modal-70', action, function () { }, function () { });
+        Modals.loadAnyModal('nuevoTurnoDialog', 'modal-50', action, function () { }, function () { });
     }
 
     function doAction() {

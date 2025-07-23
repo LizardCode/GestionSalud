@@ -239,7 +239,6 @@ input::placeholder {
     font-weight: 100;
     opacity: 1;
     font-size: 14px;
-    color: red;
 }
 
 .form-control[type="range"] {

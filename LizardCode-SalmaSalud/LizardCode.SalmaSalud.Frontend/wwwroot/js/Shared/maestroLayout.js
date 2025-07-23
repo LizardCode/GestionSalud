@@ -50,9 +50,7 @@ var MaestroLayout = new (function () {
                 allowInput: true,
                 dateFormat: "d/m/Y",
                 onClose: function (selectedDates, dateStr, instance) {
-                    if (dateStr == "")
-                        instance.setDate(moment().format(enums.FormatoFecha.DefaultFormat));
-                    else
+                    if (dateStr != "")
                         instance.setDate(dateStr);
                 }
             });

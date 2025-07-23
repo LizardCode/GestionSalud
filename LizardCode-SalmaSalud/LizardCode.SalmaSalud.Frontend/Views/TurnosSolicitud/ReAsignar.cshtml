@@ -27,23 +27,18 @@
                 <h6 class="card-title"><i class="fa fa-calendar"></i>  </h6>
                 </div>*@
                 <div class="card-body">
-                    @if (!string.IsNullOrEmpty(Model.Dias) && !string.IsNullOrEmpty(Model.Rangos))
-                    {
-                        <div class="row alert alert-primary m-2">
-                            <div class="col">
-                                <b>Preferencias del paciente: </b>@Model.Dias / @Model.Rangos
-                            </div>
+                    <div class="row alert alert-primary m-2">
+                        <div class="col">
+                            <b>Fecha actual del Turno: </b>@Model.Fecha - @Model.Profesional
                         </div>
-                    }
+                    </div>
 
                     @using (Html.AjaxBeginForm((string)ViewBag.AjaxReAsignar, (string)ViewBag.MainClass, begin: "ajaxReAsignarBegin", success: "ajaxReAsignarSuccess", failure: "ajaxReAsignarFailure", css: "frmReAsignar"))
                     {
                         @Html.HiddenFor(m => m.IdTurnoSolicitud, new { @class = "hdnIdTurno" })
                         <div class="col">
-                            @Html.FormGroupPickerDateFor(m => m.Fecha, title: "", placeholder: "Fecha Turno", colSize: "col-md-6", addValidator: true, editingDisabled: false)
-
-                            @Html.FormGroupDropDownListFor(m => m.IdProfesional, Model.MaestroProfesionales, "Profesional", fieldCss: "select2-field validate profesional")
-
+                            @Html.FormGroupPickerDateFor(m => m.Fecha, title: "Fecha Nuevo Turno", placeholder: "Fecha Turno", colSize: "col-md-6", addValidator: true, editingDisabled: false)
+                            @Html.FormGroupDropDownListFor(m => m.IdProfesional, Model.MaestroProfesionales, "Profesional", fieldCss: "select2-field validate profesional", addValidator: true)
                             <div class="row">
                                 @Html.FormGroupTextAreaFor(m => m.Observaciones, title: "Observaciones", rows: 4)
                             </div>

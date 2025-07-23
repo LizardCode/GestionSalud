@@ -22,6 +22,7 @@ namespace LizardCode.SalmaSalud.Application.Models.TurnosSolicitud
 
         [RequiredEx]
         public int IdProfesional { get; set; }
+        public string Profesional { get; set; }
         public SelectList MaestroProfesionales { get; set; }
     }
 }

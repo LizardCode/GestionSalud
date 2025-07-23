@@ -30,14 +30,10 @@
                     @using (Html.AjaxBeginForm((string)ViewBag.AjaxNuevo, (string)ViewBag.MainClass, begin: "ajaxNuevoBegin", success: "ajaxNuevoSuccess", failure: "ajaxNuevoFailure", css: "frmNuevo"))
                     {
                         <div class="col">
-                            @Html.FormGroupDropDownListFor(m => m.IdPaciente, Model.MaestroPacientes, "Pacientes", fieldCss: "select2-field validate paciente")
-
-                            @Html.FormGroupDropDownListFor(m => m.IdEspecialidad, Model.MaestroEspecialidades, "Especialidades", fieldCss: "select2-field validate especialidad")
-
-                            @Html.FormGroupPickerDateFor(m => m.Fecha, title: "", placeholder: "Fecha Turno", colSize: "col-md-6", addValidator: true, editingDisabled: false)
-
-                            @Html.FormGroupDropDownListFor(m => m.IdProfesional, Model.MaestroProfesionales, "Profesional", fieldCss: "select2-field validate profesional")
-
+                            @Html.FormGroupDropDownListFor(m => m.IdPaciente, Model.MaestroPacientes, "Pacientes", fieldCss: "select2-field validate paciente", addValidator: true)
+                            @Html.FormGroupDropDownListFor(m => m.IdEspecialidad, Model.MaestroEspecialidades, "Especialidades", fieldCss: "select2-field validate especialidad", addValidator: true)
+                            @Html.FormGroupPickerDateFor(m => m.Fecha, title: "", placeholder: "Fecha Turno", colSize: "col-md-4", addValidator: true, editingDisabled: false)
+                            @Html.FormGroupDropDownListFor(m => m.IdProfesional, Model.MaestroProfesionales, "Profesional", fieldCss: "select2-field validate profesional", addValidator: true)
                             <div class="row">
                                 @Html.FormGroupTextAreaFor(m => m.Observaciones, title: "Observaciones", rows: 4)
                             </div>

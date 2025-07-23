@@ -129,6 +129,9 @@ namespace LizardCode.SalmaSalud.Application.Business
                 builder.Append($"AND FechaSolicitud <= {date.AddDays(1)}");
             }
 
+            if (filters.ContainsKey("IdProfesional"))
+                builder.Append($"AND IdProfesional = {filters["IdProfesional"]}");
+
             if (filters.ContainsKey("FechaAsigDesde") && filters["FechaAsigDesde"].ToString() != "__/__/____")
                 builder.Append($"AND FechaAsignacion >= {DateTime.ParseExact(filters["FechaAsigDesde"].ToString(), "dd/MM/yyyy", null)}");
 

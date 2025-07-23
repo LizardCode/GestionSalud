@@ -37,9 +37,7 @@ var TurnosReAsignarView = new (function () {
                 dateFormat: "d/m/Y H:i",
                 enableTime: true,
                 onClose: function (selectedDates, dateStr, instance) {
-                    if (dateStr == "")
-                        instance.setDate(moment().format(enums.FormatoFecha.DefaultFormat));
-                    else
+                    if (dateStr != "")
                         instance.setDate(dateStr);
                 }
             });

@@ -165,9 +165,11 @@ namespace LizardCode.SalmaSalud.Controllers
 
             var model = new ReAsignarViewModel
             {
+                Fecha = solicitud.FechaAsignacion,
                 IdTurnoSolicitud = idTurnoSolicitud,
                 Dias = solicitud.Dias,
                 Rangos = solicitud.Rangos,
+                Profesional = solicitud.Profesional,
 
                 MaestroProfesionales = profesionales
                     .ToDropDownList(k => k.IdProfesional, t => t.Nombre, descriptionIncludesKey: false)
