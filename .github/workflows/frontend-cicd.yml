@@ -5,10 +5,12 @@ on:
     branches: [ master ]
     paths:
       - 'LizardCode-SalmaSalud/LizardCode.SalmaSalud.Frontend/**'
+      - '.github/workflows/frontend-cicd.yml'
   pull_request:
     branches: [ master ]
     paths:
       - 'LizardCode-SalmaSalud/LizardCode.SalmaSalud.Frontend/**'
+      - '.github/workflows/frontend-cicd.yml'
 
 env:
   REGISTRY: registry.digitalocean.com
