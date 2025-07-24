@@ -14,7 +14,7 @@ on:
 
 env:
   REGISTRY: registry.digitalocean.com
-  IMAGE_NAME: gestionsalud-frontend
+  IMAGE_NAME: salmasalud-frontend
 
 jobs:
   build-and-push:
