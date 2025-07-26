@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Custom = LizardCode.SalmaSalud.Domain.EntitiesCustom;
 using System.Linq;
+using NPOI.SS.Formula.Functions;
 
 namespace LizardCode.SalmaSalud.Application.Business
 {
@@ -53,6 +54,13 @@ namespace LizardCode.SalmaSalud.Application.Business
             var solicitud = _mapper.Map<TurnoSolicitud>(model);
 
             Validate(solicitud);
+
+            var paciente = await _pacientesRepository.GetById<Paciente>(solicitud.IdPaciente);
+            if (paciente == null)
+                throw new BusinessException("No se encontró el paciente.");
+
+            if (!paciente.Habilitado)
+                throw new BusinessException("El paciente se encuentra deshabilitado.");
 
             if (model.Dias.Count == 0 || model.RangosHorarios.Count == 0)
             {
@@ -268,21 +276,29 @@ namespace LizardCode.SalmaSalud.Application.Business
 
         public async Task Asignar(AsignarViewModel model)
         {
-            var turno = await _turnosSolicitudRepository.GetCustomById(model.IdTurnoSolicitud);
-            if (turno == null)
+            var solicitud = await _turnosSolicitudRepository.GetCustomById(model.IdTurnoSolicitud);
+            if (solicitud == null)
             {
                 throw new BusinessException("Solicitud inexistente");
             }
 
-            if (_permissionsBusiness.Value.User.IdPaciente > 0 && _permissionsBusiness.Value.User.IdPaciente != turno.IdPaciente)
+            if (_permissionsBusiness.Value.User.IdPaciente > 0 && _permissionsBusiness.Value.User.IdPaciente != solicitud.IdPaciente)
             {
                 throw new UnauthorizedAccessException("El turno no pertence al paciente.");
             }
 
-            if (turno.IdEstadoTurnoSolicitud != (int)EstadoTurnoSolicitud.Solicitado)
+            if (solicitud.IdEstadoTurnoSolicitud != (int)EstadoTurnoSolicitud.Solicitado)
             {
                 throw new BusinessException("La solicitud no se encuentra en un estado válido.");
             }
+
+            var paciente = await _pacientesRepository.GetById<Paciente>(solicitud.IdPaciente);
+            if (paciente == null)
+                throw new BusinessException("No se encontró el paciente.");
+
+            if (!paciente.Habilitado)
+                throw new BusinessException("El paciente se encuentra deshabilitado.");
+
 
             //TODO: Validaciones de cliente...
             var dbturno = await _turnosSolicitudRepository.GetById<TurnoSolicitud>(model.IdTurnoSolicitud);
@@ -302,13 +318,13 @@ namespace LizardCode.SalmaSalud.Application.Business
 
                 tran.Commit();
 
-                await _mailBusiness.EnviarMailTurnoAsignadoPaciente(turno.Email,
-                                                            turno.Paciente,
+                await _mailBusiness.EnviarMailTurnoAsignadoPaciente(solicitud.Email,
+                                                            solicitud.Paciente,
                                                             model.Fecha?.ToString("dd/MM/yyyy HH:mm"),
-                                                            turno.Especialidad,
+                                                            solicitud.Especialidad,
                                                             model.Observaciones);
 
-                await _chatApiBusiness.SendMessageSolicitudTurnoAsignado(turno.Telefono, model.Fecha.Value, turno.Paciente, turno.Especialidad, turno.IdPaciente);
+                await _chatApiBusiness.SendMessageSolicitudTurnoAsignado(solicitud.Telefono, model.Fecha.Value, solicitud.Paciente, solicitud.Especialidad, solicitud.IdPaciente);
             }
             catch (Exception ex)
             {
@@ -320,22 +336,29 @@ namespace LizardCode.SalmaSalud.Application.Business
 
         public async Task ReAsignar(ReAsignarViewModel model)
         {
-            var turno = await _turnosSolicitudRepository.GetCustomById(model.IdTurnoSolicitud);
-            if (turno == null)
+            var solicitud = await _turnosSolicitudRepository.GetCustomById(model.IdTurnoSolicitud);
+            if (solicitud == null)
             {
                 throw new BusinessException("Solicitud inexistente");
             }
 
-            if (_permissionsBusiness.Value.User.IdPaciente > 0 && _permissionsBusiness.Value.User.IdPaciente != turno.IdPaciente)
+            if (_permissionsBusiness.Value.User.IdPaciente > 0 && _permissionsBusiness.Value.User.IdPaciente != solicitud.IdPaciente)
             {
                 throw new UnauthorizedAccessException("El turno no pertence al paciente.");
             }
 
-            if (turno.IdEstadoTurnoSolicitud != (int)EstadoTurnoSolicitud.Asignado
-                && turno.IdEstadoTurnoSolicitud != (int)EstadoTurnoSolicitud.ReAsignado)
+            if (solicitud.IdEstadoTurnoSolicitud != (int)EstadoTurnoSolicitud.Asignado
+                && solicitud.IdEstadoTurnoSolicitud != (int)EstadoTurnoSolicitud.ReAsignado)
             {
                 throw new BusinessException("La solicitud no se encuentra en un estado válido.");
             }
+
+            var paciente = await _pacientesRepository.GetById<Paciente>(solicitud.IdPaciente);
+            if (paciente == null)
+                throw new BusinessException("No se encontró el paciente.");
+
+            if (!paciente.Habilitado)
+                throw new BusinessException("El paciente se encuentra deshabilitado.");
 
             //TODO: Validaciones de cliente...
             var dbturno = await _turnosSolicitudRepository.GetById<TurnoSolicitud>(model.IdTurnoSolicitud);
@@ -355,13 +378,13 @@ namespace LizardCode.SalmaSalud.Application.Business
 
                 tran.Commit();
 
-                await _mailBusiness.EnviarMailTurnoReAsignadoPaciente(turno.Email,
-                                                            turno.Paciente,
+                await _mailBusiness.EnviarMailTurnoReAsignadoPaciente(solicitud.Email,
+                                                            solicitud.Paciente,
                                                             model.Fecha?.ToString("dd/MM/yyyy HH:mm"),
-                                                            turno.Especialidad,
+                                                            solicitud.Especialidad,
                                                             model.Observaciones);
 
-                await _chatApiBusiness.SendMessageSolicitudTurnoReAsignado(turno.Telefono, model.Fecha.Value, turno.Paciente, turno.Especialidad, turno.IdPaciente);
+                await _chatApiBusiness.SendMessageSolicitudTurnoReAsignado(solicitud.Telefono, model.Fecha.Value, solicitud.Paciente, solicitud.Especialidad, solicitud.IdPaciente);
             }
             catch (Exception ex)
             {
@@ -433,9 +456,9 @@ namespace LizardCode.SalmaSalud.Application.Business
             }
         }
 
-        public async Task<DataTablesResponse<Custom.TurnosSolicitudDashboard>> TurnosSolicitudDashboard(DataTablesRequest request)
+        public async Task<DataTablesResponse<Custom.TurnosSolicitudDashboard>> TurnosSolicitudDashboard(DataTablesRequest request, int idEspecialidad)
         {
-            var customQuery = _turnosSolicitudRepository.GetTurnosSolicitudDashboard();
+            var customQuery = _turnosSolicitudRepository.GetTurnosSolicitudDashboard(idEspecialidad);
             var builder = _dbContext.Connection.QueryBuilder();
 
             return await _dataTablesService.Resolve<Custom.TurnosSolicitudDashboard>(request, customQuery.Sql, customQuery.Parameters, staticWhere: builder.Sql);

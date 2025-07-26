@@ -6,6 +6,13 @@ using LizardCode.SalmaSalud.Application.Startup;
 using System.Threading.Tasks;
 using LizardCode.SalmaSalud.Application.Interfaces.Business;
 using System.Runtime.InteropServices;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Linq;
+using System.Collections.Generic;
+using LizardCode.Framework.Application.Common.Extensions;
+using LizardCode.SalmaSalud.Application.Models.TurnosSolicitud;
+using LizardCode.SalmaSalud.Domain.Enums;
+using LizardCode.SalmaSalud.Application.Models.Home;
 
 namespace LizardCode.SalmaSalud.Controllers
 {
@@ -21,14 +28,22 @@ namespace LizardCode.SalmaSalud.Controllers
         }
 
         [Authorize]
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
             TempData.Remove("MenuItem");
             TempData.Add("MenuItem", Url.Action("Index", "Home"));
 
+            var especialidades = (await _lookupsBusiness.GetAllEspecialidades()).ToList();
+            especialidades.Insert(0, new Domain.Entities.Especialidades { IdEspecialidad = 0, Descripcion = "TODAS" });
+            var model = new HomeViewModel
+            {                
+                MaestroEspecialidades = especialidades
+                    .ToDropDownList(k => k.IdEspecialidad, t => t.Descripcion)
+            };
+
             if (base._permisosBusiness.User.IdTipoUsuario == (int)TipoUsuario.Administrador)
             {
-                return View("Administrador");
+                return View("Administrador", model);
             }
             else if (base._permisosBusiness.User.IdTipoUsuario == (int)TipoUsuario.Administracion)
             {
@@ -36,7 +51,7 @@ namespace LizardCode.SalmaSalud.Controllers
             }
             else if (base._permisosBusiness.User.IdTipoUsuario == (int)TipoUsuario.Recepcion)
             {
-                return View("Recepcion");
+                return View("Recepcion", model);
             }
             else if (base._permisosBusiness.User.IdTipoUsuario == (int)TipoUsuario.Profesional)
             {

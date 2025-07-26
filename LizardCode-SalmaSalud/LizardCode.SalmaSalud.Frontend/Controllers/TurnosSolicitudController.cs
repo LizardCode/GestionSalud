@@ -191,7 +191,7 @@ namespace LizardCode.SalmaSalud.Controllers
             return Json(true);
         }
 
-        [Authorize]
+        [Authorize(Roles = "ADMIN, RECEPCION")]
         public async Task<IActionResult> ObtenerTotalesDashboard()
         {
             var totalAfiliados = (await _lookupsBusiness.GetAllPacientes()).Count;
@@ -243,10 +243,10 @@ namespace LizardCode.SalmaSalud.Controllers
         }
 
         [HttpPost]
-        [Authorize]
-        public async Task<JsonResult> TurnosSolicitudDashboard([FromForm] DataTablesRequest request)
+        [Authorize(Roles = "ADMIN, RECEPCION")]
+        public async Task<JsonResult> TurnosSolicitudDashboard([FromForm] DataTablesRequest request, int idEspecialidad)
         {
-            var results = await _turnosSolicitudBusiness.TurnosSolicitudDashboard(request);
+            var results = await _turnosSolicitudBusiness.TurnosSolicitudDashboard(request, idEspecialidad);
             return Json(results);
         }
     }

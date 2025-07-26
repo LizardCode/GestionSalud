@@ -24,6 +24,6 @@ namespace LizardCode.SalmaSalud.Application.Interfaces.Business
         Task<Custom.TurnoSolicitud> GetCustomById(int idSolicitud);
         Task Nuevo(NuevoViewModel model);
         Task ReAsignar(ReAsignarViewModel model);
-        Task<DataTablesResponse<Custom.TurnosSolicitudDashboard>> TurnosSolicitudDashboard(DataTablesRequest request);
+        Task<DataTablesResponse<Custom.TurnosSolicitudDashboard>> TurnosSolicitudDashboard(DataTablesRequest request, int idEspecialidad);
     }
 }

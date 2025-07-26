@@ -74,8 +74,15 @@ namespace LizardCode.SalmaSalud.Application.Components
                     Icono = "user"
                 });
 
+                model.Items.Insert(3, new ItemMenu(TipoMenuItem.Item, true)
+                {
+                    Texto = "Profesionales",
+                    Codigo = "PROFESIONALES",
+                    Action = "Profesionales",
+                    Icono = "briefcase"
+                });
 
-                model.Items.Insert(3, new ItemMenu(TipoMenuItem.Espaciador, true)
+                model.Items.Insert(4, new ItemMenu(TipoMenuItem.Espaciador, true)
                 {
                     Texto = "",
                     Codigo = "",
@@ -111,8 +118,15 @@ namespace LizardCode.SalmaSalud.Application.Components
                     Icono = "user"
                 });
 
+                model.Items.Insert(3, new ItemMenu(TipoMenuItem.Item, true)
+                {
+                    Texto = "Profesionales",
+                    Codigo = "PROFESIONALES",
+                    Action = "Profesionales",
+                    Icono = "briefcase"
+                });
 
-                model.Items.Insert(3, new ItemMenu(TipoMenuItem.Espaciador, true)
+                model.Items.Insert(4, new ItemMenu(TipoMenuItem.Espaciador, true)
                 {
                     Texto = "",
                     Codigo = "",

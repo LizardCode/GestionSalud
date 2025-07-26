@@ -20,6 +20,8 @@ var ABMTurnosSolicitudView = new (function () {
 
     this.init = function () {
 
+        $('.sidebarCollapse').click();
+
         modalNew = $('.modal.modalNew', mainClass);
         modalEdit = $('.modal.modalEdit', mainClass);
 

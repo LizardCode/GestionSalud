@@ -7,8 +7,7 @@
 
     //#region Init
 
-    var dtTurnosHoy = null;
-    var dtMensajesHoy = null;
+    var dtTurnosSolicitud = null;
 
     var domTurnos =
         "<'dt--top-section'<l>>" +
@@ -143,11 +142,13 @@
     //#region Funciones
 
     function buildControls() {
-
+        $('.especialidadesDashboard').select2();
     }
 
     function bindControlsEvents() {
-
+        $('.especialidadesDashboard').on('change', function () {
+            dtTurnosSolicitud.reload();
+        });
     }
 
     function datatableDraw() {
@@ -192,12 +193,17 @@
     //#endregion
 
     function initDataTables() {
-        dtTiposDeCambio = $('.dtTurnosSolicitud')
+
+
+        dtTurnosSolicitud = $('.dtTurnosSolicitud')
             .DataTableEx({
 
                 ajax: {
                     url: RootPath + '/TurnosSolicitud/TurnosSolicitudDashboard',
                     type: 'POST',
+                    data: function (d) {
+                        d.idEspecialidad = $('.especialidadesDashboard').select2('val')
+                    },
                     error: function (xhr, ajaxOptions, thrownError) {
                         Ajax.ShowError(xhr, xhr.statusText, thrownError);
                     },

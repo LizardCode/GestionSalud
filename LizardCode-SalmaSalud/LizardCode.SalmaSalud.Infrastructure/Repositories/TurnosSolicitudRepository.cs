@@ -169,7 +169,7 @@ namespace LizardCode.SalmaSalud.Infrastructure.Repositories
         //    return results.AsList();
         //}
 
-        public DataTablesCustomQuery GetTurnosSolicitudDashboard()
+        public DataTablesCustomQuery GetTurnosSolicitudDashboard(int idEspecialidad)
         {
             FormattableString sql = $@"SELECT SUM(CASE WHEN CAST(fechaAsignacion as date) = CAST(getdate() as date) AND (idEstadoTurnoSolicitud = {(int)EstadoTurnoSolicitud.Asignado} OR idEstadoTurnoSolicitud = {(int)EstadoTurnoSolicitud.ReAsignado}) THEN 1 ELSE 0 END) as AsigandosHoy,
 	                                           SUM(CASE WHEN idEstadoTurnoSolicitud = {(int)EstadoTurnoSolicitud.Asignado} OR idEstadoTurnoSolicitud = {(int)EstadoTurnoSolicitud.ReAsignado} THEN 1 ELSE 0 END) as AsignadosMes,
@@ -177,7 +177,7 @@ namespace LizardCode.SalmaSalud.Infrastructure.Repositories
 	                                           ISNULL(P.Nombre, '[SIN ASIGNAR]') AS Profesional
                                         FROM TurnosSolicitud TS
                                         LEFT JOIN Profesionales P ON (TS.idProfesional = P.IdProfesional)
-                                        WHERE ((idEstadoTurnoSolicitud = {(int)EstadoTurnoSolicitud.Asignado} OR idEstadoTurnoSolicitud = {(int)EstadoTurnoSolicitud.ReAsignado}) AND MONTH(fechaAsignacion) = MONTH(GETDATE()))
+                                        WHERE ({idEspecialidad} = 0 OR TS.idEspecialidad = {idEspecialidad}) AND ((idEstadoTurnoSolicitud = {(int)EstadoTurnoSolicitud.Asignado} OR idEstadoTurnoSolicitud = {(int)EstadoTurnoSolicitud.ReAsignado}) AND MONTH(fechaAsignacion) = MONTH(GETDATE()))
 	                                        OR (idEstadoTurnoSolicitud = {(int)EstadoTurnoSolicitud.Cancelado} AND (MONTH(fechaSolicitud) = MONTH(GETDATE()) OR MONTH(fechaAsignacion) = MONTH(GETDATE())))
                                         GROUP BY P.Nombre, P.idProfesional";
             var builder = _context.Connection.QueryBuilder(sql);

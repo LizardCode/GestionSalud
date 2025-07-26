@@ -7,8 +7,7 @@
 
     //#region Init
 
-    var dtTurnosHoy = null;
-    var dtMensajesHoy = null;
+    var dtTurnosSolicitud = null;
 
     var domTurnos =
         "<'dt--top-section'<l>>" +
@@ -39,22 +38,25 @@
             })
             .fail(Ajax.ShowError);
 
-        Ajax.GetJson(RootPath + 'AuditoriasChatApi/ObtenerTotalesByEstado')
-            .done(function (data) {
+        //Ajax.GetJson(RootPath + 'AuditoriasChatApi/ObtenerTotalesByEstado')
+        //    .done(function (data) {
 
-                $('.bMensajesError').html(data.auditoriaChatApiErrorHoy);
-                $('.bMensajesEnviados').html(data.auditoriaChatApiEnviadosHoy);
-            })
-            .fail(Ajax.ShowError);
+        //        $('.bMensajesError').html(data.auditoriaChatApiErrorHoy);
+        //        $('.bMensajesEnviados').html(data.auditoriaChatApiEnviadosHoy);
+        //    })
+        //    .fail(Ajax.ShowError);
     }
 
     function initDataTables() {
-        dtTiposDeCambio = $('.dtTurnosSolicitud')
+        dtTurnosSolicitud = $('.dtTurnosSolicitud')
             .DataTableEx({
 
                 ajax: {
-                    url: RootPath + '/TurnosSolciitud/TurnosSolicitudDashboard',
+                    url: RootPath + '/TurnosSolicitud/TurnosSolicitudDashboard',
                     type: 'POST',
+                    data: function (d) {
+                        d.idEspecialidad = $('.especialidadesDashboard').select2('val')
+                    },
                     error: function (xhr, ajaxOptions, thrownError) {
                         Ajax.ShowError(xhr, xhr.statusText, thrownError);
                     },
@@ -83,11 +85,13 @@
     //#region Funciones
 
     function buildControls() {
-
+        $('.especialidadesDashboard').select2();
     }
 
     function bindControlsEvents() {
-
+        $('.especialidadesDashboard').on('change', function () {
+            dtTurnosSolicitud.reload();
+        });
     }
 
     function datatableDraw() {

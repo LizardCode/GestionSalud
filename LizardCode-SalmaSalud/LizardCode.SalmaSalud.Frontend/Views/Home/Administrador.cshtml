@@ -1,4 +1,5 @@
-﻿@{
+﻿@model LizardCode.SalmaSalud.Application.Models.Home.HomeViewModel
+@{
     Layout = "~/Views/Shared/BaseLayout.cshtml";
 
     ViewBag.Title = "";
@@ -139,6 +140,13 @@
                         <div class="col">
                             <div class="card">
                                 <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <div class="row">
+                                                @Html.FormGroupDropDownListFor(m => m.IdEspecialidad, Model.MaestroEspecialidades, "Especialidad", fieldCss: "select2-field especialidadesDashboard", addValidator: true)
+                                            </div>
+                                        </div>                                        
+                                    </div>
                                     <div class="row">
                                         <h5 class="card-title ml-2">Turnos por Profesional</h5>
                                         <div class="table-responsive">
