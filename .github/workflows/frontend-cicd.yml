@@ -53,14 +53,17 @@ jobs:
       continue-on-error: false
 
     - name: Build and push to DigitalOcean Container Registry
+      if: github.ref == 'refs/heads/master'
       uses: digitalocean/action-doctl@v2
       with:
         token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
     
     - name: Log in to DigitalOcean Container Registry
+      if: github.ref == 'refs/heads/master'
       run: doctl registry login --expiry-seconds 1200
     
     - name: Build Docker image
+      if: github.ref == 'refs/heads/master'
       run: |
         IMAGE_TAG="${{ env.REGISTRY }}/${{ secrets.DIGITALOCEAN_REGISTRY_NAME }}/${{ env.IMAGE_NAME }}"
         
