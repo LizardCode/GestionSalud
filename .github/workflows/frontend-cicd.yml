@@ -20,11 +20,19 @@ jobs:
   build-and-push:
     runs-on: ubuntu-latest
     environment: 
-      name: ${{ github.ref == 'refs/heads/master' && 'production' || 'development' }}
+      name: ${{ github.event_name == 'pull_request' && 'development' || (github.ref == 'refs/heads/master' && 'production' || 'development') }}
     
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
+
+    - name: Load development environment
+      if: github.event_name == 'pull_request'
+      run: |
+        echo "🔧 Loading development environment for Pull Request"
+        echo "ASPNETCORE_ENVIRONMENT=Development" >> $GITHUB_ENV
+        echo "Environment: Development"
+        echo "Pull Request #${{ github.event.number }} targeting master branch"
 
     - name: Setup .NET 8
       uses: actions/setup-dotnet@v4
@@ -40,8 +48,9 @@ jobs:
     - name: Publish application
       run: dotnet publish LizardCode-SalmaSalud/LizardCode.SalmaSalud.Frontend/LizardCode.SalmaSalud.csproj --no-build --configuration Release --output ./publish
 
-    - name: Run tests
+    - name: Run & test
       run: dotnet test LizardCode-SalmaSalud/LizardCode.SalmaSalud.sln --no-build --configuration Release --verbosity normal
+      continue-on-error: false
 
     - name: Build and push to DigitalOcean Container Registry
       uses: digitalocean/action-doctl@v2
@@ -67,7 +76,7 @@ jobs:
         for TAG in $TAGS; do
           echo "Building and pushing: $TAG"
           docker build \
-            --build-arg ASPNETCORE_ENVIRONMENT=${{ github.ref == 'refs/heads/master' && 'Production' || 'Development' }} \
+            --build-arg ASPNETCORE_ENVIRONMENT=${{ github.event_name == 'pull_request' && 'Development' || (github.ref == 'refs/heads/master' && 'Production' || 'Development') }} \
             -t $TAG \
             -f LizardCode-SalmaSalud/LizardCode.SalmaSalud.Frontend/Dockerfile \
             .
