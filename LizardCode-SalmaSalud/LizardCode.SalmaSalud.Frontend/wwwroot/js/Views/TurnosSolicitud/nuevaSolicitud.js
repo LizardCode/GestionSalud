@@ -19,6 +19,10 @@
         $('#IdEspecialidad').select2();
         $('#Dias').select2();
         $('#RangosHorarios').select2();
+
+        $('select[name$="IdEspecialidad"]').on('change', function (e) {
+            reloadRangos(e);
+        });
     }
 
     function bindControlsEvents() {
@@ -29,6 +33,44 @@
 
         //    Modals.loadAnyModal('actionsDialog', widthClass, action, function () { }, function () { dtView.reload(); });
         //});
+    }
+
+    function reloadRangos(e, element, selection) {
+
+        var target = (e == null ? element : e.target);
+        var idEspecialidad = $(target).val();
+        var rangos = $('#RangosHorarios');
+
+        var action = 'TurnosSolicitud/GetRangosHorariosByEspecialidadId';
+        var params = {
+            id: idEspecialidad,
+        };
+
+        rangos.find('option').remove();
+
+        Ajax.Execute(action, params)
+            .done(function (response) {
+                Ajax.ParseResponse(response,
+                    function (data) {
+
+                        rangos.find('option').remove();
+
+                        for (var i in data) {
+                            var option = data[i];
+
+                            rangos.append(
+                                $('<option />')
+                                    .val(option.idRangoHorario)
+                                    .text(option.descripcion)
+                            );
+                        }
+
+                        rangos.select2('val', selection);
+                    },
+                    Ajax.ShowError
+                );
+            })
+            .fail(Ajax.ShowError);
     }
 
     this.ajaxBegin = function (context, arguments) {

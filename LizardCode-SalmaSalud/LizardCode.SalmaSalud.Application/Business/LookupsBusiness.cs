@@ -34,9 +34,9 @@ namespace LizardCode.SalmaSalud.Application.Business
         private readonly ICentrosCostoRepository _centrosCostoRepository;
         private readonly IMonedasFechasCambioRepository _monedasFechasCambioRepository;
         private readonly ICondicionVentasComprasRepository _condicionVentasComprasRepository;
-		private readonly IRecibosRepository _recibosRepository;
-		private readonly IOrdenesPagoRepository _ordenesPagoRepository;
-		private readonly IEspecialidadesRepository _especialidadesRepository;
+        private readonly IRecibosRepository _recibosRepository;
+        private readonly IOrdenesPagoRepository _ordenesPagoRepository;
+        private readonly IEspecialidadesRepository _especialidadesRepository;
         private readonly IFinanciadoresRepository _financiadoresRepository;
         private readonly IProfesionalesRepository _profesionalesRepository;
         private readonly IPrestacionesRepository _prestacionesRepository;
@@ -45,6 +45,7 @@ namespace LizardCode.SalmaSalud.Application.Business
         private readonly IVademecumRepository _vademecumRepository;
         private readonly ITiposTurnoRepository _tiposTurnoRepository;
         private readonly INacionalidadesRepository _nacionalidadesRepository;
+        private readonly IRangosHorariosRepository _rangosHorariosRepository;
 
         public LookupsBusiness(
             IUsuariosRepository usuariosRepository,
@@ -67,8 +68,8 @@ namespace LizardCode.SalmaSalud.Application.Business
             ICentrosCostoRepository centrosCostoRepository,
             IMonedasFechasCambioRepository monedasFechasCambioRepository,
             IAlicuotasRepository alicuotasRepository,
-			IRecibosRepository recibosRepository,
-			IOrdenesPagoRepository ordenesPagoRepository,
+            IRecibosRepository recibosRepository,
+            IOrdenesPagoRepository ordenesPagoRepository,
             ITipoDocumentoRepository tipoDocumentoRepository,
             ICondicionVentasComprasRepository condicionVentasComprasRepository,
             IEspecialidadesRepository especialidadesRepository,
@@ -79,7 +80,8 @@ namespace LizardCode.SalmaSalud.Application.Business
             IPacientesRepository pacientesRepository,
             IVademecumRepository vademecumRepository,
             ITiposTurnoRepository tiposTurnoRepository,
-            INacionalidadesRepository nacionalidadesRepository)
+            INacionalidadesRepository nacionalidadesRepository,
+            IRangosHorariosRepository rangosHorariosRepository)
         {   
             _usuariosRepository = usuariosRepository;
             _clientesRepository = clientesRepository;
@@ -114,6 +116,7 @@ namespace LizardCode.SalmaSalud.Application.Business
             _vademecumRepository = vademecumRepository;
             _tiposTurnoRepository = tiposTurnoRepository;
             _nacionalidadesRepository = nacionalidadesRepository;
+            _rangosHorariosRepository = rangosHorariosRepository;
         }
 
         public async Task<IList<Usuario>> GetAllUsuariosByIdEmpresaLookup(int idEmpresa) =>
@@ -349,5 +352,8 @@ namespace LizardCode.SalmaSalud.Application.Business
 
         public async Task<IList<Domain.Entities.Nacionalidad>> GetNacionalidades() =>
             await _nacionalidadesRepository.GetAll<Domain.Entities.Nacionalidad>();
+
+        public async Task<IList<Domain.Entities.TipoRangoHorario>> GetAllRangosHorarios() =>
+            await _rangosHorariosRepository.GetAll<Domain.Entities.TipoRangoHorario>();
     }
 }

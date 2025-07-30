@@ -19,12 +19,17 @@ namespace LizardCode.SalmaSalud.API.Controllers
         private IEspecialidadesRepository _especialidadesRepository;
         private ITurnosSolicitudBusiness _turnosSolicitudBusiness;
         private IPacientesBusiness _pacientesBusiness;
+        private IRangosHorariosRepository _rangosHorariosRepository;
 
-        public TurnosSolicitudController(IEspecialidadesRepository especialidadesRepository, ITurnosSolicitudBusiness turnosSolicitudBusiness, IPacientesBusiness pacientesBusiness)
+        public TurnosSolicitudController(IEspecialidadesRepository especialidadesRepository, 
+                                        ITurnosSolicitudBusiness turnosSolicitudBusiness, 
+                                        IPacientesBusiness pacientesBusiness, 
+                                        IRangosHorariosRepository rangosHorariosRepository)
         {
             this._especialidadesRepository = especialidadesRepository;
             this._turnosSolicitudBusiness = turnosSolicitudBusiness;
             this._pacientesBusiness = pacientesBusiness;
+            this._rangosHorariosRepository = rangosHorariosRepository;
         }
 
         [HttpGet("~/especialidades")]        
@@ -44,9 +49,14 @@ namespace LizardCode.SalmaSalud.API.Controllers
         }
 
         [HttpGet("~/rangos-horarios")]
-        public async Task<IActionResult> RangosHorarios()
+        public async Task<IActionResult> RangosHorarios(int? idEspecialidad)
         {
-            var rangos = Utilities.EnumToDictionary<RangoHorario>();
+            //var rangos = Utilities.EnumToDictionary<RangoHorario>();
+            var rangos = await _rangosHorariosRepository.GetAll<TipoRangoHorario>();
+            if (idEspecialidad > 0)
+            {
+                rangos = rangos?.Where(r => r.IdEspecialidad == idEspecialidad.Value)?.ToList();
+            }
 
             return Json(rangos);
         }
@@ -110,6 +120,9 @@ namespace LizardCode.SalmaSalud.API.Controllers
 
             if (paciente == null)
                 throw new UnauthorizedAccessException("Paciente no encontrado.");
+
+            if (!paciente.Habilitado)
+                throw new UnauthorizedAccessException("Paciente se encuentra deshabilitado.");
 
             if (paciente.Telefono != telefono)
                 throw new UnauthorizedAccessException("Paciente incorrecto.");

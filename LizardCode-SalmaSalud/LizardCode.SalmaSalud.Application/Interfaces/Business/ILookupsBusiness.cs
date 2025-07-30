@@ -95,5 +95,7 @@ namespace LizardCode.SalmaSalud.Application.Interfaces.Business
         Task<IList<Vademecum>> GetAllVademecum();
         Task<IList<Domain.Entities.TiposTurno>> GetTiposTurno();
         Task<IList<Nacionalidad>> GetNacionalidades();
+
+        Task<IList<TipoRangoHorario>> GetAllRangosHorarios();
     }
 }

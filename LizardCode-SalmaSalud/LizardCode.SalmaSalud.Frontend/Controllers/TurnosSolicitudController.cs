@@ -12,6 +12,7 @@ using LizardCode.SalmaSalud.Domain.Enums;
 using System.Linq;
 using System.Threading.Tasks;
 using System;
+using Org.BouncyCastle.Asn1.Ocsp;
 
 namespace LizardCode.SalmaSalud.Controllers
 {
@@ -248,6 +249,20 @@ namespace LizardCode.SalmaSalud.Controllers
         {
             var results = await _turnosSolicitudBusiness.TurnosSolicitudDashboard(request, idEspecialidad);
             return Json(results);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<JsonResult> GetRangosHorariosByEspecialidadId(int id)
+        {
+            var results = await _lookupsBusiness.GetAllRangosHorarios();
+
+            if (id > 0)
+            {
+                results = results?.Where(r => r.IdEspecialidad == id)?.ToList();
+            }
+
+            return Json(() => results);
         }
     }
 }
