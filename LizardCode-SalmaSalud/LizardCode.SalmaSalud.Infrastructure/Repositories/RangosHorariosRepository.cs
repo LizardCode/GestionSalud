@@ -1,4 +1,6 @@
-﻿using LizardCode.Framework.Application.Interfaces.Context;
+﻿using Dapper.DataTables.Models;
+using DapperQueryBuilder;
+using LizardCode.Framework.Application.Interfaces.Context;
 using LizardCode.SalmaSalud.Application.Interfaces.Repositories;
 
 namespace LizardCode.SalmaSalud.Infrastructure.Repositories
@@ -7,6 +9,16 @@ namespace LizardCode.SalmaSalud.Infrastructure.Repositories
     {
         public RangosHorariosRepository(IDbContext context) : base(context)
         {
+        }
+
+        public DataTablesCustomQuery GetAllCustomQuery()
+        {
+            var query = _context.Connection
+                .QueryBuilder($@"SELECT rh.*, e.descripcion as Especialidad
+                                    FROM TipoRangoHorario rh
+                                    INNER JOIN Especialidades e on (rh.idEspecialidad = e.IdEspecialidad)");
+
+            return base.GetAllCustomQuery(query);
         }
     }
 }

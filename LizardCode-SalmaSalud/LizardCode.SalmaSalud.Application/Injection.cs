@@ -96,6 +96,7 @@ namespace LizardCode.SalmaSalud.Application
             services.AddScoped<IGuardiasBusiness, GuardiasBusiness>();
 
             services.AddScoped<ITurnosSolicitudBusiness, TurnosSolicitudBusiness>();
+            services.AddScoped<IRangosHorariosBusiness, RangosHorariosBusiness>();
             services.AddScoped<IWAppApiHelper, WAppApiHelper>();
 
             return services;

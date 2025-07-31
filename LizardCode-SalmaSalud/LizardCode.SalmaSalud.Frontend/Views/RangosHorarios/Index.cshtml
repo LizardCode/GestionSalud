@@ -1,0 +1,50 @@
+﻿@model LizardCode.SalmaSalud.Application.Models.RangosHorarios.RangosHorariosViewModel
+@{
+    Layout = "~/Views/Shared/MaestroLayout.cshtml";
+
+    ViewBag.MainClass = "ABMRangosHorariosView";
+
+    ViewBag.Title = "Mantenimiento de Rangos Horarios";
+    ViewBag.TitleNew = "Nuevo Rango Horario...";
+    ViewBag.TitleEdit = "Modificar Rangos Horarios...";
+    ViewBag.TitleRemove = "Eliminar Rango Horario...";
+    ViewBag.ItemMenu = "Rangos Horarios";
+
+    ViewBag.ButtonNew = true;
+    ViewBag.ButtonEdit = true;
+    ViewBag.ButtonRemove = true;
+
+    ViewBag.AjaxGetAll = Url.Action("ObtenerTodos", "RangosHorarios");
+    ViewBag.AjaxGet = Url.Action("Obtener", "RangosHorarios");
+    ViewBag.AjaxAdd = Url.Action("Nuevo", "RangosHorarios");
+    ViewBag.AjaxUpdate = Url.Action("Modificar", "RangosHorarios");
+    ViewBag.AjaxDelete = Url.Action("Eliminar", "RangosHorarios");
+
+    ViewBag.Tabs = new string[] { "General" };
+}
+
+@section Styles {
+    <link href="/css/Views/RangosHorarios/index.css?1361" rel="stylesheet" />
+}
+
+@section GridColumns {
+
+    <th>ID</th>
+    <th>Especialidad</th>
+    <th>Descripción</th>
+
+}
+
+@section CrudForm {
+
+    @Html.FormGroupTextBoxFor(m => m.IdRangoHorario, title: "ID", editingDisabled: true, newVisible: false)
+
+    @Html.FormGroupDropDownListFor(m => m.IdEspecialidad, Model.MaestroEspecialidades, "Especialidades", fieldCss: "select2-field validate especialidad", addValidator: true)
+
+    @Html.FormGroupTextBoxFor(m => m.Descripcion, title: "Descripción", addValidator: true)
+
+}
+
+@section Scripts {
+    <script src="/js/Views/RangosHorarios/index.js?1361"></script>
+}

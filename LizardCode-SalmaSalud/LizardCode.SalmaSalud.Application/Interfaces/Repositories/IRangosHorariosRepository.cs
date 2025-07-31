@@ -1,4 +1,5 @@
-﻿using LizardCode.SalmaSalud.Domain.Enums;
+﻿using Dapper.DataTables.Models;
+using LizardCode.SalmaSalud.Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -13,5 +14,11 @@ namespace LizardCode.SalmaSalud.Application.Interfaces.Repositories
         Task<IList<TRangoHorario>> GetAll<TRangoHorario>(IDbTransaction transaction = null);
 
         Task<TRangoHorario> GetById<TRangoHorario>(int id, IDbTransaction transaction = null);
+
+        Task<long> Insert<TRangoHorario>(TRangoHorario entity, IDbTransaction transaction = null);
+
+        Task<bool> Update<TRangoHorario>(TRangoHorario entity, IDbTransaction transaction = null);
+
+        DataTablesCustomQuery GetAllCustomQuery();
     }
 }

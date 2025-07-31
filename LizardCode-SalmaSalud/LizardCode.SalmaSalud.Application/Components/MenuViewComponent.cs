@@ -82,7 +82,15 @@ namespace LizardCode.SalmaSalud.Application.Components
                     Icono = "briefcase"
                 });
 
-                model.Items.Insert(4, new ItemMenu(TipoMenuItem.Espaciador, true)
+                model.Items.Insert(4, new ItemMenu(TipoMenuItem.Item, true)
+                {
+                    Texto = "R. Horarios",
+                    Codigo = "RHORARIOS",
+                    Action = "RangosHorarios",
+                    Icono = "clock"
+                });
+
+                model.Items.Insert(5, new ItemMenu(TipoMenuItem.Espaciador, true)
                 {
                     Texto = "",
                     Codigo = "",
@@ -126,50 +134,15 @@ namespace LizardCode.SalmaSalud.Application.Components
                     Icono = "briefcase"
                 });
 
-                model.Items.Insert(4, new ItemMenu(TipoMenuItem.Espaciador, true)
+                model.Items.Insert(4, new ItemMenu(TipoMenuItem.Item, true)
                 {
-                    Texto = "",
-                    Codigo = "",
-                    Action = "",
-                    Icono = ""
-                });
-            }
-            else if (_permissions.User.IdTipoUsuario == (int)TipoUsuario.Profesional)
-            {
-                model.Items.Insert(0, new ItemMenu(TipoMenuItem.Item, true)
-                {
-                    Texto = "Dashboard",
-                    Codigo = "DASHBOARD",
-                    Action = "Home",
-                    Icono = "activity"
-                });
-
-                model.Items.Insert(1, new ItemMenu(TipoMenuItem.Item, true)
-                {
-                    Texto = "Sala de Espera",
-                    Codigo = "TURNOSSALAESPERA",
-                    Action = "TurnosSalaEspera",
+                    Texto = "R. Horarios",
+                    Codigo = "RHORARIOS",
+                    Action = "RangosHorarios",
                     Icono = "clock"
                 });
 
-                model.Items.Insert(2, new ItemMenu(TipoMenuItem.Item, true)
-                {
-                    Texto = "Guardia",
-                    Codigo = "GUARDIA",
-                    Action = "TurnosGuardia",
-                    Icono = "plus"
-                });
-
-                model.Items.Insert(3, new ItemMenu(TipoMenuItem.Item, true)
-                {
-                    Texto = "Pacientes",
-                    Codigo = "PACIENTES",
-                    Action = "Pacientes",
-                    Icono = "user"
-                });
-
-
-                model.Items.Insert(3, new ItemMenu(TipoMenuItem.Espaciador, true)
+                model.Items.Insert(5, new ItemMenu(TipoMenuItem.Espaciador, true)
                 {
                     Texto = "",
                     Codigo = "",
@@ -177,33 +150,76 @@ namespace LizardCode.SalmaSalud.Application.Components
                     Icono = ""
                 });
             }
-            else if (_permissions.User.IdTipoUsuario == (int)TipoUsuario.ProfesionalExterno)
-            {
-                model.Items.Insert(0, new ItemMenu(TipoMenuItem.Item, true)
-                {
-                    Texto = "Dashboard",
-                    Codigo = "DASHBOARD",
-                    Action = "Home",
-                    Icono = "activity"
-                });
+            //else if (_permissions.User.IdTipoUsuario == (int)TipoUsuario.Profesional)
+            //{
+            //    model.Items.Insert(0, new ItemMenu(TipoMenuItem.Item, true)
+            //    {
+            //        Texto = "Dashboard",
+            //        Codigo = "DASHBOARD",
+            //        Action = "Home",
+            //        Icono = "activity"
+            //    });
 
-                model.Items.Insert(1, new ItemMenu(TipoMenuItem.Item, true)
-                {
-                    Texto = "Evoluciones",
-                    Codigo = "EVOLUCIONES",
-                    Action = "Index",
-                    Controller = "/evolucionesExternas",
-                    Icono = "file-text"
-                });
+            //    model.Items.Insert(1, new ItemMenu(TipoMenuItem.Item, true)
+            //    {
+            //        Texto = "Sala de Espera",
+            //        Codigo = "TURNOSSALAESPERA",
+            //        Action = "TurnosSalaEspera",
+            //        Icono = "clock"
+            //    });
 
-                model.Items.Insert(2, new ItemMenu(TipoMenuItem.Espaciador, true)
-                {
-                    Texto = "",
-                    Codigo = "",
-                    Action = "",
-                    Icono = ""
-                });
-            }
+            //    model.Items.Insert(2, new ItemMenu(TipoMenuItem.Item, true)
+            //    {
+            //        Texto = "Guardia",
+            //        Codigo = "GUARDIA",
+            //        Action = "TurnosGuardia",
+            //        Icono = "plus"
+            //    });
+
+            //    model.Items.Insert(3, new ItemMenu(TipoMenuItem.Item, true)
+            //    {
+            //        Texto = "Pacientes",
+            //        Codigo = "PACIENTES",
+            //        Action = "Pacientes",
+            //        Icono = "user"
+            //    });
+
+
+            //    model.Items.Insert(3, new ItemMenu(TipoMenuItem.Espaciador, true)
+            //    {
+            //        Texto = "",
+            //        Codigo = "",
+            //        Action = "",
+            //        Icono = ""
+            //    });
+            //}
+            //else if (_permissions.User.IdTipoUsuario == (int)TipoUsuario.ProfesionalExterno)
+            //{
+            //    model.Items.Insert(0, new ItemMenu(TipoMenuItem.Item, true)
+            //    {
+            //        Texto = "Dashboard",
+            //        Codigo = "DASHBOARD",
+            //        Action = "Home",
+            //        Icono = "activity"
+            //    });
+
+            //    model.Items.Insert(1, new ItemMenu(TipoMenuItem.Item, true)
+            //    {
+            //        Texto = "Evoluciones",
+            //        Codigo = "EVOLUCIONES",
+            //        Action = "Index",
+            //        Controller = "/evolucionesExternas",
+            //        Icono = "file-text"
+            //    });
+
+            //    model.Items.Insert(2, new ItemMenu(TipoMenuItem.Espaciador, true)
+            //    {
+            //        Texto = "",
+            //        Codigo = "",
+            //        Action = "",
+            //        Icono = ""
+            //    });
+            //}
             else if (_permissions.User.IdTipoUsuario == (int)TipoUsuario.Paciente)
             {
                 model.Items.Insert(0, new ItemMenu(TipoMenuItem.Item, true)
