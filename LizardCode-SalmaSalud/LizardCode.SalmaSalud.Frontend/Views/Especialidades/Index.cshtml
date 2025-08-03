@@ -1,0 +1,46 @@
+﻿@model LizardCode.SalmaSalud.Application.Models.Especialidades.EspecialidadViewModel
+@{
+    Layout = "~/Views/Shared/MaestroLayout.cshtml";
+
+    ViewBag.MainClass = "ABMEspecialidadesView";
+
+    ViewBag.Title = "Mantenimiento de Especialidades";
+    ViewBag.TitleNew = "Nuevo Especialidad...";
+    ViewBag.TitleEdit = "Modificar Especialidad...";
+    ViewBag.TitleRemove = "Eliminar Especialidad...";
+    ViewBag.ItemMenu = "Especialidades";
+
+    ViewBag.ButtonNew = true;
+    ViewBag.ButtonEdit = true;
+    ViewBag.ButtonRemove = false;
+
+    ViewBag.AjaxGetAll = Url.Action("ObtenerTodos", "Especialidades");
+    ViewBag.AjaxGet = Url.Action("Obtener", "Especialidades");
+    ViewBag.AjaxAdd = Url.Action("Nuevo", "Especialidades");
+    ViewBag.AjaxUpdate = Url.Action("Modificar", "Especialidades");
+    ViewBag.AjaxDelete = Url.Action("Eliminar", "Especialidades");
+
+    ViewBag.Tabs = new string[] { "General" };
+}
+
+@section Styles {
+    <link href="/css/Views/Especialidades/index.css?1361" rel="stylesheet" />
+}
+
+@section GridColumns {
+
+    <th>ID</th>
+    <th>Nombre</th>
+
+}
+
+@section CrudForm {
+
+    @Html.FormGroupTextBoxFor(m => m.IdEspecialidad, title: "ID", editingDisabled: true, newVisible: false)
+
+    @Html.FormGroupTextAreaFor(m => m.Descripcion, title: "Descripción")
+}
+
+@section Scripts {
+    <script src="/js/Views/Especialidades/index.js?1361"></script>
+}

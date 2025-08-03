@@ -74,7 +74,23 @@ namespace LizardCode.SalmaSalud.Application.Components
                     Icono = "user"
                 });
 
-                model.Items.Insert(3, new ItemMenu(TipoMenuItem.Item, true)
+                model.Items.Insert(3, new ItemMenu(TipoMenuItem.Espaciador, true)
+                {
+                    Texto = "",
+                    Codigo = "",
+                    Action = "",
+                    Icono = ""
+                });
+
+                model.Items.Insert(4, new ItemMenu(TipoMenuItem.Item, true)
+                {
+                    Texto = "Especialidades",
+                    Codigo = "ESPECIALIDADES",
+                    Action = "Especialidades",
+                    Icono = "plus"
+                });
+
+                model.Items.Insert(5, new ItemMenu(TipoMenuItem.Item, true)
                 {
                     Texto = "Profesionales",
                     Codigo = "PROFESIONALES",
@@ -82,20 +98,12 @@ namespace LizardCode.SalmaSalud.Application.Components
                     Icono = "briefcase"
                 });
 
-                model.Items.Insert(4, new ItemMenu(TipoMenuItem.Item, true)
+                model.Items.Insert(6, new ItemMenu(TipoMenuItem.Item, true)
                 {
                     Texto = "R. Horarios",
                     Codigo = "RHORARIOS",
                     Action = "RangosHorarios",
                     Icono = "clock"
-                });
-
-                model.Items.Insert(5, new ItemMenu(TipoMenuItem.Espaciador, true)
-                {
-                    Texto = "",
-                    Codigo = "",
-                    Action = "",
-                    Icono = ""
                 });
             }
             else if (_permissions.User.IdTipoUsuario == (int)TipoUsuario.Recepcion)
@@ -126,7 +134,23 @@ namespace LizardCode.SalmaSalud.Application.Components
                     Icono = "user"
                 });
 
-                model.Items.Insert(3, new ItemMenu(TipoMenuItem.Item, true)
+                model.Items.Insert(3, new ItemMenu(TipoMenuItem.Espaciador, true)
+                {
+                    Texto = "",
+                    Codigo = "",
+                    Action = "",
+                    Icono = ""
+                });
+
+                model.Items.Insert(4, new ItemMenu(TipoMenuItem.Item, true)
+                {
+                    Texto = "Especialidades",
+                    Codigo = "ESPECIALIDADES",
+                    Action = "Especialidades",
+                    Icono = "plus"
+                });
+
+                model.Items.Insert(5, new ItemMenu(TipoMenuItem.Item, true)
                 {
                     Texto = "Profesionales",
                     Codigo = "PROFESIONALES",
@@ -134,20 +158,12 @@ namespace LizardCode.SalmaSalud.Application.Components
                     Icono = "briefcase"
                 });
 
-                model.Items.Insert(4, new ItemMenu(TipoMenuItem.Item, true)
+                model.Items.Insert(6, new ItemMenu(TipoMenuItem.Item, true)
                 {
                     Texto = "R. Horarios",
                     Codigo = "RHORARIOS",
                     Action = "RangosHorarios",
                     Icono = "clock"
-                });
-
-                model.Items.Insert(5, new ItemMenu(TipoMenuItem.Espaciador, true)
-                {
-                    Texto = "",
-                    Codigo = "",
-                    Action = "",
-                    Icono = ""
                 });
             }
             //else if (_permissions.User.IdTipoUsuario == (int)TipoUsuario.Profesional)
