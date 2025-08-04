@@ -1,0 +1,106 @@
+name: API CI/CD
+
+on:
+  push:
+    branches: [ master ]
+    paths:
+      - 'LizardCode-SalmaSalud/LizardCode.SalmaSalud.API/**'
+      - '.github/workflows/api-cicd.yml'
+  pull_request:
+    branches: [ master ]
+    paths:
+      - 'LizardCode-SalmaSalud/LizardCode.SalmaSalud.API/**'
+      - '.github/workflows/api-cicd.yml'
+
+env:
+  REGISTRY: registry.digitalocean.com
+  IMAGE_NAME: salmasalud-api
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    environment: 
+      name: ${{ github.event_name == 'pull_request' && 'development' || (github.ref == 'refs/heads/master' && 'production' || 'development') }}
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Load development environment
+      if: github.event_name == 'pull_request'
+      run: |
+        echo "🔧 Loading development environment for Pull Request"
+        echo "ASPNETCORE_ENVIRONMENT=Development" >> $GITHUB_ENV
+        echo "Environment: Development"
+        echo "Pull Request #${{ github.event.number }} targeting master branch"
+
+    - name: Setup .NET 8
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Restore dependencies
+      run: dotnet restore LizardCode-SalmaSalud/LizardCode.SalmaSalud.sln
+
+    - name: Build solution
+      run: dotnet build LizardCode-SalmaSalud/LizardCode.SalmaSalud.sln --no-restore --configuration Release
+
+    - name: Publish application
+      run: dotnet publish LizardCode-SalmaSalud/LizardCode.SalmaSalud.Frontend/LizardCode.SalmaSalud.csproj --no-build --configuration Release --output ./publish
+
+    - name: Run & test
+      run: dotnet test LizardCode-SalmaSalud/LizardCode.SalmaSalud.sln --no-build --configuration Release --verbosity normal
+      continue-on-error: false
+
+    - name: Build and push to DigitalOcean Container Registry
+      if: github.ref == 'refs/heads/master'
+      uses: digitalocean/action-doctl@v2
+      with:
+        token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+    
+    - name: Log in to DigitalOcean Container Registry
+      if: github.ref == 'refs/heads/master'
+      run: doctl registry login --expiry-seconds 1200
+    
+    - name: Build Docker image
+      if: github.ref == 'refs/heads/master'
+      run: |
+        IMAGE_TAG="${{ env.REGISTRY }}/${{ secrets.DIGITALOCEAN_REGISTRY_NAME }}/${{ env.IMAGE_NAME }}"
+        
+        # Create tags based on branch and commit
+        if [ "${{ github.ref }}" = "refs/heads/master" ]; then
+          TAGS="${IMAGE_TAG}:latest ${IMAGE_TAG}:${{ github.sha }}"
+        else
+          BRANCH_NAME=$(echo ${{ github.ref }} | sed 's/refs\/heads\///')
+          TAGS="${IMAGE_TAG}:${BRANCH_NAME} ${IMAGE_TAG}:${BRANCH_NAME}-${{ github.sha }}"
+        fi
+        
+        # Build with multiple tags
+        for TAG in $TAGS; do
+          echo "Building and pushing: $TAG"
+          docker build \
+            --build-arg ASPNETCORE_ENVIRONMENT=${{ github.event_name == 'pull_request' && 'Development' || (github.ref == 'refs/heads/master' && 'Production' || 'Development') }} \
+            -t $TAG \
+            -f LizardCode-SalmaSalud/LizardCode.SalmaSalud.API/Dockerfile \
+            .
+          docker push $TAG
+        done
+        
+        # Output final tags for later use
+        echo "DOCKER_TAGS=$TAGS" >> $GITHUB_ENV
+
+    - name: Production deployment notification
+      if: github.ref == 'refs/heads/master'
+      run: |
+        echo "🚀 Production Frontend image pushed successfully!"
+        echo "Environment: Production"
+        echo "Images: ${{ env.DOCKER_TAGS }}"
+        echo "Ready for production deployment"
+
+    - name: Development deployment notification
+      if: github.ref != 'refs/heads/master'
+      run: |
+        echo "🔧 Development Frontend image pushed successfully!"
+        echo "Environment: Development"
+        echo "Images: ${{ env.DOCKER_TAGS }}"
+        echo "Ready for development deployment"
