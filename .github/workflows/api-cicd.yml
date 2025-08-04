@@ -46,7 +46,9 @@ jobs:
       run: dotnet build LizardCode-SalmaSalud/LizardCode.SalmaSalud.sln --no-restore --configuration Release
 
     - name: Publish application
-      run: dotnet publish LizardCode-SalmaSalud/LizardCode.SalmaSalud.Frontend/LizardCode.SalmaSalud.csproj --no-build --configuration Release --output ./publish
+
+      run: dotnet publish LizardCode-SalmaSalud/LizardCode.SalmaSalud.API/LizardCode.SalmaSalud.API.csproj --no-build --configuration Release --output ./publish
+
 
     - name: Run & test
       run: dotnet test LizardCode-SalmaSalud/LizardCode.SalmaSalud.sln --no-build --configuration Release --verbosity normal
@@ -92,7 +94,8 @@ jobs:
     - name: Production deployment notification
       if: github.ref == 'refs/heads/master'
       run: |
-        echo "🚀 Production Frontend image pushed successfully!"
+        echo "🚀 Production API image pushed successfully!"
+
         echo "Environment: Production"
         echo "Images: ${{ env.DOCKER_TAGS }}"
         echo "Ready for production deployment"
@@ -100,7 +103,9 @@ jobs:
     - name: Development deployment notification
       if: github.ref != 'refs/heads/master'
       run: |
-        echo "🔧 Development Frontend image pushed successfully!"
+
+        echo "🔧 Development API image pushed successfully!"
+
         echo "Environment: Development"
         echo "Images: ${{ env.DOCKER_TAGS }}"
         echo "Ready for development deployment"

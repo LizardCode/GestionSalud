@@ -7,7 +7,9 @@ COPY ["LizardCode-Framework/", "LizardCode-Framework/"]
 
 # Copy solution file and project files
 COPY ["LizardCode-SalmaSalud/LizardCode.SalmaSalud.sln", "LizardCode-SalmaSalud/"]
-COPY ["LizardCode-SalmaSalud/LizardCode.SalmaSalud.API/LizardCode.SalmaSalud.API.csproj", "LizardCode-SalmaSalud/LizardCode.SalmaSalud.Frontend/"]
+
+COPY ["LizardCode-SalmaSalud/LizardCode.SalmaSalud.API/LizardCode.SalmaSalud.API.csproj", "LizardCode-SalmaSalud/LizardCode.SalmaSalud.API/"]
+
 COPY ["LizardCode-SalmaSalud/LizardCode.SalmaSalud.Application/LizardCode.SalmaSalud.Application.csproj", "LizardCode-SalmaSalud/LizardCode.SalmaSalud.Application/"]
 COPY ["LizardCode-SalmaSalud/LizardCode.SalmaSalud.Domain/LizardCode.SalmaSalud.Domain.csproj", "LizardCode-SalmaSalud/LizardCode.SalmaSalud.Domain/"]
 COPY ["LizardCode-SalmaSalud/LizardCode.SalmaSalud.Infrastructure/LizardCode.SalmaSalud.Infrastructure.csproj", "LizardCode-SalmaSalud/LizardCode.SalmaSalud.Infrastructure/"]
