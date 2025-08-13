@@ -44,8 +44,9 @@ namespace LizardCode.SalmaSalud.Infrastructure.Repositories
                                 LEFT JOIN Profesionales PRO ON PRO.idProfesional = TS.idProfesional
                                 LEFT JOIN (
                                     SELECT idTurnoSolicitud, 
-		                                    STRING_AGG(CASE Dia WHEN 1 THEN 'LU' WHEN 2 THEN 'MA' WHEN 3 THEN 'MI' WHEN 4 THEN 'JU' WHEN 5 THEN 'VI' WHEN 6 THEN 'SA' ELSE 'DO' END, ', ') AS Dias
-                                    FROM TurnosSolicitudDia
+		                                    STRING_AGG(ISNULL(td.tag, ''), ', ') AS Dias
+                                    FROM TurnosSolicitudDia tsd
+                                    LEFT JOIN TipoDia td ON (td.idTipoDia = tsd.dia)
                                     GROUP BY idTurnoSolicitud
                                 ) AS vwTSD ON (vwTSD.idTurnoSolicitud = ts.idTurnoSolicitud)
                                 LEFT JOIN (
@@ -93,8 +94,9 @@ namespace LizardCode.SalmaSalud.Infrastructure.Repositories
                 LEFT JOIN Profesionales PRO ON PRO.idProfesional = TS.idProfesional
                 LEFT JOIN (
                     SELECT idTurnoSolicitud, 
-		                    STRING_AGG(CASE Dia WHEN 1 THEN 'LU' WHEN 2 THEN 'MA' WHEN 3 THEN 'MI' WHEN 4 THEN 'JU' WHEN 5 THEN 'VI' WHEN 6 THEN 'SA' ELSE 'DO' END, ', ') AS Dias
-                    FROM TurnosSolicitudDia
+		                    STRING_AGG(ISNULL(td.tag, ''), ', ') AS Dias
+                    FROM TurnosSolicitudDia tsd
+                    LEFT JOIN TipoDia td ON (td.idTipoDia = tsd.dia)
                     GROUP BY idTurnoSolicitud
                 ) AS vwTSD ON (vwTSD.idTurnoSolicitud = ts.idTurnoSolicitud)
                 LEFT JOIN (

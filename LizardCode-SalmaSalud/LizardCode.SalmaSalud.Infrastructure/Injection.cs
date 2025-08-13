@@ -166,6 +166,7 @@ namespace LizardCode.SalmaSalud.Infrastructure
             services.AddTransient<ITurnosSolicitudRangosHorariosRepository, TurnosSolicitudRangosHorariosRepository>();
             services.AddTransient<INacionalidadesRepository, NacionalidadesRepository>();
             services.AddTransient<IRangosHorariosRepository, RangosHorariosRepository>();
+            services.AddTransient<IDiasRepository, DiasRepository>();
 
             services.AddScoped<IFileService, FileService>();
             services.AddScoped<IBlockchainService,BlockchainService>();

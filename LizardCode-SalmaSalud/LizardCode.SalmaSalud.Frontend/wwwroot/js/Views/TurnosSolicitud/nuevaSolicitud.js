@@ -21,6 +21,7 @@
         $('#RangosHorarios').select2();
 
         $('select[name$="IdEspecialidad"]').on('change', function (e) {
+            reloadDias(e);
             reloadRangos(e);
         });
     }
@@ -33,6 +34,44 @@
 
         //    Modals.loadAnyModal('actionsDialog', widthClass, action, function () { }, function () { dtView.reload(); });
         //});
+    }
+
+    function reloadDias(e, element, selection) {
+
+        var target = (e == null ? element : e.target);
+        var idEspecialidad = $(target).val();
+        var dias = $('#Dias');
+
+        var action = 'TurnosSolicitud/GetDiasByEspecialidadId';
+        var params = {
+            id: idEspecialidad,
+        };
+
+        dias.find('option').remove();
+
+        Ajax.Execute(action, params)
+            .done(function (response) {
+                Ajax.ParseResponse(response,
+                    function (data) {
+
+                        dias.find('option').remove();
+
+                        for (var i in data) {
+                            var option = data[i];
+
+                            dias.append(
+                                $('<option />')
+                                    .val(option.idTipoDia)
+                                    .text(option.descripcion)
+                            );
+                        }
+
+                        dias.select2('val', selection);
+                    },
+                    Ajax.ShowError
+                );
+            })
+            .fail(Ajax.ShowError);
     }
 
     function reloadRangos(e, element, selection) {
