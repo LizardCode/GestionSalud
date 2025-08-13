@@ -264,5 +264,19 @@ namespace LizardCode.SalmaSalud.Controllers
 
             return Json(() => results);
         }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<JsonResult> GetDiasByEspecialidadId(int id)
+        {
+            var results = await _lookupsBusiness.GetAllDias();
+
+            if (id > 0)
+            {
+                results = results?.Where(r => r.IdEspecialidad == id)?.ToList();
+            }
+
+            return Json(() => results);
+        }
     }
 }

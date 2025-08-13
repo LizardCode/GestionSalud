@@ -20,16 +20,19 @@ namespace LizardCode.SalmaSalud.API.Controllers
         private ITurnosSolicitudBusiness _turnosSolicitudBusiness;
         private IPacientesBusiness _pacientesBusiness;
         private IRangosHorariosRepository _rangosHorariosRepository;
+        private IDiasRepository _diasRepository;
 
         public TurnosSolicitudController(IEspecialidadesRepository especialidadesRepository, 
                                         ITurnosSolicitudBusiness turnosSolicitudBusiness, 
                                         IPacientesBusiness pacientesBusiness, 
-                                        IRangosHorariosRepository rangosHorariosRepository)
+                                        IRangosHorariosRepository rangosHorariosRepository,
+                                        IDiasRepository diasRepository)
         {
             this._especialidadesRepository = especialidadesRepository;
             this._turnosSolicitudBusiness = turnosSolicitudBusiness;
             this._pacientesBusiness = pacientesBusiness;
             this._rangosHorariosRepository = rangosHorariosRepository;
+            this._diasRepository = diasRepository;
         }
 
         [HttpGet("~/especialidades")]        
@@ -41,9 +44,13 @@ namespace LizardCode.SalmaSalud.API.Controllers
         }
 
         [HttpGet("~/dias")]
-        public async Task<IActionResult> Dias()
+        public async Task<IActionResult> Dias(int? idEspecialidad)
         {
-            var dias = Utilities.EnumToDictionary<Dias>();
+            var dias = await _diasRepository.GetAll<TipoDia>();
+            if (idEspecialidad > 0)
+            {
+                dias = dias?.Where(r => r.IdEspecialidad == idEspecialidad.Value)?.ToList();
+            }
 
             return Json(dias);
         }
@@ -51,7 +58,6 @@ namespace LizardCode.SalmaSalud.API.Controllers
         [HttpGet("~/rangos-horarios")]
         public async Task<IActionResult> RangosHorarios(int? idEspecialidad)
         {
-            //var rangos = Utilities.EnumToDictionary<RangoHorario>();
             var rangos = await _rangosHorariosRepository.GetAll<TipoRangoHorario>();
             if (idEspecialidad > 0)
             {

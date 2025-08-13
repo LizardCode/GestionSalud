@@ -97,5 +97,6 @@ namespace LizardCode.SalmaSalud.Application.Interfaces.Business
         Task<IList<Nacionalidad>> GetNacionalidades();
 
         Task<IList<TipoRangoHorario>> GetAllRangosHorarios();
+        Task<IList<TipoDia>> GetAllDias();
     }
 }

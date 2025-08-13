@@ -46,6 +46,7 @@ namespace LizardCode.SalmaSalud.Application.Business
         private readonly ITiposTurnoRepository _tiposTurnoRepository;
         private readonly INacionalidadesRepository _nacionalidadesRepository;
         private readonly IRangosHorariosRepository _rangosHorariosRepository;
+        private readonly IDiasRepository _diasRepository;
 
         public LookupsBusiness(
             IUsuariosRepository usuariosRepository,
@@ -81,7 +82,8 @@ namespace LizardCode.SalmaSalud.Application.Business
             IVademecumRepository vademecumRepository,
             ITiposTurnoRepository tiposTurnoRepository,
             INacionalidadesRepository nacionalidadesRepository,
-            IRangosHorariosRepository rangosHorariosRepository)
+            IRangosHorariosRepository rangosHorariosRepository,
+            IDiasRepository diasRepository)
         {   
             _usuariosRepository = usuariosRepository;
             _clientesRepository = clientesRepository;
@@ -117,6 +119,7 @@ namespace LizardCode.SalmaSalud.Application.Business
             _tiposTurnoRepository = tiposTurnoRepository;
             _nacionalidadesRepository = nacionalidadesRepository;
             _rangosHorariosRepository = rangosHorariosRepository;
+            _diasRepository = diasRepository;
         }
 
         public async Task<IList<Usuario>> GetAllUsuariosByIdEmpresaLookup(int idEmpresa) =>
@@ -355,5 +358,8 @@ namespace LizardCode.SalmaSalud.Application.Business
 
         public async Task<IList<Domain.Entities.TipoRangoHorario>> GetAllRangosHorarios() =>
             await _rangosHorariosRepository.GetAll<Domain.Entities.TipoRangoHorario>();
+
+        public async Task<IList<Domain.Entities.TipoDia>> GetAllDias() =>
+            await _diasRepository.GetAll<Domain.Entities.TipoDia>();
     }
 }
