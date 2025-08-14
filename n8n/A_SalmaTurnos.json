@@ -11,9 +11,9 @@
       "typeVersion": 2,
       "position": [
         -3600,
-        420
+        500
       ],
-      "id": "05ac3210-8db8-4c4e-a92d-7c8e5160e7ec",
+      "id": "08ddb453-b34b-4dbf-94fc-682b400b836f",
       "name": "Webhook",
       "webhookId": "ac247fd3-9ca7-42a3-8942-7ea8c321c46d"
     },
@@ -25,9 +25,9 @@
       "typeVersion": 2,
       "position": [
         -3180,
-        360
+        440
       ],
-      "id": "a0a78d48-101f-438f-beb4-be96d1a8b1e6",
+      "id": "ff8d02d3-00af-4c39-a617-338bae893d6c",
       "name": "menssageIn"
     },
     {
@@ -38,10 +38,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -2840,
-        120
+        -2780,
+        80
       ],
-      "id": "b4cd0962-da02-4785-9b4e-18bfe2d720cc",
+      "id": "2c5d041d-d383-42fd-a91f-c75563db90de",
       "name": "Get User Session"
     },
     {
@@ -53,9 +53,9 @@
       "typeVersion": 2,
       "position": [
         -2600,
-        100
+        180
       ],
-      "id": "601f1b82-057c-4281-8026-0a3704b79766",
+      "id": "874a343d-ea34-434e-b263-d65cd06df5fb",
       "name": "Process Step Logic"
     },
     {
@@ -70,11 +70,24 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -2860,
+        -2980,
         -120
       ],
-      "id": "feafd4c9-dc9c-4342-bee4-122066413c73",
+      "id": "1643304b-63af-416e-b986-aaa62233b184",
       "name": "Get Maestros Token"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3,
+      "position": [
+        -2680,
+        -220
+      ],
+      "id": "2abacc3a-b44f-4d13-aada-091b6d204e03",
+      "name": "Set Shared Token"
     },
     {
       "parameters": {
@@ -84,7 +97,7 @@
           "parameters": [
             {
               "name": "Authorization",
-              "value": "=Bearer {{ $json.token }}"
+              "value": "=Bearer {{ $('Set Shared Token').first().json.token }}"
             },
             {
               "name": "accept",
@@ -97,10 +110,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -2540,
-        -120
+        -2420,
+        440
       ],
-      "id": "cd3c0a45-880b-423e-85c5-c8eb50799997",
+      "id": "a97aac04-1dc3-468a-ad33-d09d618c06e3",
       "name": "Get Especialidades"
     },
     {
@@ -111,9 +124,9 @@
       "typeVersion": 2,
       "position": [
         -2220,
-        -80
+        0
       ],
-      "id": "1ff9cb2b-3888-4b68-b455-f43e1e875b75",
+      "id": "a5412f75-c752-4038-952b-c2b25cd6c192",
       "name": "Format Maestros"
     },
     {
@@ -125,9 +138,9 @@
       "typeVersion": 2,
       "position": [
         -2340,
-        60
+        140
       ],
-      "id": "145840de-e1a4-484e-8a5e-a82ee52d8e31",
+      "id": "2be9f882-bf32-44b9-b394-2ba8bd2de6cf",
       "name": "Update User Session"
     },
     {
@@ -139,9 +152,9 @@
       "typeVersion": 2,
       "position": [
         -1700,
-        140
+        220
       ],
-      "id": "8b0b7ffe-5da3-4fa0-8d09-c290a618aa89",
+      "id": "e0f24400-0cce-486d-87d8-b1cffd528ab3",
       "name": "Prepare API Request"
     },
     {
@@ -153,28 +166,10 @@
       "typeVersion": 2,
       "position": [
         -1780,
-        480
+        560
       ],
-      "id": "7407e258-c9cc-4507-8339-e5ae9745e927",
+      "id": "d7900463-2123-477d-bebf-95f1aa5d5387",
       "name": "Format Final Response"
-    },
-    {
-      "parameters": {
-        "method": "POST",
-        "url": "https://api.salmasalud.com.ar/login",
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "{\n  \"user\": \"admin\",\n  \"password\": \"1234\"\n}",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        -2400,
-        340
-      ],
-      "id": "578a9d27-c816-43d5-8b83-3bab4d884f97",
-      "name": "Get Token"
     },
     {
       "parameters": {
@@ -185,7 +180,7 @@
           "parameters": [
             {
               "name": "Authorization",
-              "value": "=Bearer {{ $json.token }}"
+              "value": "=Bearer {{ $('Set Shared Token').first().json.token }}"
             }
           ]
         },
@@ -198,9 +193,9 @@
       "typeVersion": 4.2,
       "position": [
         -2100,
-        340
+        420
       ],
-      "id": "ffa4e8df-721f-4bdd-adc4-eb34adb94dd8",
+      "id": "410472c4-b33c-422b-9b59-f3b70680b01a",
       "name": "Send to API"
     },
     {
@@ -229,9 +224,9 @@
       "typeVersion": 4.2,
       "position": [
         -1400,
-        420
+        500
       ],
-      "id": "080d2e47-963e-4819-bddf-741068f56158",
+      "id": "5669bab4-6b99-48bd-a355-c38683b86a02",
       "name": "Send WhatsApp Message"
     },
     {
@@ -256,9 +251,9 @@
       "typeVersion": 4.2,
       "position": [
         -3300,
-        0
+        80
       ],
-      "id": "081d9c06-c747-41cb-b3b4-f89db4e52c8a",
+      "id": "aa804d2e-67b4-43ba-8409-81816ab03e67",
       "name": "send-typing"
     },
     {
@@ -278,10 +273,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -3020,
-        220
+        -2960,
+        320
       ],
-      "id": "65604f7e-30dc-4457-9d96-870755cea2f2",
+      "id": "33a3c9b1-1232-401c-86a2-f70ef83715cc",
       "name": "Read JSONBin"
     },
     {
@@ -310,9 +305,9 @@
       "typeVersion": 4.2,
       "position": [
         -2080,
-        40
+        120
       ],
-      "id": "e3f1d719-b353-4b40-a6ce-e99edaebd298",
+      "id": "57877b6f-107a-482a-bc58-ded4bcfdc0b6",
       "name": "Write JSONBin"
     },
     {
@@ -344,9 +339,9 @@
       "typeVersion": 2.2,
       "position": [
         -2680,
-        520
+        600
       ],
-      "id": "e36e5a2a-0458-4aff-b98c-331b0e5b5046",
+      "id": "db321776-9c90-42cb-9d7f-a15e9b16e8d7",
       "name": "API Decision"
     },
     {
@@ -378,9 +373,9 @@
       "typeVersion": 2.2,
       "position": [
         -2560,
-        -140
+        -60
       ],
-      "id": "96a74cf6-7f38-4004-8a52-1f2724df90de",
+      "id": "d5b9f652-53be-415f-be36-ebcba7405c12",
       "name": "DNI Validation Decision"
     },
     {
@@ -391,10 +386,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -1640,
-        20
+        -1560,
+        100
       ],
-      "id": "9ab917c9-2134-4427-9991-097778a7abf2",
+      "id": "84835346-445b-4f87-bcf3-d9a857ea3d8a",
       "name": "Update Session - DNI Validation"
     },
     {
@@ -422,10 +417,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -1400,
-        20
+        -1160,
+        40
       ],
-      "id": "c09988ea-9de1-4532-b519-2d1a4178f30d",
+      "id": "ff5e4395-fdc2-413f-a12d-d09a6355d3f2",
       "name": "Write JSONBin 2"
     },
     {
@@ -436,29 +431,11 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -1160,
-        20
+        -820,
+        140
       ],
-      "id": "c24e1036-a583-4337-a321-79ab565ea054",
+      "id": "1c558c47-9be4-4c21-9d4b-06b8d791e903",
       "name": "Format DNI Validation Response"
-    },
-    {
-      "parameters": {
-        "method": "POST",
-        "url": "https://api.salmasalud.com.ar/login",
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "{\n  \"user\": \"admin\",\n  \"password\": \"1234\"\n}",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        -1840,
-        -280
-      ],
-      "id": "b5f9b2cb-b9bf-44be-b461-b9b81e722051",
-      "name": "DNI Validation - Get Token"
     },
     {
       "parameters": {
@@ -468,7 +445,7 @@
           "parameters": [
             {
               "name": "Authorization",
-              "value": "=Bearer {{ $json.token }}"
+              "value": "=Bearer {{ $('Set Shared Token').first().json.token }}"
             }
           ]
         },
@@ -477,10 +454,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -1880,
+        -1940,
         -100
       ],
-      "id": "a39a86ea-cabe-413d-8917-4e201467ab46",
+      "id": "b87fc77e-e335-4f31-98bb-f7aab009b12f",
       "name": "DNI Validation Request"
     },
     {
@@ -491,10 +468,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -1640,
-        -100
+        -1740,
+        0
       ],
-      "id": "3939ef90-7ffb-4b6e-859b-ebbc5162ce6a",
+      "id": "e7dc032a-b356-46f0-afe7-564058843b9d",
       "name": "Process DNI Validation"
     },
     {
@@ -526,28 +503,10 @@
       "typeVersion": 2.2,
       "position": [
         -2420,
-        -280
+        -200
       ],
-      "id": "0a43b436-ea3f-4e96-bfe4-492d9deadfec",
+      "id": "7457906d-3a15-4fe8-8884-4686384a53a4",
       "name": "Especialidad Selection Decision"
-    },
-    {
-      "parameters": {
-        "method": "POST",
-        "url": "https://api.salmasalud.com.ar/login",
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "{\n  \"user\": \"admin\",\n  \"password\": \"1234\"\n}",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        -2080,
-        -280
-      ],
-      "id": "deab4622-826b-4c4b-a069-b799e8a2f2ec",
-      "name": "Get Dias Horarios Token"
     },
     {
       "parameters": {
@@ -557,7 +516,7 @@
           "parameters": [
             {
               "name": "Authorization",
-              "value": "=Bearer {{ $json.token }}"
+              "value": "=Bearer {{ $('Set Shared Token').first().json.token }}"
             },
             {
               "name": "accept",
@@ -571,20 +530,20 @@
       "typeVersion": 4.2,
       "position": [
         -1740,
-        -280
+        -200
       ],
-      "id": "ac3322cf-f440-409b-b0e5-68516173c9f8",
+      "id": "89a4d7f8-80b5-452b-81e6-4c18bb828ec1",
       "name": "Get Dias"
     },
     {
       "parameters": {
-        "url": "=https://api.salmasalud.com.ar/rangos-horarios?idEspecialidad={{ $('Get Dias Horarios Token').first().json.token && $('Process Step Logic').first().json.updateData.especialidad.idEspecialidad }}",
+        "url": "=https://api.salmasalud.com.ar/rangos-horarios?idEspecialidad={{ $('Process Step Logic').first().json.updateData.especialidad.idEspecialidad }}",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
               "name": "Authorization",
-              "value": "=Bearer {{ $('Get Dias Horarios Token').first().json.token }}"
+              "value": "=Bearer {{ $('Set Shared Token').first().json.token }}"
             },
             {
               "name": "accept",
@@ -598,37 +557,37 @@
       "typeVersion": 4.2,
       "position": [
         -1400,
-        -280
+        -200
       ],
-      "id": "8a1b9262-8467-49d0-934f-9b292b9a9a96",
+      "id": "afc8709c-c2b2-49ce-967f-488f75331e75",
       "name": "Get Rangos Horarios"
     },
     {
       "parameters": {
         "mode": "runOnceForEachItem",
-        "jsCode": "// Nodo: Process Dynamic Maestros\nconst especialidades = $('Format Maestros').first().json.especialidades;\nconst dias = $('Get Dias').first().json;\nconst rangosHorarios = $('Get Rangos Horarios').first().json;\nconst processStepData = $('Process Step Logic').first().json;\n\nconsole.log('=== PROCESS DYNAMIC MAESTROS ===');\nconsole.log('Especialidades:', JSON.stringify(especialidades, null, 2));\nconsole.log('Dias from API:', JSON.stringify(dias, null, 2));\nconsole.log('Rangos Horarios from API:', JSON.stringify(rangosHorarios, null, 2));\nconsole.log('Process Step Data:', JSON.stringify(processStepData, null, 2));\nconsole.log('===============================');\n\n// Convertir días de array a objeto con formato esperado\nlet diasObj = {};\nif (Array.isArray(dias)) {\n  dias.forEach((dia, index) => {\n    // CORREGIDO: Usar idTipoDia como ID y descripcion como valor\n    const diaId = dia.idTipoDia || (index + 1);\n    const diaDesc = dia.descripcion || `Día ${index + 1}`;\n    diasObj[diaId] = diaDesc;\n  });\n} else if (typeof dias === 'object' && dias !== null) {\n  diasObj = dias;\n}\n\n// Convertir rangos horarios de array a objeto con formato esperado\nlet rangosHorariosObj = {};\nif (Array.isArray(rangosHorarios)) {\n  rangosHorarios.forEach((rango, index) => {\n    // CORREGIDO: Usar idRangoHorario como ID y descripcion como valor\n    const rangoId = rango.idRangoHorario || (index + 1);\n    const rangoDesc = rango.descripcion || `Horario ${index + 1}`;\n    rangosHorariosObj[rangoId] = rangoDesc;\n  });\n} else if (typeof rangosHorarios === 'object' && rangosHorarios !== null) {\n  rangosHorariosObj = rangosHorarios;\n}\n\nconsole.log('=== PROCESSED DYNAMIC DATA ===');\nconsole.log('Dias object:', JSON.stringify(diasObj, null, 2));\nconsole.log('Rangos Horarios object:', JSON.stringify(rangosHorariosObj, null, 2));\nconsole.log('==============================');\n\n// Crear el objeto maestros completo con datos dinámicos\nconst maestrosDinamicos = {\n  especialidades: especialidades,\n  dias: diasObj,\n  rangosHorarios: rangosHorariosObj\n};\n\n// Generar respuesta con días para el usuario\nlet diasText = \"📅 *Seleccione uno o más días:*\\n\\n\";\nObject.keys(diasObj).forEach(key => {\n  diasText += `${key}. ${diasObj[key]}\\n`;\n});\ndiasText += \"\\n💡 *Puede seleccionar múltiples opciones separándolas con comas*\\n\";\ndiasText += \"Ejemplo: 1,3,5\";\n\n// APLICAR LIMPIEZA DE CARACTERES\nlet cleanedResponse = diasText\n  .replace(/^#+\\s+(.+)$/gm, \"$1\")\n  .replace(/\\*\\*([^*]+)\\*\\*/g, \"$1\")\n  .replace(/^\\s*-\\s+/gm, \"- \");\n\nreturn {\n  json: {\n    chatId: processStepData.chatId,\n    maestrosDinamicos: maestrosDinamicos,\n    response: {\n      message: cleanedResponse,\n      sendToAPI: false\n    },\n    newEstado: \"ESPERANDO_DIA\",\n    updateData: processStepData.updateData,\n    isValid: true,\n    timestamp: new Date().toISOString()\n  }\n};"
+        "jsCode": "// Nodo: Process Dynamic Maestros - CORRECCIÓN CRÍTICA PARA FORMATEO DE DÍAS\nconst especialidades = $('Format Maestros').first().json.especialidades;\nconst dias = $('Get Dias').first().json;\nconst rangosHorarios = $('Get Rangos Horarios').first().json;\nconst processStepData = $('Process Step Logic').first().json;\n\nconsole.log('=== PROCESS DYNAMIC MAESTROS - CRITICAL FIX ===');\nconsole.log('Especialidades:', JSON.stringify(especialidades, null, 2));\nconsole.log('Dias from API (RAW):', JSON.stringify(dias, null, 2));\nconsole.log('Rangos Horarios from API (RAW):', JSON.stringify(rangosHorarios, null, 2));\nconsole.log('Process Step Data:', JSON.stringify(processStepData, null, 2));\nconsole.log('============================================');\n\n// CRÍTICO: Convertir días de array a objeto con formato esperado\nlet diasObj = {};\nif (Array.isArray(dias)) {\n  console.log('🔧 Processing ARRAY of dias:', dias.length, 'items');\n  dias.forEach((dia, index) => {\n    if (dia && typeof dia === 'object') {\n      const diaId = dia.idTipoDia;\n      const diaDesc = dia.descripcion;\n      \n      console.log(`Processing día ${index}:`, {\n        id: diaId,\n        descripcion: diaDesc,\n        fullObject: JSON.stringify(dia)\n      });\n      \n      if (diaId && diaDesc) {\n        diasObj[diaId] = diaDesc;\n        console.log(`✅ Added día: ${diaId} -> ${diaDesc}`);\n      } else {\n        console.log(`❌ Invalid día object:`, dia);\n      }\n    }\n  });\n} else if (typeof dias === 'object' && dias !== null) {\n  console.log('🔧 Processing OBJECT dias');\n  diasObj = dias;\n} else {\n  console.log('❌ Invalid dias format, using empty object');\n  diasObj = {};\n}\n\n// CRÍTICO: Convertir rangos horarios de array a objeto con formato esperado Y ELIMINAR DUPLICADOS\nlet rangosHorariosObj = {};\nif (Array.isArray(rangosHorarios)) {\n  console.log('🔧 Processing ARRAY of rangos horarios:', rangosHorarios.length, 'items');\n  \n  // Usar Map para eliminar duplicados basándose en idRangoHorario\n  const uniqueRangos = new Map();\n  rangosHorarios.forEach((rango, index) => {\n    if (rango && typeof rango === 'object') {\n      const rangoId = rango.idRangoHorario;\n      const rangoDesc = rango.descripcion;\n      \n      console.log(`Processing rango ${index}:`, {\n        id: rangoId,\n        descripcion: rangoDesc,\n        isDuplicate: uniqueRangos.has(rangoId)\n      });\n      \n      if (rangoId && rangoDesc) {\n        if (!uniqueRangos.has(rangoId)) {\n          uniqueRangos.set(rangoId, rangoDesc);\n          rangosHorariosObj[rangoId] = rangoDesc;\n          console.log(`✅ Added unique rango: ${rangoId} -> ${rangoDesc}`);\n        } else {\n          console.log(`🔄 Skipped duplicate rango: ${rangoId} -> ${rangoDesc}`);\n        }\n      } else {\n        console.log(`❌ Invalid rango object:`, rango);\n      }\n    }\n  });\n  \n  console.log(`📊 Duplicates removed: ${rangosHorarios.length} -> ${uniqueRangos.size} unique items`);\n} else if (typeof rangosHorarios === 'object' && rangosHorarios !== null) {\n  console.log('🔧 Processing OBJECT rangos horarios');\n  rangosHorariosObj = rangosHorarios;\n} else {\n  console.log('❌ Invalid rangos horarios format, using empty object');\n  rangosHorariosObj = {};\n}\n\n// VALIDACIÓN CRÍTICA DEL OBJETO DÍAS\nconsole.log('=== CRITICAL VALIDATION OF DIAS OBJECT ===');\nconsole.log('Final Dias object:', JSON.stringify(diasObj, null, 2));\nconsole.log('Dias object type:', typeof diasObj);\nconsole.log('Dias object keys:', Object.keys(diasObj));\nconsole.log('Dias object values:', Object.values(diasObj));\nconsole.log('Final Rangos Horarios object (without duplicates):', JSON.stringify(rangosHorariosObj, null, 2));\nconsole.log('=========================================');\n\n// Crear el objeto maestros completo con datos dinámicos\nconst maestrosDinamicos = {\n  especialidades: especialidades,\n  dias: diasObj,\n  rangosHorarios: rangosHorariosObj\n};\n\n// CRÍTICO: Generar respuesta con días para el usuario - FORMATO CORRECTO GARANTIZADO\nlet diasText = \"📅 Seleccione uno o más días:\\n\\n\";\nconst diasKeys = Object.keys(diasObj);\n\nconsole.log('=== GENERATING DIAS TEXT - CRITICAL DEBUG ===');\nconsole.log('Dias keys to process:', diasKeys);\nconsole.log('Dias keys length:', diasKeys.length);\nconsole.log('Dias keys type:', typeof diasKeys);\nconsole.log('Is diasKeys array:', Array.isArray(diasKeys));\n\nif (diasKeys.length > 0) {\n  // DEPURACIÓN CRÍTICA: Verificar cada iteración\n  for (let i = 0; i < diasKeys.length; i++) {\n    const key = diasKeys[i];\n    const description = diasObj[key];\n    \n    console.log(`🔍 Processing key ${i}: \"${key}\" -> \"${description}\"`);\n    console.log(`   Key type: ${typeof key}, Description type: ${typeof description}`);\n    \n    if (key && description) {\n      const line = `${key}. ${description}\\n`;\n      diasText += line;\n      console.log(`   ✅ Added line: \"${line.trim()}\"`);\n    } else {\n      console.log(`   ❌ INVALID: key=\"${key}\", description=\"${description}\"`);\n    }\n  }\n} else {\n  console.log('❌ NO DIAS KEYS FOUND - Adding fallback message');\n  diasText += \"No hay días disponibles\\n\";\n}\n\ndiasText += \"\\n💡 Puede seleccionar múltiples opciones separándolas con comas\\n\";\ndiasText += \"Ejemplo: 1,3,5\";\n\nconsole.log('=== FINAL DIAS TEXT - CRITICAL VERIFICATION ===');\nconsole.log('Complete message length:', diasText.length);\nconsole.log('Complete message:');\nconsole.log('\"' + diasText + '\"');\nconsole.log('Message contains expected pattern (9. Martes):', diasText.includes('9. Martes'));\nconsole.log('Message contains expected pattern (10. Jueves):', diasText.includes('10. Jueves'));\nconsole.log('===============================================');\n\n// APLICAR LIMPIEZA DE CARACTERES MÍNIMA\nlet cleanedResponse = diasText\n  .replace(/\\*\\*([^*]+)\\*\\*/g, \"$1\") // Solo quitar negritas dobles\n  .replace(/\\*(.*?)\\*/g, \"$1\");    // Solo quitar negritas simples\n\nconsole.log('=== CLEANED RESPONSE - FINAL VERIFICATION ===');\nconsole.log('After cleaning:');\nconsole.log('\"' + cleanedResponse + '\"');\nconsole.log('Cleaned contains expected pattern (9. Martes):', cleanedResponse.includes('9. Martes'));\nconsole.log('Cleaned contains expected pattern (10. Jueves):', cleanedResponse.includes('10. Jueves'));\nconsole.log('============================================');\n\nreturn {\n  json: {\n    chatId: processStepData.chatId,\n    maestrosDinamicos: maestrosDinamicos,\n    response: {\n      message: cleanedResponse,\n      sendToAPI: false\n    },\n    newEstado: \"ESPERANDO_DIA\",\n    updateData: processStepData.updateData,\n    isValid: true,\n    timestamp: new Date().toISOString()\n  }\n};"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
         -1060,
-        -280
+        -200
       ],
-      "id": "f058f244-99a0-4003-8e9c-3bbad076aeaa",
+      "id": "a4e6c288-4a85-4447-b07a-d562246f59a3",
       "name": "Process Dynamic Maestros"
     },
     {
       "parameters": {
         "mode": "runOnceForEachItem",
-        "jsCode": "// Nodo: Update Session - Dynamic Maestros\nconst processData = $json;\nconst chatId = processData.chatId;\nconst newEstado = processData.newEstado;\nconst updateData = processData.updateData;\nconst maestrosDinamicos = processData.maestrosDinamicos;\n\n// Obtener las sesiones actuales desde JSONBin\nlet allSessions = {};\ntry {\n  const jsonbinData = $('Read JSONBin').first().json;\n  if (jsonbinData && jsonbinData.record) {\n    allSessions = { ...jsonbinData.record };\n  }\n  console.log('=== UPDATE SESSION - DYNAMIC MAESTROS ===');\n  console.log('ChatId a actualizar:', chatId);\n  console.log('Nuevo estado:', newEstado);\n  console.log('Datos a actualizar:', JSON.stringify(updateData, null, 2));\n  console.log('Maestros dinámicos:', JSON.stringify(maestrosDinamicos, null, 2));\n  console.log('========================================');\n} catch (error) {\n  console.error('Error obteniendo sesiones de JSONBin:', error);\n}\n\n// Actualizar la sesión del usuario\nallSessions[chatId] = {\n  chatId: chatId,\n  estado: newEstado,\n  datos: updateData,\n  maestrosDinamicos: maestrosDinamicos, // Guardar los maestros dinámicos en la sesión\n  createdAt: allSessions[chatId]?.createdAt || new Date().toISOString(),\n  lastActivity: new Date().toISOString(),\n  updatedAt: new Date().toISOString()\n};\n\nconsole.log('=== SESIÓN ACTUALIZADA (DYNAMIC MAESTROS) ===');\nconsole.log('Sesión del usuario:', JSON.stringify(allSessions[chatId], null, 2));\nconsole.log('Total sesiones después de actualizar:', Object.keys(allSessions).length);\nconsole.log('=============================================');\n\n// Preparar estructura para JSONBin\nconst jsonbinPayload = {\n  sessions: allSessions\n};\n\nreturn {\n  json: jsonbinPayload\n};"
+        "jsCode": "// Nodo: Update Session - Dynamic Maestros - MEJORADO CON VALIDACIÓN\nconst processData = $json;\nconst chatId = processData.chatId;\nconst newEstado = processData.newEstado;\nconst updateData = processData.updateData;\nconst maestrosDinamicos = processData.maestrosDinamicos;\n\n// Validación de datos de entrada\nif (!chatId || !newEstado || !maestrosDinamicos) {\n  console.error('❌ DATOS FALTANTES en Update Session - Dynamic Maestros');\n  console.error('chatId:', chatId);\n  console.error('newEstado:', newEstado);\n  console.error('maestrosDinamicos existe:', !!maestrosDinamicos);\n  return {\n    json: {\n      error: \"Datos faltantes para actualizar sesión con maestros dinámicos\"\n    }\n  };\n}\n\n// Obtener las sesiones actuales desde JSONBin\nlet allSessions = {};\ntry {\n  const jsonbinData = $('Read JSONBin').first().json;\n  if (jsonbinData && jsonbinData.record) {\n    allSessions = { ...jsonbinData.record };\n  }\n  console.log('=== UPDATE SESSION - DYNAMIC MAESTROS ENHANCED ===');\n  console.log('ChatId a actualizar:', chatId);\n  console.log('Nuevo estado:', newEstado);\n  console.log('Datos a actualizar:', JSON.stringify(updateData, null, 2));\n  console.log('Maestros dinámicos validados:');\n  console.log('  - Especialidades:', maestrosDinamicos.especialidades?.length || 0);\n  console.log('  - Días:', Object.keys(maestrosDinamicos.dias || {}).length);\n  console.log('  - Rangos horarios:', Object.keys(maestrosDinamicos.rangosHorarios || {}).length);\n  console.log('=============================================');\n} catch (error) {\n  console.error('Error obteniendo sesiones de JSONBin:', error);\n}\n\n// Validar estructura de maestros dinámicos\nconst validatedMaestrosDinamicos = {\n  especialidades: maestrosDinamicos.especialidades || [],\n  dias: maestrosDinamicos.dias || {},\n  rangosHorarios: maestrosDinamicos.rangosHorarios || {}\n};\n\n// Validación adicional: asegurar que días y rangos horarios no estén vacíos\nconst diasCount = Object.keys(validatedMaestrosDinamicos.dias).length;\nconst horariosCount = Object.keys(validatedMaestrosDinamicos.rangosHorarios).length;\n\nconsole.log('=== VALIDACIÓN MAESTROS DINÁMICOS ===');\nconsole.log('Días procesados:', diasCount);\nconsole.log('Rangos horarios procesados:', horariosCount);\nconsole.log('Días objeto:', JSON.stringify(validatedMaestrosDinamicos.dias, null, 2));\nconsole.log('Rangos objeto:', JSON.stringify(validatedMaestrosDinamicos.rangosHorarios, null, 2));\nconsole.log('===================================');\n\nif (diasCount === 0 || horariosCount === 0) {\n  console.warn('⚠️ ADVERTENCIA: Maestros dinámicos incompletos');\n  console.warn('Días:', diasCount, 'Horarios:', horariosCount);\n}\n\n// Actualizar la sesión del usuario\nallSessions[chatId] = {\n  chatId: chatId,\n  estado: newEstado,\n  datos: updateData,\n  maestrosDinamicos: validatedMaestrosDinamicos, // Guardar los maestros dinámicos validados\n  createdAt: allSessions[chatId]?.createdAt || new Date().toISOString(),\n  lastActivity: new Date().toISOString(),\n  updatedAt: new Date().toISOString()\n};\n\nconsole.log('=== SESIÓN ACTUALIZADA (DYNAMIC MAESTROS ENHANCED) ===');\nconsole.log('Sesión del usuario actualizada exitosamente');\nconsole.log('Total sesiones después de actualizar:', Object.keys(allSessions).length);\nconsole.log('Estado final de la sesión:', allSessions[chatId].estado);\nconsole.log('Maestros dinámicos almacenados correctamente');\nconsole.log('====================================================');\n\n// Preparar estructura para JSONBin\nconst jsonbinPayload = {\n  sessions: allSessions\n};\n\nreturn {\n  json: jsonbinPayload\n};"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
         -720,
-        -280
+        -200
       ],
-      "id": "17f56ea2-d21e-40ce-8e8d-ebc9c11f6160",
+      "id": "cae9030e-d2b9-49e5-95b6-f39fddf1b429",
       "name": "Update Session - Dynamic Maestros"
     },
     {
@@ -657,9 +616,9 @@
       "typeVersion": 4.2,
       "position": [
         -380,
-        -280
+        -200
       ],
-      "id": "bd534a2d-8ffc-4402-91ce-cede41d0be4a",
+      "id": "86ce6abf-583a-4c28-be06-59798e673196",
       "name": "Write JSONBin - Dynamic Maestros"
     },
     {
@@ -671,9 +630,9 @@
       "typeVersion": 2,
       "position": [
         -40,
-        -280
+        -200
       ],
-      "id": "4c5c7ace-9781-4a8e-8b0d-79b7d6ddb99d",
+      "id": "3cfcf85e-d354-4a27-b394-16cb84f8aa38",
       "name": "Format Dynamic Maestros Response"
     }
   ],
@@ -737,7 +696,7 @@
       "main": [
         [
           {
-            "node": "DNI Validation - Get Token",
+            "node": "DNI Validation Request",
             "type": "main",
             "index": 0
           }
@@ -767,17 +726,6 @@
         [
           {
             "node": "API Decision",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Get Token": {
-      "main": [
-        [
-          {
-            "node": "Send to API",
             "type": "main",
             "index": 0
           }
@@ -844,18 +792,7 @@
         ],
         [
           {
-            "node": "Get Token",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "DNI Validation - Get Token": {
-      "main": [
-        [
-          {
-            "node": "DNI Validation Request",
+            "node": "Send to API",
             "type": "main",
             "index": 0
           }
@@ -915,6 +852,17 @@
       "main": [
         [
           {
+            "node": "Set Shared Token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Shared Token": {
+      "main": [
+        [
+          {
             "node": "Get Especialidades",
             "type": "main",
             "index": 0
@@ -934,17 +882,6 @@
       ]
     },
     "Especialidad Selection Decision": {
-      "main": [
-        [
-          {
-            "node": "Get Dias Horarios Token",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Get Dias Horarios Token": {
       "main": [
         [
           {
@@ -1020,7 +957,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "d5c06e24-2b0a-404a-80c3-d2872749e3c2",
+  "versionId": "2ac85a72-791a-4240-96d3-a027dbe87f30",
   "meta": {
     "instanceId": "556514cf317cac5c724bf084ccbb32127ff27cc56f225fb39f131295f3c7f3d0"
   },
