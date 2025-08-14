@@ -10,10 +10,10 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
       "position": [
-        -2080,
-        860
+        -3600,
+        420
       ],
-      "id": "e2449639-f9ab-4be9-a4b7-1feb5c06281e",
+      "id": "05ac3210-8db8-4c4e-a92d-7c8e5160e7ec",
       "name": "Webhook",
       "webhookId": "ac247fd3-9ca7-42a3-8942-7ea8c321c46d"
     },
@@ -24,10 +24,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -1660,
-        800
+        -3180,
+        360
       ],
-      "id": "031c00ec-65fb-4330-9936-5fb2a08fc6e0",
+      "id": "a0a78d48-101f-438f-beb4-be96d1a8b1e6",
       "name": "menssageIn"
     },
     {
@@ -38,40 +38,83 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -1320,
-        560
+        -2840,
+        120
       ],
-      "id": "1f8a651c-d627-4740-a489-6ce590e97724",
+      "id": "b4cd0962-da02-4785-9b4e-18bfe2d720cc",
       "name": "Get User Session"
     },
     {
       "parameters": {
         "mode": "runOnceForEachItem",
-        "jsCode": "// Nodo: Process Step Logic (CON SELECCIÓN MÚLTIPLE Y VALIDACIÓN DNI MEJORADA)\nconst messageText = $json.messageText.toLowerCase();\nconst userSession = $json.userSession;\nconst chatId = $json.chatId;\nconst maestros = $('Maestros').first().json;\n\nlet response = {};\nlet newEstado = userSession.estado;\nlet updateData = { ...userSession.datos };\nlet isValid = true;\nlet errorMessage = \"\";\n\n// Función auxiliar para parsear selección múltiple\nfunction parseMultipleSelection(input, validOptions) {\n  console.log('=== PARSE MULTIPLE SELECTION ===');\n  console.log('Input:', input);\n  console.log('Valid options:', Object.keys(validOptions));\n  \n  if (!input || typeof input !== 'string') {\n    console.log('Invalid input type');\n    return {\n      valid: false,\n      selections: [],\n      invalidItems: [input]\n    };\n  }\n  \n  const selections = input.split(',').map(item => item.trim()).filter(item => item.length > 0);\n  const validSelections = [];\n  const invalidItems = [];\n  \n  console.log('Parsed selections:', selections);\n  \n  for (const selection of selections) {\n    if (validOptions.hasOwnProperty(selection)) {\n      validSelections.push({\n        id: selection,\n        value: validOptions[selection]\n      });\n      console.log(`Valid selection: ${selection} -> ${validOptions[selection]}`);\n    } else {\n      invalidItems.push(selection);\n      console.log(`Invalid selection: ${selection}`);\n    }\n  }\n  \n  const result = {\n    valid: invalidItems.length === 0 && validSelections.length > 0,\n    selections: validSelections,\n    invalidItems: invalidItems\n  };\n  \n  console.log('Final result:', JSON.stringify(result, null, 2));\n  console.log('================================');\n  \n  return result;\n}\n\nswitch (userSession.estado) {\n  case \"INICIO\":\n    // Cualquier mensaje inicia el proceso\n    response = {\n      message: \"🏥 *Bienvenido al Sistema de Turnos*\\n\\nPor favor, indique su DNI (solo números, sin puntos):\",\n      nextStep: \"ESPERANDO_DNI\"\n    };\n    newEstado = \"ESPERANDO_DNI\";\n    break;\n\n  case \"COMPLETADO\":\n    // NUEVO CASO: Usuario que ya completó un turno quiere hacer otro\n    console.log('=== REINICIANDO USUARIO COMPLETADO ===');\n    console.log('Usuario:', chatId);\n    console.log('Estado anterior:', userSession.estado);\n    console.log('Datos anteriores:', JSON.stringify(userSession.datos, null, 2));\n    \n    // Limpiar datos y reiniciar\n    updateData = {};\n    response = {\n      message: \"🏥 *Bienvenido nuevamente al Sistema de Turnos*\\n\\n¿Desea agendar un nuevo turno?\\n\\nPor favor, indique su DNI (solo números, sin puntos):\",\n      nextStep: \"ESPERANDO_DNI\"\n    };\n    newEstado = \"ESPERANDO_DNI\";\n    \n    console.log('Nuevo estado:', newEstado);\n    console.log('Datos limpiados:', JSON.stringify(updateData, null, 2));\n    console.log('=====================================');\n    break;\n\n  case \"ESPERANDO_DNI\":\n    const dniInput = $json.messageText.trim();\n    \n    console.log('=== VALIDACIÓN DNI DEBUG ===');\n    console.log('Input original:', JSON.stringify(dniInput));\n    console.log('Input length:', dniInput.length);\n    console.log('Input chars:', dniInput.split('').map(c => c.charCodeAt(0)));\n    \n    // Limpiar DNI: quitar espacios, puntos, comas, guiones\n    const cleanDNI = dniInput\n      .replace(/\\s+/g, '')        // Quitar espacios\n      .replace(/\\./g, '')         // Quitar puntos\n      .replace(/,/g, '')          // Quitar comas  \n      .replace(/-/g, '')          // Quitar guiones\n      .replace(/[^\\d]/g, '');     // Quitar cualquier carácter que no sea dígito\n    \n    console.log('DNI limpio:', cleanDNI);\n    console.log('DNI length:', cleanDNI.length);\n    console.log('Es solo números:', /^\\d+$/.test(cleanDNI));\n    console.log('===========================');\n    \n    // Validar DNI limpio (solo números, 7-8 dígitos)\n    if (!cleanDNI || cleanDNI.length < 7 || cleanDNI.length > 8 || !/^\\d+$/.test(cleanDNI)) {\n      isValid = false;\n      errorMessage = `❌ *DNI inválido*\\n\\nPor favor ingrese solo números, entre 7 y 8 dígitos.\\n\\n📝 *Formatos aceptados:*\\n• 25430441\\n• 25.430.441\\n• 25 430 441\\n\\n⚠️ *Su entrada:* \"${dniInput}\"\\n💡 *Procesado como:* \"${cleanDNI}\"`;\n      \n      console.log('❌ DNI INVÁLIDO - Razón:', {\n        empty: !cleanDNI,\n        tooShort: cleanDNI.length < 7,\n        tooLong: cleanDNI.length > 8,\n        notNumbers: !/^\\d+$/.test(cleanDNI),\n        length: cleanDNI.length\n      });\n    } else {\n      updateData.dni = cleanDNI; // Guardar DNI limpio\n      \n      console.log('✅ DNI VÁLIDO:', cleanDNI);\n      \n      // Obtener especialidades del maestro\n      const especialidades = maestros.especialidades;\n      \n      let especialidadesText = \"👨‍⚕️ *Seleccione una especialidad:*\\n\\n\";\n      especialidades.forEach(esp => {\n        especialidadesText += `${esp.idEspecialidad}. ${esp.descripcion}\\n`;\n      });\n      \n      response = {\n        message: especialidadesText,\n        nextStep: \"ESPERANDO_ESPECIALIDAD\"\n      };\n      newEstado = \"ESPERANDO_ESPECIALIDAD\";\n    }\n    break;\n\n  case \"ESPERANDO_ESPECIALIDAD\":\n    const especialidadId = parseInt($json.messageText.trim());\n    const especialidad = maestros.especialidades.find(e => e.idEspecialidad === especialidadId);\n    \n    if (!especialidad) {\n      isValid = false;\n      let opciones = maestros.especialidades.map(e => `${e.idEspecialidad}. ${e.descripcion}`).join('\\n');\n      errorMessage = `❌ *No se reconoce el valor ingresado*\\n\\nOpciones válidas:\\n${opciones}`;\n    } else {\n      updateData.especialidad = especialidad;\n      \n      // Convertir objeto días a array para mostrar\n      const diasObj = maestros.dias;\n      let diasText = \"📅 *Seleccione uno o más días:*\\n\\n\";\n      Object.keys(diasObj).forEach(key => {\n        diasText += `${key}. ${diasObj[key]}\\n`;\n      });\n      diasText += \"\\n💡 *Puede seleccionar múltiples opciones separándolas con comas*\\n\";\n      diasText += \"Ejemplo: 1,3,5\";\n      \n      response = {\n        message: diasText,\n        nextStep: \"ESPERANDO_DIA\"\n      };\n      newEstado = \"ESPERANDO_DIA\";\n    }\n    break;\n\n  case \"ESPERANDO_DIA\":\n    const diasInput = $json.messageText.trim();\n    const diasObj = maestros.dias;\n    const diasResult = parseMultipleSelection(diasInput, diasObj);\n    \n    if (!diasResult.valid || diasResult.selections.length === 0) {\n      isValid = false;\n      let opciones = Object.keys(diasObj).map(key => `${key}. ${diasObj[key]}`).join('\\n');\n      let errorMsg = `❌ *No se reconoce el valor ingresado*\\n\\nOpciones válidas:\\n${opciones}\\n\\n`;\n      if (diasResult.invalidItems.length > 0) {\n        errorMsg += `Valores inválidos: ${diasResult.invalidItems.join(', ')}\\n`;\n      }\n      errorMsg += \"💡 Puede seleccionar múltiples opciones separándolas con comas\\nEjemplo: 1,3,5\";\n      errorMessage = errorMsg;\n    } else {\n      updateData.dias = diasResult.selections;\n      \n      console.log('=== DIAS SELECTION DEBUG ===');\n      console.log('Input:', diasInput);\n      console.log('Parsed result:', JSON.stringify(diasResult, null, 2));\n      console.log('Stored in updateData.dias:', JSON.stringify(updateData.dias, null, 2));\n      console.log('============================');\n      \n      // Convertir objeto rangos horarios a array para mostrar\n      const horariosObj = maestros.rangosHorarios;\n      let horariosText = \"🕐 *Seleccione uno o más rangos de horario:*\\n\\n\";\n      Object.keys(horariosObj).forEach(key => {\n        horariosText += `${key}. ${horariosObj[key]}\\n`;\n      });\n      horariosText += \"\\n💡 *Puede seleccionar múltiples opciones separándolas con comas*\\n\";\n      horariosText += \"Ejemplo: 1,2,4\";\n      \n      response = {\n        message: horariosText,\n        nextStep: \"ESPERANDO_HORARIO\"\n      };\n      newEstado = \"ESPERANDO_HORARIO\";\n    }\n    break;\n\n  case \"ESPERANDO_HORARIO\":\n    const horariosInput = $json.messageText.trim();\n    const horariosObj = maestros.rangosHorarios;\n    const horariosResult = parseMultipleSelection(horariosInput, horariosObj);\n    \n    if (!horariosResult.valid || horariosResult.selections.length === 0) {\n      isValid = false;\n      let opciones = Object.keys(horariosObj).map(key => `${key}. ${horariosObj[key]}`).join('\\n');\n      let errorMsg = `❌ *No se reconoce el valor ingresado*\\n\\nOpciones válidas:\\n${opciones}\\n\\n`;\n      if (horariosResult.invalidItems.length > 0) {\n        errorMsg += `Valores inválidos: ${horariosResult.invalidItems.join(', ')}\\n`;\n      }\n      errorMsg += \"💡 Puede seleccionar múltiples opciones separándolas con comas\\nEjemplo: 1,2,4\";\n      errorMessage = errorMsg;\n    } else {\n      updateData.horarios = horariosResult.selections;\n      \n      console.log('=== HORARIOS SELECTION DEBUG ===');\n      console.log('Input:', horariosInput);\n      console.log('Parsed result:', JSON.stringify(horariosResult, null, 2));\n      console.log('Stored in updateData.horarios:', JSON.stringify(updateData.horarios, null, 2));\n      console.log('================================');\n      \n      // Mostrar resumen y confirmación con múltiples selecciones\n      const diasSeleccionados = updateData.dias.map(d => d.value).join(', ');\n      const horariosSeleccionados = updateData.horarios.map(h => h.value).join(', ');\n      \n      const resumen = `📋 *Resumen del Turno:*\\n\\n` +\n                     `👤 DNI: ${updateData.dni}\\n` +\n                     `👨‍⚕️ Especialidad: ${updateData.especialidad.descripcion}\\n` +\n                     `📅 Días: ${diasSeleccionados}\\n` +\n                     `🕐 Horarios: ${horariosSeleccionados}\\n\\n` +\n                     `*¿Confirma el turno?*\\n\\n` +\n                     `1. ✅ Aceptar\\n` +\n                     `2. ❌ Cancelar`;\n      \n      response = {\n        message: resumen,\n        nextStep: \"CONFIRMACION\"\n      };\n      newEstado = \"CONFIRMACION\";\n    }\n    break;\n\n  case \"CONFIRMACION\":\n    const confirmacion = parseInt($json.messageText.trim());\n    \n    if (confirmacion === 1) {\n      // Aceptar - preparar para envío a API\n      response = {\n        message: \"✅ *Turno confirmado*\\n\\nProcesando su solicitud...\",\n        nextStep: \"COMPLETADO\",\n        sendToAPI: true\n      };\n      newEstado = \"COMPLETADO\";\n    } else if (confirmacion === 2) {\n      // Cancelar - reiniciar proceso\n      updateData = {};\n      response = {\n        message: \"❌ *Turno cancelado*\\n\\n¿Desea agendar un nuevo turno?\\n\\nEnvíe cualquier mensaje para comenzar.\",\n        nextStep: \"INICIO\"\n      };\n      newEstado = \"INICIO\";\n    } else {\n      isValid = false;\n      errorMessage = \"❌ *No se reconoce el valor ingresado*\\n\\nOpciones válidas:\\n1. ✅ Aceptar\\n2. ❌ Cancelar\";\n    }\n    break;\n\n  default:\n    // Estado desconocido, reiniciar\n    console.log('=== ESTADO DESCONOCIDO - REINICIANDO ===');\n    console.log('Estado actual:', userSession.estado);\n    console.log('======================================');\n    \n    response = {\n      message: \"🏥 *Bienvenido al Sistema de Turnos*\\n\\nPor favor, indique su DNI (solo números, sin puntos):\",\n      nextStep: \"ESPERANDO_DNI\"\n    };\n    newEstado = \"ESPERANDO_DNI\";\n    updateData = {};\n}\n\n// APLICAR LIMPIEZA DE CARACTERES (CORREGIDA)\nlet finalMessage = isValid ? response.message : errorMessage;\n\n// Limpiar caracteres especiales para WAAPI pero mantener saltos de línea\nlet cleanedResponse = finalMessage\n  // Quitamos los encabezados #\n  .replace(/^#+\\s+(.+)$/gm, \"$1\")\n  // Quitamos asteriscos de negrita\n  .replace(/\\*\\*([^*]+)\\*\\*/g, \"$1\")\n  // Simplificamos listados\n  .replace(/^\\s*-\\s+/gm, \"- \");\n\n// NO aplicar JSON.stringify para mantener los saltos de línea\n// cleanedResponse = JSON.stringify(cleanedResponse).slice(1, -1);\n\n// Resultado final\nreturn {\n  json: {\n    chatId: chatId,\n    isValid: isValid,\n    response: {\n      message: cleanedResponse, // Mensaje limpio para WAAPI\n      sendToAPI: response.sendToAPI || false\n    },\n    newEstado: isValid ? newEstado : userSession.estado,\n    updateData: isValid ? updateData : userSession.datos,\n    sendToAPI: response.sendToAPI || false,\n    timestamp: new Date().toISOString()\n  }\n};"
+        "jsCode": "// Nodo: Process Step Logic (CON SELECCIÓN MÚLTIPLE Y VALIDACIÓN DNI MEJORADA)\nconst messageText = $json.messageText.toLowerCase();\nconst userSession = $json.userSession;\nconst chatId = $json.chatId;\nconst maestros = $('Format Maestros').first().json;\n\nlet response = {};\nlet newEstado = userSession.estado;\nlet updateData = { ...userSession.datos };\nlet isValid = true;\nlet errorMessage = \"\";\n\n// Función auxiliar para parsear selección múltiple\nfunction parseMultipleSelection(input, validOptions) {\n  console.log('=== PARSE MULTIPLE SELECTION ===');\n  console.log('Input:', input);\n  console.log('Valid options:', Object.keys(validOptions));\n  \n  if (!input || typeof input !== 'string') {\n    console.log('Invalid input type');\n    return {\n      valid: false,\n      selections: [],\n      invalidItems: [input]\n    };\n  }\n  \n  const selections = input.split(',').map(item => item.trim()).filter(item => item.length > 0);\n  const validSelections = [];\n  const invalidItems = [];\n  \n  console.log('Parsed selections:', selections);\n  \n  for (const selection of selections) {\n    if (validOptions.hasOwnProperty(selection)) {\n      validSelections.push({\n        id: selection,\n        value: validOptions[selection]\n      });\n      console.log(`Valid selection: ${selection} -> ${validOptions[selection]}`);\n    } else {\n      invalidItems.push(selection);\n      console.log(`Invalid selection: ${selection}`);\n    }\n  }\n  \n  const result = {\n    valid: invalidItems.length === 0 && validSelections.length > 0,\n    selections: validSelections,\n    invalidItems: invalidItems\n  };\n  \n  console.log('Final result:', JSON.stringify(result, null, 2));\n  console.log('================================');\n  \n  return result;\n}\n\nswitch (userSession.estado) {\n  case \"INICIO\":\n    // Cualquier mensaje inicia el proceso\n    response = {\n      message: \"🏥 *Bienvenido al Sistema de Turnos*\\n\\nPor favor, indique su DNI (solo números, sin puntos):\",\n      nextStep: \"ESPERANDO_DNI\"\n    };\n    newEstado = \"ESPERANDO_DNI\";\n    break;\n\n  case \"COMPLETADO\":\n    // NUEVO CASO: Usuario que ya completó un turno quiere hacer otro\n    console.log('=== REINICIANDO USUARIO COMPLETADO ===');\n    console.log('Usuario:', chatId);\n    console.log('Estado anterior:', userSession.estado);\n    console.log('Datos anteriores:', JSON.stringify(userSession.datos, null, 2));\n    \n    // Limpiar datos y reiniciar\n    updateData = {};\n    response = {\n      message: \"🏥 *Bienvenido nuevamente al Sistema de Turnos*\\n\\n¿Desea agendar un nuevo turno?\\n\\nPor favor, indique su DNI (solo números, sin puntos):\",\n      nextStep: \"ESPERANDO_DNI\"\n    };\n    newEstado = \"ESPERANDO_DNI\";\n    \n    console.log('Nuevo estado:', newEstado);\n    console.log('Datos limpiados:', JSON.stringify(updateData, null, 2));\n    console.log('=====================================');\n    break;\n\n  case \"ESPERANDO_DNI\":\n    const dniInput = $json.messageText.trim();\n    \n    console.log('=== VALIDACIÓN DNI DEBUG ===');\n    console.log('Input original:', JSON.stringify(dniInput));\n    console.log('Input length:', dniInput.length);\n    console.log('Input chars:', dniInput.split('').map(c => c.charCodeAt(0)));\n    \n    // Limpiar DNI: quitar espacios, puntos, comas, guiones\n    const cleanDNI = dniInput\n      .replace(/\\s+/g, '')        // Quitar espacios\n      .replace(/\\./g, '')         // Quitar puntos\n      .replace(/,/g, '')          // Quitar comas  \n      .replace(/-/g, '')          // Quitar guiones\n      .replace(/[^\\d]/g, '');     // Quitar cualquier carácter que no sea dígito\n    \n    console.log('DNI limpio:', cleanDNI);\n    console.log('DNI length:', cleanDNI.length);\n    console.log('Es solo números:', /^\\d+$/.test(cleanDNI));\n    console.log('===========================');\n    \n    // Validar DNI limpio (solo números, 7-8 dígitos)\n    if (!cleanDNI || cleanDNI.length < 7 || cleanDNI.length > 8 || !/^\\d+$/.test(cleanDNI)) {\n      isValid = false;\n      errorMessage = `❌ *DNI inválido*\\n\\nPor favor ingrese solo números, entre 7 y 8 dígitos.\\n\\n📝 *Formatos aceptados:*\\n• 25430441\\n• 25.430.441\\n• 25 430 441\\n\\n⚠️ *Su entrada:* \"${dniInput}\"\\n💡 *Procesado como:* \"${cleanDNI}\"`;\n      \n      console.log('❌ DNI INVÁLIDO - Razón:', {\n        empty: !cleanDNI,\n        tooShort: cleanDNI.length < 7,\n        tooLong: cleanDNI.length > 8,\n        notNumbers: !/^\\d+$/.test(cleanDNI),\n        length: cleanDNI.length\n      });\n    } else {\n      updateData.dni = cleanDNI; // Guardar DNI limpio\n      \n      console.log('✅ DNI VÁLIDO:', cleanDNI);\n      \n      // Obtener especialidades del maestro\n      const especialidades = maestros.especialidades;\n      \n      let especialidadesText = \"👨‍⚕️ *Seleccione una especialidad:*\\n\\n\";\n      especialidades.forEach(esp => {\n        especialidadesText += `${esp.idEspecialidad}. ${esp.descripcion}\\n`;\n      });\n      \n      response = {\n        message: especialidadesText,\n        nextStep: \"ESPERANDO_ESPECIALIDAD\"\n      };\n      newEstado = \"ESPERANDO_ESPECIALIDAD\";\n    }\n    break;\n\n  case \"ESPERANDO_ESPECIALIDAD\":\n    const especialidadId = parseInt($json.messageText.trim());\n    const especialidad = maestros.especialidades.find(e => e.idEspecialidad === especialidadId);\n    \n    if (!especialidad) {\n      isValid = false;\n      let opciones = maestros.especialidades.map(e => `${e.idEspecialidad}. ${e.descripcion}`).join('\\n');\n      errorMessage = `❌ *No se reconoce el valor ingresado*\\n\\nOpciones válidas:\\n${opciones}`;\n    } else {\n      updateData.especialidad = especialidad;\n      \n      // En lugar de mostrar días inmediatamente, configurar para activar el flujo dinámico\n      response = {\n        message: \"⏳ *Procesando especialidad seleccionada...*\\n\\nObteniendo días disponibles para ${especialidad.descripcion}.\",\n        nextStep: \"ESPERANDO_DIA\",\n        triggerDynamicFlow: true\n      };\n      newEstado = \"ESPERANDO_DIA\";\n      \n      console.log('=== ESPECIALIDAD SELECTED FOR DYNAMIC FLOW ===');\n      console.log('Especialidad seleccionada:', especialidad);\n      console.log('Activando flujo dinámico para obtener días y horarios');\n      console.log('=============================================');\n    }\n    break;\n\n  case \"ESPERANDO_DIA\":\n    const diasInput = $json.messageText.trim();\n    \n    // Obtener días dinámicos de la sesión\n    let diasObj = {};\n    try {\n      const userSessionFromJSONBin = $('Read JSONBin').first().json.record[userSession.chatId];\n      if (userSessionFromJSONBin && userSessionFromJSONBin.maestrosDinamicos && userSessionFromJSONBin.maestrosDinamicos.dias) {\n        diasObj = userSessionFromJSONBin.maestrosDinamicos.dias;\n        console.log('=== USING DYNAMIC DIAS ===');\n        console.log('Dynamic dias:', JSON.stringify(diasObj, null, 2));\n        console.log('==========================');\n      } else {\n        // Fallback a datos estáticos si no hay dinámicos\n        diasObj = maestros.dias || {};\n        console.log('=== FALLBACK TO STATIC DIAS ===');\n        console.log('Static dias:', JSON.stringify(diasObj, null, 2));\n        console.log('===============================');\n      }\n    } catch (error) {\n      console.log('Error getting dynamic dias, using fallback:', error.message);\n      diasObj = maestros.dias || {};\n    }\n    \n    const diasResult = parseMultipleSelection(diasInput, diasObj);\n    \n    if (!diasResult.valid || diasResult.selections.length === 0) {\n      isValid = false;\n      let opciones = Object.keys(diasObj).map(key => `${key}. ${diasObj[key]}`).join('\\n');\n      let errorMsg = `❌ *No se reconoce el valor ingresado*\\n\\nOpciones válidas:\\n${opciones}\\n\\n`;\n      if (diasResult.invalidItems.length > 0) {\n        errorMsg += `Valores inválidos: ${diasResult.invalidItems.join(', ')}\\n`;\n      }\n      errorMsg += \"💡 Puede seleccionar múltiples opciones separándolas con comas\\nEjemplo: 1,3,5\";\n      errorMessage = errorMsg;\n    } else {\n      updateData.dias = diasResult.selections;\n      \n      console.log('=== DIAS SELECTION DEBUG ===');\n      console.log('Input:', diasInput);\n      console.log('Parsed result:', JSON.stringify(diasResult, null, 2));\n      console.log('Stored in updateData.dias:', JSON.stringify(updateData.dias, null, 2));\n      console.log('============================');\n      \n      // Obtener rangos horarios dinámicos de la sesión\n      let horariosObj = {};\n      try {\n        const userSessionFromJSONBin = $('Read JSONBin').first().json.record[userSession.chatId];\n        if (userSessionFromJSONBin && userSessionFromJSONBin.maestrosDinamicos && userSessionFromJSONBin.maestrosDinamicos.rangosHorarios) {\n          horariosObj = userSessionFromJSONBin.maestrosDinamicos.rangosHorarios;\n          console.log('=== USING DYNAMIC RANGOS HORARIOS ===');\n          console.log('Dynamic rangos horarios:', JSON.stringify(horariosObj, null, 2));\n          console.log('====================================');\n        } else {\n          // Fallback a datos estáticos si no hay dinámicos\n          horariosObj = maestros.rangosHorarios || {};\n          console.log('=== FALLBACK TO STATIC RANGOS HORARIOS ===');\n          console.log('Static rangos horarios:', JSON.stringify(horariosObj, null, 2));\n          console.log('==========================================');\n        }\n      } catch (error) {\n        console.log('Error getting dynamic rangos horarios, using fallback:', error.message);\n        horariosObj = maestros.rangosHorarios || {};\n      }\n      \n      let horariosText = \"🕐 *Seleccione uno o más rangos de horario:*\\n\\n\";\n      Object.keys(horariosObj).forEach(key => {\n        horariosText += `${key}. ${horariosObj[key]}\\n`;\n      });\n      horariosText += \"\\n💡 *Puede seleccionar múltiples opciones separándolas con comas*\\n\";\n      horariosText += \"Ejemplo: 1,2,4\";\n      \n      response = {\n        message: horariosText,\n        nextStep: \"ESPERANDO_HORARIO\"\n      };\n      newEstado = \"ESPERANDO_HORARIO\";\n    }\n    break;\n\n  case \"ESPERANDO_HORARIO\":\n    const horariosInput = $json.messageText.trim();\n    \n    // Obtener rangos horarios dinámicos de la sesión\n    let horariosObj = {};\n    try {\n      const userSessionFromJSONBin = $('Read JSONBin').first().json.record[userSession.chatId];\n      if (userSessionFromJSONBin && userSessionFromJSONBin.maestrosDinamicos && userSessionFromJSONBin.maestrosDinamicos.rangosHorarios) {\n        horariosObj = userSessionFromJSONBin.maestrosDinamicos.rangosHorarios;\n        console.log('=== USING DYNAMIC RANGOS HORARIOS (HORARIO SELECTION) ===');\n        console.log('Dynamic rangos horarios:', JSON.stringify(horariosObj, null, 2));\n        console.log('========================================================');\n      } else {\n        // Fallback a datos estáticos si no hay dinámicos\n        horariosObj = maestros.rangosHorarios || {};\n        console.log('=== FALLBACK TO STATIC RANGOS HORARIOS (HORARIO SELECTION) ===');\n        console.log('Static rangos horarios:', JSON.stringify(horariosObj, null, 2));\n        console.log('==============================================================');\n      }\n    } catch (error) {\n      console.log('Error getting dynamic rangos horarios for selection, using fallback:', error.message);\n      horariosObj = maestros.rangosHorarios || {};\n    }\n    \n    const horariosResult = parseMultipleSelection(horariosInput, horariosObj);\n    \n    if (!horariosResult.valid || horariosResult.selections.length === 0) {\n      isValid = false;\n      let opciones = Object.keys(horariosObj).map(key => `${key}. ${horariosObj[key]}`).join('\\n');\n      let errorMsg = `❌ *No se reconoce el valor ingresado*\\n\\nOpciones válidas:\\n${opciones}\\n\\n`;\n      if (horariosResult.invalidItems.length > 0) {\n        errorMsg += `Valores inválidos: ${horariosResult.invalidItems.join(', ')}\\n`;\n      }\n      errorMsg += \"💡 Puede seleccionar múltiples opciones separándolas con comas\\nEjemplo: 1,2,4\";\n      errorMessage = errorMsg;\n    } else {\n      updateData.horarios = horariosResult.selections;\n      \n      console.log('=== HORARIOS SELECTION DEBUG ===');\n      console.log('Input:', horariosInput);\n      console.log('Parsed result:', JSON.stringify(horariosResult, null, 2));\n      console.log('Stored in updateData.horarios:', JSON.stringify(updateData.horarios, null, 2));\n      console.log('================================');\n      \n      // Mostrar resumen y confirmación con múltiples selecciones\n      const diasSeleccionados = updateData.dias.map(d => d.value).join(', ');\n      const horariosSeleccionados = updateData.horarios.map(h => h.value).join(', ');\n      \n      const resumen = `📋 *Resumen del Turno:*\\n\\n` +\n                     `👤 DNI: ${updateData.dni}\\n` +\n                     `👨‍⚕️ Especialidad: ${updateData.especialidad.descripcion}\\n` +\n                     `📅 Días: ${diasSeleccionados}\\n` +\n                     `🕐 Horarios: ${horariosSeleccionados}\\n\\n` +\n                     `*¿Confirma el turno?*\\n\\n` +\n                     `1. ✅ Aceptar\\n` +\n                     `2. ❌ Cancelar`;\n      \n      response = {\n        message: resumen,\n        nextStep: \"CONFIRMACION\"\n      };\n      newEstado = \"CONFIRMACION\";\n    }\n    break;\n\n  case \"CONFIRMACION\":\n    const confirmacion = parseInt($json.messageText.trim());\n    \n    if (confirmacion === 1) {\n      // Aceptar - preparar para envío a API\n      response = {\n        message: \"✅ *Turno confirmado*\\n\\nProcesando su solicitud...\",\n        nextStep: \"COMPLETADO\",\n        sendToAPI: true\n      };\n      newEstado = \"COMPLETADO\";\n    } else if (confirmacion === 2) {\n      // Cancelar - reiniciar proceso\n      updateData = {};\n      response = {\n        message: \"❌ *Turno cancelado*\\n\\n¿Desea agendar un nuevo turno?\\n\\nEnvíe cualquier mensaje para comenzar.\",\n        nextStep: \"INICIO\"\n      };\n      newEstado = \"INICIO\";\n    } else {\n      isValid = false;\n      errorMessage = \"❌ *No se reconoce el valor ingresado*\\n\\nOpciones válidas:\\n1. ✅ Aceptar\\n2. ❌ Cancelar\";\n    }\n    break;\n\n  default:\n    // Estado desconocido, reiniciar\n    console.log('=== ESTADO DESCONOCIDO - REINICIANDO ===');\n    console.log('Estado actual:', userSession.estado);\n    console.log('======================================');\n    \n    response = {\n      message: \"🏥 *Bienvenido al Sistema de Turnos*\\n\\nPor favor, indique su DNI (solo números, sin puntos):\",\n      nextStep: \"ESPERANDO_DNI\"\n    };\n    newEstado = \"ESPERANDO_DNI\";\n    updateData = {};\n}\n\n// APLICAR LIMPIEZA DE CARACTERES (CORREGIDA)\nlet finalMessage = isValid ? response.message : errorMessage;\n\n// Limpiar caracteres especiales para WAAPI pero mantener saltos de línea\nlet cleanedResponse = finalMessage\n  // Quitamos los encabezados #\n  .replace(/^#+\\s+(.+)$/gm, \"$1\")\n  // Quitamos asteriscos de negrita\n  .replace(/\\*\\*([^*]+)\\*\\*/g, \"$1\")\n  // Simplificamos listados\n  .replace(/^\\s*-\\s+/gm, \"- \");\n\n// NO aplicar JSON.stringify para mantener los saltos de línea\n// cleanedResponse = JSON.stringify(cleanedResponse).slice(1, -1);\n\n// Resultado final\nreturn {\n  json: {\n    chatId: chatId,\n    isValid: isValid,\n    response: {\n      message: cleanedResponse, // Mensaje limpio para WAAPI\n      sendToAPI: response.sendToAPI || false\n    },\n    newEstado: isValid ? newEstado : userSession.estado,\n    updateData: isValid ? updateData : userSession.datos,\n    sendToAPI: response.sendToAPI || false,\n    timestamp: new Date().toISOString()\n  }\n};"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -1080,
-        540
+        -2600,
+        100
       ],
-      "id": "13e42605-f47c-4cee-8cb3-f15ffef1d71f",
+      "id": "601f1b82-057c-4281-8026-0a3704b79766",
       "name": "Process Step Logic"
     },
     {
       "parameters": {
-        "mode": "raw",
-        "jsonOutput": "{\n  \"especialidades\":[\n    {\n      \"idEspecialidad\": 1,\n      \"descripcion\": \"Cardiología\",\n      \"turnosIntervalo\": 30\n    },\n    {\n      \"idEspecialidad\": 2,\n      \"descripcion\": \"Clínico\",\n      \"turnosIntervalo\": 30\n    },\n    {\n      \"idEspecialidad\": 3,\n      \"descripcion\": \"Traumatología\",\n      \"turnosIntervalo\": 30\n    },\n    {\n      \"idEspecialidad\": 4,\n      \"descripcion\": \"Gastro\",\n      \"turnosIntervalo\": 30\n    },\n    {\n      \"idEspecialidad\": 5,\n      \"descripcion\": \"Otorrinolaringología\",\n      \"turnosIntervalo\": 30\n    }\n  ],  \n  \"dias\":{\n  \"1\": \"LUNES\",\n  \"2\": \"MARTES\",\n  \"3\": \"MIÉRCOLES\",\n  \"4\": \"JUEVES\",\n  \"5\": \"VIERNES\",\n  \"6\": \"SÁBADO\"\n  },\n  \"rangosHorarios\":{\n  \"1\": \"07-09 hs.\",\n  \"2\": \"09-11 hs.\",\n  \"3\": \"11-13 hs.\",\n  \"4\": \"13-15 hs.\",\n  \"5\": \"15-17 hs.\",\n  \"6\": \"17-19 hs.\"\n  }\n}\n",
+        "method": "POST",
+        "url": "https://api.salmasalud.com.ar/login",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"user\": \"admin\",\n  \"password\": \"1234\"\n}",
         "options": {}
       },
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
       "position": [
-        -1340,
-        320
+        -2860,
+        -120
       ],
-      "id": "5094c62e-c839-414f-aee3-c1c814322bc6",
-      "name": "Maestros"
+      "id": "feafd4c9-dc9c-4342-bee4-122066413c73",
+      "name": "Get Maestros Token"
+    },
+    {
+      "parameters": {
+        "url": "https://api.salmasalud.com.ar/especialidades",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $json.token }}"
+            },
+            {
+              "name": "accept",
+              "value": "*/*"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -2540,
+        -120
+      ],
+      "id": "cd3c0a45-880b-423e-85c5-c8eb50799997",
+      "name": "Get Especialidades"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Nodo: Format Maestros Data\n// CORREGIDO: Usar $input.all (sin paréntesis) para obtener TODAS las especialidades\nconst allInputs = $input.all()\nlet especialidades = [];\n\nconsole.log('=== ESPECIALIDADES FROM API (CORREGIDO) ===');\nconsole.log('Total inputs received:', allInputs.length);\nconsole.log('All inputs:', JSON.stringify(allInputs, null, 2));\n\n// Extraer todas las especialidades de todos los inputs\nfor (const input of allInputs) {\n  if (Array.isArray(input.json)) {\n    // Si el input.json es un array, agregamos todos los elementos\n    especialidades = especialidades.concat(input.json);\n    console.log('Added array of especialidades:', input.json.length, 'items');\n  } else if (input.json && typeof input.json === 'object') {\n    // Si es un objeto individual, lo agregamos como item único\n    especialidades.push(input.json);\n    console.log('Added single especialidad:', input.json.descripcion || input.json);\n  }\n}\n\nconsole.log('=======================================');\n\n// Formatear especialidades para mantener compatibilidad con el código existente\nconst maestrosData = {\n  especialidades: especialidades\n};\n\nconsole.log('=== MAESTROS FORMATTED (CORREGIDO) ===');\nconsole.log('Total especialidades processed:', especialidades.length);\nconsole.log('Final maestros data:', JSON.stringify(maestrosData, null, 2));\nconsole.log('=====================================');\n\nreturn {\n  json: maestrosData\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -2220,
+        -80
+      ],
+      "id": "1ff9cb2b-3888-4b68-b455-f43e1e875b75",
+      "name": "Format Maestros"
     },
     {
       "parameters": {
@@ -81,10 +124,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -820,
-        500
+        -2340,
+        60
       ],
-      "id": "c223835d-72f0-496f-94b5-bcee9e2f43aa",
+      "id": "145840de-e1a4-484e-8a5e-a82ee52d8e31",
       "name": "Update User Session"
     },
     {
@@ -95,10 +138,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -180,
-        580
+        -1700,
+        140
       ],
-      "id": "b15ef4ec-e30f-443f-8396-33ace27b0cfa",
+      "id": "8b0b7ffe-5da3-4fa0-8d09-c290a618aa89",
       "name": "Prepare API Request"
     },
     {
@@ -109,10 +152,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -260,
-        920
+        -1780,
+        480
       ],
-      "id": "adabd3bb-4aef-42bb-9d86-e3275fb04756",
+      "id": "7407e258-c9cc-4507-8339-e5ae9745e927",
       "name": "Format Final Response"
     },
     {
@@ -127,10 +170,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -880,
-        780
+        -2400,
+        340
       ],
-      "id": "b2ca5e25-b898-4b42-b839-50da33afc2d1",
+      "id": "578a9d27-c816-43d5-8b83-3bab4d884f97",
       "name": "Get Token"
     },
     {
@@ -154,10 +197,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -580,
-        780
+        -2100,
+        340
       ],
-      "id": "1959dff5-a7e0-4e30-8a80-7f6c9e70d555",
+      "id": "ffa4e8df-721f-4bdd-adc4-eb34adb94dd8",
       "name": "Send to API"
     },
     {
@@ -185,10 +228,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        120,
-        860
+        -1400,
+        420
       ],
-      "id": "56f39224-f22f-46c7-8506-a11c31abb2e7",
+      "id": "080d2e47-963e-4819-bddf-741068f56158",
       "name": "Send WhatsApp Message"
     },
     {
@@ -212,10 +255,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -1780,
-        440
+        -3300,
+        0
       ],
-      "id": "8c2bdcc2-1e5b-449a-9459-0a5828aa40d8",
+      "id": "081d9c06-c747-41cb-b3b4-f89db4e52c8a",
       "name": "send-typing"
     },
     {
@@ -235,10 +278,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -1500,
-        660
+        -3020,
+        220
       ],
-      "id": "2acfb3d0-2004-499d-9fb8-b9c9b4411bcb",
+      "id": "65604f7e-30dc-4457-9d96-870755cea2f2",
       "name": "Read JSONBin"
     },
     {
@@ -266,10 +309,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -560,
-        480
+        -2080,
+        40
       ],
-      "id": "77db58dd-a6f3-48f0-b4b8-0996fe33c140",
+      "id": "e3f1d719-b353-4b40-a6ce-e99edaebd298",
       "name": "Write JSONBin"
     },
     {
@@ -300,10 +343,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -1160,
-        960
+        -2680,
+        520
       ],
-      "id": "6b5257e8-ebbe-486b-aedc-68b7607c8e5b",
+      "id": "e36e5a2a-0458-4aff-b98c-331b0e5b5046",
       "name": "API Decision"
     },
     {
@@ -334,10 +377,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -1040,
-        300
+        -2560,
+        -140
       ],
-      "id": "ac2cd15b-ffae-4add-875f-6c36b2e69162",
+      "id": "96a74cf6-7f38-4004-8a52-1f2724df90de",
       "name": "DNI Validation Decision"
     },
     {
@@ -348,10 +391,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -120,
-        460
+        -1640,
+        20
       ],
-      "id": "ff3f4eb8-d9e6-4a72-b91c-dcb221a904a3",
+      "id": "9ab917c9-2134-4427-9991-097778a7abf2",
       "name": "Update Session - DNI Validation"
     },
     {
@@ -379,10 +422,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        120,
-        460
+        -1400,
+        20
       ],
-      "id": "3b8f78e5-86d2-4fdc-9d53-74b20d3a0a83",
+      "id": "c09988ea-9de1-4532-b519-2d1a4178f30d",
       "name": "Write JSONBin 2"
     },
     {
@@ -393,10 +436,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        360,
-        460
+        -1160,
+        20
       ],
-      "id": "5373f9fd-fa9a-4b16-a756-c6faf034d9c0",
+      "id": "c24e1036-a583-4337-a321-79ab565ea054",
       "name": "Format DNI Validation Response"
     },
     {
@@ -411,10 +454,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -700,
-        300
+        -1840,
+        -280
       ],
-      "id": "27a01b5f-e648-4b39-9c4a-fc4a5067193f",
+      "id": "b5f9b2cb-b9bf-44be-b461-b9b81e722051",
       "name": "DNI Validation - Get Token"
     },
     {
@@ -434,25 +477,204 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -360,
-        340
+        -1880,
+        -100
       ],
-      "id": "04500589-fcec-4768-a1e3-f93c3820cf92",
+      "id": "a39a86ea-cabe-413d-8917-4e201467ab46",
       "name": "DNI Validation Request"
     },
     {
       "parameters": {
         "mode": "runOnceForEachItem",
-        "jsCode": "// Nodo: Process DNI Validation Response\nconst dniValidationResponse = $json;\nconst processStepData = $('Process Step Logic').first().json;\nconst maestros = $('Maestros').first().json;\n\n// Obtener DNI desde múltiples fuentes para mayor robustez\nlet dni = processStepData.updateData?.dni;\nif (!dni) {\n  const getUserSessionData = $('Get User Session').first().json;\n  dni = getUserSessionData.messageText?.replace(/[^0-9]/g, '');\n}\n\nconsole.log('=== DNI VALIDATION RESPONSE ===');\nconsole.log('DNI being validated:', dni);\nconsole.log('API Response:', JSON.stringify(dniValidationResponse, null, 2));\nconsole.log('Process Step Data:', JSON.stringify(processStepData, null, 2));\nconsole.log('==============================');\n\nlet continueFlow = false;\nlet responseMessage = \"\";\nlet newEstado = processStepData.newEstado;\nlet pacienteInfo = null;\n\n// Verificar si el DNI fue encontrado en la API\nif (dniValidationResponse && (dniValidationResponse.id || dniValidationResponse.idPaciente)) {\n  // Paciente encontrado\n  pacienteInfo = dniValidationResponse;\n  continueFlow = true;\n  \n  console.log('✅ PACIENTE ENCONTRADO:', {\n    id: pacienteInfo.id || pacienteInfo.idPaciente,\n    nombre: pacienteInfo.nombre,\n    apellido: pacienteInfo.apellido,\n    dni: dni\n  });\n  \n  // Obtener especialidades del maestro\n  const especialidades = maestros.especialidades;\n  \n  let nombreCompleto = [pacienteInfo.nombre, pacienteInfo.apellido].filter(Boolean).join(' ');\n  let especialidadesText = `👋 ¡Hola ${nombreCompleto}!\\\\n\\\\n👨‍⚕️ *Seleccione una especialidad:*\\\\n\\\\n`;\n  especialidades.forEach(esp => {\n    especialidadesText += `${esp.idEspecialidad}. ${esp.descripcion}\\n`;\n  });\n  \n  responseMessage = especialidadesText;\n  newEstado = \"ESPERANDO_ESPECIALIDAD\";\n  \n} else {\n  // Paciente no encontrado\n  continueFlow = false;\n  \n  console.log('❌ PACIENTE NO ENCONTRADO para DNI:', dni);\n  console.log('API Response details:', {\n    hasResponse: !!dniValidationResponse,\n    responseKeys: dniValidationResponse ? Object.keys(dniValidationResponse) : [],\n    responseType: typeof dniValidationResponse\n  });\n  \n  responseMessage = `❌ *Paciente no encontrado*\\n\\n` +\n                   `No se encontró un paciente registrado con el DNI: ${dni}\\n\\n` +\n                   `Por favor verifique el número de documento o consulte en recepción para registrarse.\\n\\n` +\n                   `Si necesita agendar un turno con otro DNI, envíe cualquier mensaje para comenzar nuevamente.`;\n  newEstado = \"INICIO\"; // Reiniciar el flujo\n}\n\n// APLICAR LIMPIEZA DE CARACTERES\nlet cleanedResponse = responseMessage\n  .replace(/^#+\\s+(.+)$/gm, \"$1\")\n  .replace(/\\*\\*([^*]+)\\*\\*/g, \"$1\")\n  .replace(/^\\s*-\\s+/gm, \"- \");\n\n// Asegurar que el DNI esté en updateData para flujos posteriores\nlet finalUpdateData = continueFlow ? {\n  ...processStepData.updateData,\n  dni: dni, // Asegurar que el DNI esté presente\n  pacienteInfo: pacienteInfo\n} : {}; // Limpiar datos si no se encuentra el paciente\n\nreturn {\n  json: {\n    chatId: processStepData.chatId,\n    continueFlow: continueFlow,\n    response: {\n      message: cleanedResponse,\n      sendToAPI: false\n    },\n    newEstado: newEstado,\n    updateData: finalUpdateData,\n    pacienteInfo: pacienteInfo,\n    isValid: true,\n    timestamp: new Date().toISOString()\n  }\n};"
+        "jsCode": "// Nodo: Process DNI Validation Response\nconst dniValidationResponse = $json;\nconst processStepData = $('Process Step Logic').first().json;\nconst maestros = $('Format Maestros').first().json;\n\n// Obtener DNI desde múltiples fuentes para mayor robustez\nlet dni = processStepData.updateData?.dni;\nif (!dni) {\n  const getUserSessionData = $('Get User Session').first().json;\n  dni = getUserSessionData.messageText?.replace(/[^0-9]/g, '');\n}\n\nconsole.log('=== DNI VALIDATION RESPONSE ===');\nconsole.log('DNI being validated:', dni);\nconsole.log('API Response:', JSON.stringify(dniValidationResponse, null, 2));\nconsole.log('Process Step Data:', JSON.stringify(processStepData, null, 2));\nconsole.log('==============================');\n\nlet continueFlow = false;\nlet responseMessage = \"\";\nlet newEstado = processStepData.newEstado;\nlet pacienteInfo = null;\n\n// Verificar si el DNI fue encontrado en la API\nif (dniValidationResponse && (dniValidationResponse.id || dniValidationResponse.idPaciente)) {\n  // Paciente encontrado\n  pacienteInfo = dniValidationResponse;\n  continueFlow = true;\n  \n  console.log('✅ PACIENTE ENCONTRADO:', {\n    id: pacienteInfo.id || pacienteInfo.idPaciente,\n    nombre: pacienteInfo.nombre,\n    apellido: pacienteInfo.apellido,\n    dni: dni\n  });\n  \n  // Obtener especialidades del maestro\n  const especialidades = maestros.especialidades;\n  \n  let nombreCompleto = [pacienteInfo.nombre, pacienteInfo.apellido].filter(Boolean).join(' ');\n  let especialidadesText = `👋 ¡Hola ${nombreCompleto}!\\n\\n👨‍⚕️ *Seleccione una especialidad:*\\n\\n`;\n  especialidades.forEach(esp => {\n    especialidadesText += `${esp.idEspecialidad}. ${esp.descripcion}\\n`;\n  });\n  \n  responseMessage = especialidadesText;\n  newEstado = \"ESPERANDO_ESPECIALIDAD\";\n  \n} else {\n  // Paciente no encontrado\n  continueFlow = false;\n  \n  console.log('❌ PACIENTE NO ENCONTRADO para DNI:', dni);\n  console.log('API Response details:', {\n    hasResponse: !!dniValidationResponse,\n    responseKeys: dniValidationResponse ? Object.keys(dniValidationResponse) : [],\n    responseType: typeof dniValidationResponse\n  });\n  \n  responseMessage = `❌ *Paciente no encontrado*\\n\\n` +\n                   `No se encontró un paciente registrado con el DNI: ${dni}\\n\\n` +\n                   `Por favor verifique el número de documento o consulte en recepción para registrarse.\\n\\n` +\n                   `Si necesita agendar un turno con otro DNI, envíe cualquier mensaje para comenzar nuevamente.`;\n  newEstado = \"INICIO\"; // Reiniciar el flujo\n}\n\n// APLICAR LIMPIEZA DE CARACTERES\nlet cleanedResponse = responseMessage\n  .replace(/^#+\\s+(.+)$/gm, \"$1\")\n  .replace(/\\*\\*([^*]+)\\*\\*/g, \"$1\")\n  .replace(/^\\s*-\\s+/gm, \"- \");\n\n// Asegurar que el DNI esté en updateData para flujos posteriores\nlet finalUpdateData = continueFlow ? {\n  ...processStepData.updateData,\n  dni: dni, // Asegurar que el DNI esté presente\n  pacienteInfo: pacienteInfo\n} : {}; // Limpiar datos si no se encuentra el paciente\n\nreturn {\n  json: {\n    chatId: processStepData.chatId,\n    continueFlow: continueFlow,\n    response: {\n      message: cleanedResponse,\n      sendToAPI: false\n    },\n    newEstado: newEstado,\n    updateData: finalUpdateData,\n    pacienteInfo: pacienteInfo,\n    isValid: true,\n    timestamp: new Date().toISOString()\n  }\n};"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -120,
-        340
+        -1640,
+        -100
       ],
-      "id": "15c2697e-7d23-4450-a3ff-35aada7bcd69",
+      "id": "3939ef90-7ffb-4b6e-859b-ebbc5162ce6a",
       "name": "Process DNI Validation"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "especialidad-selection-condition",
+              "leftValue": "={{ $('Get User Session').first().json.userSession.estado === 'ESPERANDO_ESPECIALIDAD' && $json.newEstado === 'ESPERANDO_DIA' && $json.isValid === true && $json.updateData.especialidad }}",
+              "rightValue": "=true",
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -2420,
+        -280
+      ],
+      "id": "0a43b436-ea3f-4e96-bfe4-492d9deadfec",
+      "name": "Especialidad Selection Decision"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.salmasalud.com.ar/login",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"user\": \"admin\",\n  \"password\": \"1234\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -2080,
+        -280
+      ],
+      "id": "deab4622-826b-4c4b-a069-b799e8a2f2ec",
+      "name": "Get Dias Horarios Token"
+    },
+    {
+      "parameters": {
+        "url": "=https://api.salmasalud.com.ar/dias?idEspecialidad={{ $('Process Step Logic').first().json.updateData.especialidad.idEspecialidad }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $json.token }}"
+            },
+            {
+              "name": "accept",
+              "value": "*/*"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -1740,
+        -280
+      ],
+      "id": "ac3322cf-f440-409b-b0e5-68516173c9f8",
+      "name": "Get Dias"
+    },
+    {
+      "parameters": {
+        "url": "=https://api.salmasalud.com.ar/rangos-horarios?idEspecialidad={{ $('Get Dias Horarios Token').first().json.token && $('Process Step Logic').first().json.updateData.especialidad.idEspecialidad }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Get Dias Horarios Token').first().json.token }}"
+            },
+            {
+              "name": "accept",
+              "value": "*/*"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -1400,
+        -280
+      ],
+      "id": "8a1b9262-8467-49d0-934f-9b292b9a9a96",
+      "name": "Get Rangos Horarios"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Nodo: Process Dynamic Maestros\nconst especialidades = $('Format Maestros').first().json.especialidades;\nconst dias = $('Get Dias').first().json;\nconst rangosHorarios = $('Get Rangos Horarios').first().json;\nconst processStepData = $('Process Step Logic').first().json;\n\nconsole.log('=== PROCESS DYNAMIC MAESTROS ===');\nconsole.log('Especialidades:', JSON.stringify(especialidades, null, 2));\nconsole.log('Dias from API:', JSON.stringify(dias, null, 2));\nconsole.log('Rangos Horarios from API:', JSON.stringify(rangosHorarios, null, 2));\nconsole.log('Process Step Data:', JSON.stringify(processStepData, null, 2));\nconsole.log('===============================');\n\n// Convertir días de array a objeto con formato esperado\nlet diasObj = {};\nif (Array.isArray(dias)) {\n  dias.forEach((dia, index) => {\n    // CORREGIDO: Usar idTipoDia como ID y descripcion como valor\n    const diaId = dia.idTipoDia || (index + 1);\n    const diaDesc = dia.descripcion || `Día ${index + 1}`;\n    diasObj[diaId] = diaDesc;\n  });\n} else if (typeof dias === 'object' && dias !== null) {\n  diasObj = dias;\n}\n\n// Convertir rangos horarios de array a objeto con formato esperado\nlet rangosHorariosObj = {};\nif (Array.isArray(rangosHorarios)) {\n  rangosHorarios.forEach((rango, index) => {\n    // CORREGIDO: Usar idRangoHorario como ID y descripcion como valor\n    const rangoId = rango.idRangoHorario || (index + 1);\n    const rangoDesc = rango.descripcion || `Horario ${index + 1}`;\n    rangosHorariosObj[rangoId] = rangoDesc;\n  });\n} else if (typeof rangosHorarios === 'object' && rangosHorarios !== null) {\n  rangosHorariosObj = rangosHorarios;\n}\n\nconsole.log('=== PROCESSED DYNAMIC DATA ===');\nconsole.log('Dias object:', JSON.stringify(diasObj, null, 2));\nconsole.log('Rangos Horarios object:', JSON.stringify(rangosHorariosObj, null, 2));\nconsole.log('==============================');\n\n// Crear el objeto maestros completo con datos dinámicos\nconst maestrosDinamicos = {\n  especialidades: especialidades,\n  dias: diasObj,\n  rangosHorarios: rangosHorariosObj\n};\n\n// Generar respuesta con días para el usuario\nlet diasText = \"📅 *Seleccione uno o más días:*\\n\\n\";\nObject.keys(diasObj).forEach(key => {\n  diasText += `${key}. ${diasObj[key]}\\n`;\n});\ndiasText += \"\\n💡 *Puede seleccionar múltiples opciones separándolas con comas*\\n\";\ndiasText += \"Ejemplo: 1,3,5\";\n\n// APLICAR LIMPIEZA DE CARACTERES\nlet cleanedResponse = diasText\n  .replace(/^#+\\s+(.+)$/gm, \"$1\")\n  .replace(/\\*\\*([^*]+)\\*\\*/g, \"$1\")\n  .replace(/^\\s*-\\s+/gm, \"- \");\n\nreturn {\n  json: {\n    chatId: processStepData.chatId,\n    maestrosDinamicos: maestrosDinamicos,\n    response: {\n      message: cleanedResponse,\n      sendToAPI: false\n    },\n    newEstado: \"ESPERANDO_DIA\",\n    updateData: processStepData.updateData,\n    isValid: true,\n    timestamp: new Date().toISOString()\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1060,
+        -280
+      ],
+      "id": "f058f244-99a0-4003-8e9c-3bbad076aeaa",
+      "name": "Process Dynamic Maestros"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Nodo: Update Session - Dynamic Maestros\nconst processData = $json;\nconst chatId = processData.chatId;\nconst newEstado = processData.newEstado;\nconst updateData = processData.updateData;\nconst maestrosDinamicos = processData.maestrosDinamicos;\n\n// Obtener las sesiones actuales desde JSONBin\nlet allSessions = {};\ntry {\n  const jsonbinData = $('Read JSONBin').first().json;\n  if (jsonbinData && jsonbinData.record) {\n    allSessions = { ...jsonbinData.record };\n  }\n  console.log('=== UPDATE SESSION - DYNAMIC MAESTROS ===');\n  console.log('ChatId a actualizar:', chatId);\n  console.log('Nuevo estado:', newEstado);\n  console.log('Datos a actualizar:', JSON.stringify(updateData, null, 2));\n  console.log('Maestros dinámicos:', JSON.stringify(maestrosDinamicos, null, 2));\n  console.log('========================================');\n} catch (error) {\n  console.error('Error obteniendo sesiones de JSONBin:', error);\n}\n\n// Actualizar la sesión del usuario\nallSessions[chatId] = {\n  chatId: chatId,\n  estado: newEstado,\n  datos: updateData,\n  maestrosDinamicos: maestrosDinamicos, // Guardar los maestros dinámicos en la sesión\n  createdAt: allSessions[chatId]?.createdAt || new Date().toISOString(),\n  lastActivity: new Date().toISOString(),\n  updatedAt: new Date().toISOString()\n};\n\nconsole.log('=== SESIÓN ACTUALIZADA (DYNAMIC MAESTROS) ===');\nconsole.log('Sesión del usuario:', JSON.stringify(allSessions[chatId], null, 2));\nconsole.log('Total sesiones después de actualizar:', Object.keys(allSessions).length);\nconsole.log('=============================================');\n\n// Preparar estructura para JSONBin\nconst jsonbinPayload = {\n  sessions: allSessions\n};\n\nreturn {\n  json: jsonbinPayload\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -720,
+        -280
+      ],
+      "id": "17f56ea2-d21e-40ce-8e8d-ebc9c11f6160",
+      "name": "Update Session - Dynamic Maestros"
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "https://api.jsonbin.io/v3/b/687566205d646f1c273fa03e",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "X-Master-Key",
+              "value": "$2a$10$x6g.oxG8TSRAhrOyGXNhjOcipTIiu9RU3X/h2S0DC4kbIalK9KxEO"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json.sessions }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -380,
+        -280
+      ],
+      "id": "bd534a2d-8ffc-4402-91ce-cede41d0be4a",
+      "name": "Write JSONBin - Dynamic Maestros"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Nodo: Format Dynamic Maestros Response\nlet finalMessage = \"\";\nlet chatId = \"\";\n\n// Obtener datos del proceso dinámico de maestros\ntry {\n  const dynamicMaestrosData = $('Process Dynamic Maestros').first().json;\n  chatId = dynamicMaestrosData.chatId;\n  finalMessage = dynamicMaestrosData.response.message;\n  \n  console.log('=== FORMAT DYNAMIC MAESTROS RESPONSE ===');\n  console.log('ChatId:', chatId);\n  console.log('Message:', finalMessage);\n  console.log('Maestros dinámicos agregados a la sesión');\n  console.log('=======================================');\n  \n} catch (error) {\n  console.error('Error obteniendo datos de Dynamic Maestros:', error);\n  chatId = \"unknown\";\n  finalMessage = \"Error procesando datos dinámicos\";\n}\n\n// APLICAR LIMPIEZA DE CARACTERES\nlet cleanedMessage = finalMessage\n  .replace(/^#+\\\\s+(.+)$/gm, \"$1\")\n  .replace(/\\\\*\\\\*([^*]+)\\\\*\\\\*/g, \"$1\")\n  .replace(/^\\\\s*-\\\\s+/gm, \"- \");\n\ncleanedMessage = JSON.stringify(cleanedMessage).slice(1, -1);\n\nreturn {\n  json: {\n    chatId: chatId,\n    message: cleanedMessage,\n    messageType: \"text\"\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -40,
+        -280
+      ],
+      "id": "4c5c7ace-9781-4a8e-8b0d-79b7d6ddb99d",
+      "name": "Format Dynamic Maestros Response"
     }
   ],
   "pinData": {},
@@ -500,6 +722,11 @@
         [
           {
             "node": "DNI Validation Decision",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Especialidad Selection Decision",
             "type": "main",
             "index": 0
           }
@@ -588,7 +815,7 @@
             "index": 0
           },
           {
-            "node": "Maestros",
+            "node": "Get Maestros Token",
             "type": "main",
             "index": 0
           }
@@ -683,13 +910,117 @@
           }
         ]
       ]
+    },
+    "Get Maestros Token": {
+      "main": [
+        [
+          {
+            "node": "Get Especialidades",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Especialidades": {
+      "main": [
+        [
+          {
+            "node": "Format Maestros",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Especialidad Selection Decision": {
+      "main": [
+        [
+          {
+            "node": "Get Dias Horarios Token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Dias Horarios Token": {
+      "main": [
+        [
+          {
+            "node": "Get Dias",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Dias": {
+      "main": [
+        [
+          {
+            "node": "Get Rangos Horarios",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Rangos Horarios": {
+      "main": [
+        [
+          {
+            "node": "Process Dynamic Maestros",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Dynamic Maestros": {
+      "main": [
+        [
+          {
+            "node": "Update Session - Dynamic Maestros",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Session - Dynamic Maestros": {
+      "main": [
+        [
+          {
+            "node": "Write JSONBin - Dynamic Maestros",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Format Dynamic Maestros Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Dynamic Maestros Response": {
+      "main": [
+        [
+          {
+            "node": "Send WhatsApp Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": false,
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "73365e21-0cde-4b23-b62a-f62eea2387e5",
+  "versionId": "d5c06e24-2b0a-404a-80c3-d2872749e3c2",
   "meta": {
     "instanceId": "556514cf317cac5c724bf084ccbb32127ff27cc56f225fb39f131295f3c7f3d0"
   },
