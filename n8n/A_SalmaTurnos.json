@@ -10,24 +10,24 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
       "position": [
-        180,
-        -160
+        -1940,
+        440
       ],
-      "id": "d31552dd-12f1-4040-9803-5f5aa8f99219",
+      "id": "06f4a861-6ace-4710-b240-7f14fc79b3d0",
       "name": "Webhook Start",
       "webhookId": "e3b2122c-9d00-4104-b64f-91553cc08f8c"
     },
     {
       "parameters": {
-        "jsCode": "// Parse WhatsApp Message\nconst items = $input.all();\nconst message = items[0].json.body.data.message;\n\nif (!message || message.type !== 'chat') {\n  return [{ json: { error: \"Invalid message type\" } }];\n}\n\nconst chatId = message.from;\nconst messageText = message.body?.trim() || \"\";\nconst messageId = message.id;\n\nreturn {\n  json: {\n    chatId: chatId,\n    messageText: messageText,\n    messageId: messageId,\n    timestamp: new Date().toISOString()\n  }\n};"
+        "jsCode": "// Parse WhatsApp Message\nconst items = $input.all();\nconst message = items[0].json.body.data.message;\n\nif (!message || message.type !== 'chat') {\n  return [{ json: { error: \"Invalid message type\" } }];\n}\n\nconst chatId = message.from;\nconst messageText = message.body?.trim() || \"\";\nconst messageId = message.id;\n\nreturn [{\n  json: {\n    chatId: chatId,\n    messageText: messageText,\n    messageId: messageId,\n    timestamp: new Date().toISOString()\n  }\n}];"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        440,
-        -100
+        -1680,
+        500
       ],
-      "id": "d1023e0c-6bc4-42d5-8ebb-5546d5f8184f",
+      "id": "da81bf1d-c7d5-461d-9ea9-5b8acff48a70",
       "name": "Parse Message"
     },
     {
@@ -42,10 +42,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        700,
-        -360
+        -1420,
+        240
       ],
-      "id": "5a9d5ab1-76ed-4444-abf4-57babdf96442",
+      "id": "8bcbe112-4e02-4433-8471-d5bef1409d32",
       "name": "Get Auth Token"
     },
     {
@@ -65,10 +65,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        700,
-        -40
+        -1420,
+        560
       ],
-      "id": "f0892033-d79b-4a68-9d48-0527e07625a6",
+      "id": "f788d4b0-7e55-400d-9106-431d9c8db242",
       "name": "Get User Session"
     },
     {
@@ -79,7 +79,7 @@
           "parameters": [
             {
               "name": "Authorization",
-              "value": "=Bearer {{ $('Get Auth Token').first().json.token }}"
+              "value": "=Bearer {{ $('Get Auth Token').first().json.token}}"
             }
           ]
         },
@@ -88,23 +88,23 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        960,
-        -400
+        -1160,
+        200
       ],
-      "id": "6ba79216-b09c-417f-9a51-27d1155141c0",
+      "id": "7b1790c2-5da0-43f5-95bc-b0417350810e",
       "name": "Get Especialidades"
     },
     {
       "parameters": {
-        "jsCode": "// Process User State and Determine Next Step\nconst chatId = $('Parse Message').first().json.chatId;\nconst messageText = $('Parse Message').first().json.messageText.trim();\nconst token = $('Get Auth Token').first().json.token;\nconst especialidades = $('Get Especialidades').all();\n\n// Get user session from JSONBin\nlet allSessions = {};\nlet userSession = null;\n\ntry {\n  const jsonbinResponse = $('Get User Session').first().json;\n  if (jsonbinResponse && jsonbinResponse.record && jsonbinResponse.record.sessions) {\n    allSessions = jsonbinResponse.record.sessions;\n    console.log('✅ JSONBin data loaded, total users:', Object.keys(allSessions).length);\n  } else {\n    console.log('⚠️ No existing JSONBin data, creating new structure');\n    allSessions = {};\n  }\n  userSession = allSessions[chatId];\n} catch (error) {\n  console.log('❌ Error reading JSONBin, creating new structure:', error.message);\n  allSessions = {};\n}\n\n// Initialize new session if needed\nconst isNewUser = !userSession;\nif (!userSession) {\n  userSession = {\n    chatId: chatId,\n    estado: \"INICIO\",\n    datos: {},\n    createdAt: new Date().toISOString(),\n    lastActivity: new Date().toISOString()\n  };\n  console.log('🆕 Created new user session for:', chatId);\n} else {\n  userSession.lastActivity = new Date().toISOString();\n  console.log('🔄 Updated existing user session for:', chatId);\n}\n\n// Process based on current state\nlet response = {};\nlet newState = userSession.estado;\nlet updateData = { ...userSession.datos };\nlet isValid = true;\nlet errorMessage = \"\";\nlet needsDniValidation = false;\nlet needsDaysData = false;\nlet needsHoursData = false;\nlet needsApiSubmission = false;\n\n// CRITICAL FIX: Detect if we're transitioning from INICIO/COMPLETADO states\nconst currentState = userSession.estado;\nlet skipDniProcessing = (currentState === \"INICIO\" || currentState === \"COMPLETADO\");\n\n// CRITICAL: If skipDniProcessing is true, we MUST prevent ALL processing nodes from executing\nif (skipDniProcessing) {\n  console.log('🛑 SKIP MODE ACTIVE: Preventing all processing operations for state transition from ' + currentState);\n  // Force all processing flags to false to prevent parallel execution of validation nodes\n  needsDniValidation = false;\n  needsDaysData = false;\n  needsHoursData = false;\n  needsApiSubmission = false;\n}\n\nswitch (userSession.estado) {\n  case \"INICIO\":\n  case \"COMPLETADO\":\n    // Start or restart flow - ONLY show welcome message\n    if (userSession.estado === \"COMPLETADO\") {\n      updateData = {}; // Clear previous data\n    }\n    response = {\n      message: \"🏥 Bienvenido al Sistema de Turnos\\n\\nPor favor, indique su DNI (solo números, sin puntos):\"\n    };\n    newState = \"ESPERANDO_DNI\";\n    console.log('🔄 State transition: ' + currentState + ' -> ESPERANDO_DNI (skipDniProcessing: true)');\n    break;\n\n  case \"ESPERANDO_DNI\":\n    // CRITICAL: Skip DNI processing if we just transitioned from INICIO/COMPLETADO\n    if (skipDniProcessing) {\n      console.log('⏭️ Skipping DNI processing - just transitioned from ' + currentState + ' state');\n      // The user will need to send another message for actual DNI validation\n      // Keep current response (welcome message) and don't process current message as DNI\n      // DO NOT break here - we want to keep the welcome message from the previous case\n      console.log('📝 Keeping welcome message, user needs to send DNI in next message');\n      break;\n    }\n    \n    // Process actual DNI input from user's next message\n    console.log('🔍 Processing DNI input: \"' + messageText + '\"');\n    \n    // Clean and validate DNI\n    const cleanDNI = messageText.replace(/[^\\d]/g, '');\n    \n    if (!cleanDNI || cleanDNI.length < 7 || cleanDNI.length > 8) {\n      isValid = false;\n      errorMessage = `❌ DNI inválido\\n\\nPor favor ingrese solo números, entre 7 y 8 dígitos.\\n\\nFormatos aceptados:\\n• 25430441\\n• 25.430.441\\n• 25 430 441\\n\\nSu entrada: \"${messageText}\"\\nProcesado como: \"${cleanDNI}\"`;\n    } else {\n      updateData.dni = cleanDNI;\n      needsDniValidation = true;\n      newState = \"VALIDANDO_DNI\";\n      response = {\n        message: \"⏳ Validando DNI...\"\n      };\n    }\n    break;\n\n  case \"ESPERANDO_ESPECIALIDAD\":\n    const especialidadId = parseInt(messageText);\n    const especialidad = especialidades.find(e => e.idEspecialidad === especialidadId);\n    \n    if (!especialidad) {\n      isValid = false;\n      let opciones = especialidades.map(e => `${e.idEspecialidad}. ${e.descripcion}`).join('\\n');\n      errorMessage = `❌ No se reconoce el valor ingresado\\n\\nOpciones válidas:\\n${opciones}`;\n    } else {\n      updateData.especialidad = especialidad;\n      needsDaysData = true;\n      newState = \"CARGANDO_DIAS\";\n      response = {\n        message: `⏳ Obteniendo días disponibles para ${especialidad.descripcion}...`\n      };\n    }\n    break;\n\n  case \"ESPERANDO_DIA\":\n    const diaId = parseInt(messageText);\n    if (!updateData.diasDisponibles || !updateData.diasDisponibles[diaId]) {\n      isValid = false;\n      if (updateData.diasDisponibles) {\n        let opciones = Object.keys(updateData.diasDisponibles).map(key => `${key}. ${updateData.diasDisponibles[key]}`).join('\\n');\n        errorMessage = `❌ No se reconoce el valor ingresado\\n\\nOpciones válidas:\\n${opciones}`;\n      } else {\n        errorMessage = \"❌ Error: Días no cargados. Por favor inicie nuevamente el proceso.\";\n      }\n    } else {\n      updateData.diaSeleccionado = {\n        id: diaId,\n        descripcion: updateData.diasDisponibles[diaId]\n      };\n      needsHoursData = true;\n      newState = \"CARGANDO_HORARIOS\";\n      response = {\n        message: `⏳ Obteniendo horarios disponibles para ${updateData.diaSeleccionado.descripcion}...`\n      };\n    }\n    break;\n\n  case \"ESPERANDO_HORARIO\":\n    const horarioId = parseInt(messageText);\n    if (!updateData.horariosDisponibles || !updateData.horariosDisponibles[horarioId]) {\n      isValid = false;\n      if (updateData.horariosDisponibles) {\n        let opciones = Object.keys(updateData.horariosDisponibles).map(key => `${key}. ${updateData.horariosDisponibles[key]}`).join('\\n');\n        errorMessage = `❌ No se reconoce el valor ingresado\\n\\nOpciones válidas:\\n${opciones}`;\n      } else {\n        errorMessage = \"❌ Error: Horarios no cargados. Por favor inicie nuevamente el proceso.\";\n      }\n    } else {\n      updateData.horarioSeleccionado = {\n        id: horarioId,\n        descripcion: updateData.horariosDisponibles[horarioId]\n      };\n      \n      // Show confirmation\n      const resumen = `📋 Resumen del Turno:\\n\\n` +\n                     `👤 DNI: ${updateData.dni}\\n` +\n                     `👨‍⚕️ Especialidad: ${updateData.especialidad.descripcion}\\n` +\n                     `📅 Día: ${updateData.diaSeleccionado.descripcion}\\n` +\n                     `🕐 Horario: ${updateData.horarioSeleccionado.descripcion}\\n\\n` +\n                     `¿Confirma el turno?\\n\\n` +\n                     `1. ✅ Aceptar\\n` +\n                     `2. ❌ Cancelar`;\n      \n      response = {\n        message: resumen\n      };\n      newState = \"CONFIRMACION\";\n    }\n    break;\n\n  case \"CONFIRMACION\":\n    const confirmacion = parseInt(messageText);\n    \n    if (confirmacion === 1) {\n      needsApiSubmission = true;\n      newState = \"ENVIANDO_API\";\n      response = {\n        message: \"✅ Turno confirmado\\n\\nProcesando su solicitud...\"\n      };\n    } else if (confirmacion === 2) {\n      updateData = {};\n      newState = \"INICIO\";\n      response = {\n        message: \"❌ Turno cancelado\\n\\n¿Desea agendar un nuevo turno?\\n\\nEnvíe cualquier mensaje para comenzar.\"\n      };\n    } else {\n      isValid = false;\n      errorMessage = \"❌ No se reconoce el valor ingresado\\n\\nOpciones válidas:\\n1. ✅ Aceptar\\n2. ❌ Cancelar\";\n    }\n    break;\n\n  default:\n    // Unknown state, restart\n    response = {\n      message: \"🏥 Bienvenido al Sistema de Turnos\\n\\nPor favor, indique su DNI (solo números, sin puntos):\"\n    };\n    newState = \"ESPERANDO_DNI\";\n    updateData = {};\n}\n\n// Update session data\nallSessions[chatId] = {\n  chatId: chatId,\n  estado: isValid ? newState : userSession.estado,\n  datos: isValid ? updateData : userSession.datos,\n  createdAt: userSession.createdAt,\n  lastActivity: new Date().toISOString()\n};\n\n// Clean message for WhatsApp\nlet finalMessage = isValid ? response.message : errorMessage;\nlet cleanedMessage = finalMessage\n  .replace(/^#+\\\\s+(.+)$/gm, \"$1\")\n  .replace(/\\\\*\\\\*([^*]+)\\\\*\\\\*/g, \"$1\")\n  .replace(/^\\\\s*-\\\\s+/gm, \"- \");\n\nreturn {\n  json: {\n    chatId: chatId,\n    isValid: isValid,\n    response: {\n      message: cleanedMessage\n    },\n    allSessions: allSessions,\n    token: token,\n    needsDniValidation: needsDniValidation,\n    needsDaysData: needsDaysData,\n    needsHoursData: needsHoursData,\n    needsApiSubmission: needsApiSubmission,\n    currentState: isValid ? newState : userSession.estado,\n    timestamp: new Date().toISOString()\n  }\n};"
+        "jsCode": "// Process User State and Determine Next Step\nconst chatId = $('Parse Message').first().json.chatId;\nconst messageText = $('Parse Message').first().json.messageText.trim();\nconst token = $('Get Auth Token').first().json.token;\nconst especialidades = $('Get Especialidades').all()\n\n// Get user session from JSONBin\nlet allSessions = {};\nlet userSession = null;\n\ntry {\n  const jsonbinResponse = $('Get User Session').first().json;\n  if (jsonbinResponse && jsonbinResponse.record && jsonbinResponse.record.sessions) {\n    allSessions = jsonbinResponse.record.sessions;\n    console.log('✅ JSONBin data loaded, total users:', Object.keys(allSessions).length);\n  } else {\n    console.log('⚠️ No existing JSONBin data, creating new structure');\n    allSessions = {};\n  }\n  userSession = allSessions[chatId];\n} catch (error) {\n  console.log('❌ Error reading JSONBin, creating new structure:', error.message);\n  allSessions = {};\n}\n\n// Initialize new session if needed\nconst isNewUser = !userSession;\nif (!userSession) {\n  userSession = {\n    chatId: chatId,\n    estado: \"INICIO\",\n    datos: {},\n    createdAt: new Date().toISOString(),\n    lastActivity: new Date().toISOString()\n  };\n  console.log('🆕 Created new user session for:', chatId);\n} else {\n  userSession.lastActivity = new Date().toISOString();\n  console.log('🔄 Updated existing user session for:', chatId);\n}\n\n// Process based on current state\nlet response = {};\nlet newState = userSession.estado;\nlet updateData = { ...userSession.datos };\nlet isValid = true;\nlet errorMessage = \"\";\nlet needsDniValidation = false;\nlet needsDaysData = false;\nlet needsHoursData = false;\nlet needsApiSubmission = false;\n\n// CRITICAL FIX: Detect if we're transitioning from INICIO/COMPLETADO states\nconst currentState = userSession.estado;\nlet skipDniProcessing = (currentState === \"INICIO\" || currentState === \"COMPLETADO\");\n\n// CRITICAL: If skipDniProcessing is true, we MUST prevent ALL processing nodes from executing\nif (skipDniProcessing) {\n  console.log('🛑 SKIP MODE ACTIVE: Preventing all processing operations for state transition from ' + currentState);\n  // Force all processing flags to false to prevent parallel execution of validation nodes\n  needsDniValidation = false;\n  needsDaysData = false;\n  needsHoursData = false;\n  needsApiSubmission = false;\n}\n\nswitch (userSession.estado) {\n  case \"INICIO\":\n  case \"COMPLETADO\":\n    // Start or restart flow - ONLY show welcome message\n    if (userSession.estado === \"COMPLETADO\") {\n      updateData = {}; // Clear previous data\n    }\n    response = {\n      message: \"🏥 Bienvenido al Sistema de Turnos\\n\\nPor favor, indique su DNI (solo números, sin puntos):\"\n    };\n    newState = \"ESPERANDO_DNI\";\n    console.log('🔄 State transition: ' + currentState + ' -> ESPERANDO_DNI (skipDniProcessing: true)');\n    break;\n\n  case \"ESPERANDO_DNI\":\n    // CRITICAL: Skip DNI processing if we just transitioned from INICIO/COMPLETADO\n    if (skipDniProcessing) {\n      console.log('⏭️ Skipping DNI processing - just transitioned from ' + currentState + ' state');\n      // The user will need to send another message for actual DNI validation\n      // Keep current response (welcome message) and don't process current message as DNI\n      // DO NOT break here - we want to keep the welcome message from the previous case\n      console.log('📝 Keeping welcome message, user needs to send DNI in next message');\n      break;\n    }\n    \n    // Process actual DNI input from user's next message\n    console.log('🔍 Processing DNI input: \"' + messageText + '\"');\n    \n    // Clean and validate DNI\n    const cleanDNI = messageText.replace(/[^\\d]/g, '');\n    \n    if (!cleanDNI || cleanDNI.length < 7 || cleanDNI.length > 8) {\n      isValid = false;\n      errorMessage = `❌ DNI inválido\\n\\nPor favor ingrese solo números, entre 7 y 8 dígitos.\\n\\nFormatos aceptados:\\n• 25430441\\n• 25.430.441\\n• 25 430 441\\n\\nSu entrada: \"${messageText}\"\\nProcesado como: \"${cleanDNI}\"`;\n    } else {\n      updateData.dni = cleanDNI;\n      needsDniValidation = true;\n      newState = \"VALIDANDO_DNI\";\n      response = {\n        message: \"⏳ Validando DNI...\"\n      };\n    }\n    break;\n\n  case \"ESPERANDO_ESPECIALIDAD\":\n    const especialidadId = parseInt(messageText);\n    const especialidad = especialidades.find(e => e.idEspecialidad === especialidadId);\n    \n    if (!especialidad) {\n      isValid = false;\n      let opciones = especialidades.map(e => `${e.idEspecialidad}. ${e.descripcion}`).join('\\n');\n      errorMessage = `❌ No se reconoce el valor ingresado\\n\\nOpciones válidas:\\n${opciones}`;\n    } else {\n      updateData.especialidad = especialidad;\n      needsDaysData = true;\n      newState = \"CARGANDO_DIAS\";\n      response = {\n        message: `⏳ Obteniendo días disponibles para ${especialidad.descripcion}...`\n      };\n    }\n    break;\n\n  case \"ESPERANDO_DIA\":\n    const diaId = parseInt(messageText);\n    if (!updateData.diasDisponibles || !updateData.diasDisponibles[diaId]) {\n      isValid = false;\n      if (updateData.diasDisponibles) {\n        let opciones = Object.keys(updateData.diasDisponibles).map(key => `${key}. ${updateData.diasDisponibles[key]}`).join('\\n');\n        errorMessage = `❌ No se reconoce el valor ingresado\\n\\nOpciones válidas:\\n${opciones}`;\n      } else {\n        errorMessage = \"❌ Error: Días no cargados. Por favor inicie nuevamente el proceso.\";\n      }\n    } else {\n      updateData.diaSeleccionado = {\n        id: diaId,\n        descripcion: updateData.diasDisponibles[diaId]\n      };\n      needsHoursData = true;\n      newState = \"CARGANDO_HORARIOS\";\n      response = {\n        message: `⏳ Obteniendo horarios disponibles para ${updateData.diaSeleccionado.descripcion}...`\n      };\n    }\n    break;\n\n  case \"ESPERANDO_HORARIO\":\n    const horarioId = parseInt(messageText);\n    if (!updateData.horariosDisponibles || !updateData.horariosDisponibles[horarioId]) {\n      isValid = false;\n      if (updateData.horariosDisponibles) {\n        let opciones = Object.keys(updateData.horariosDisponibles).map(key => `${key}. ${updateData.horariosDisponibles[key]}`).join('\\n');\n        errorMessage = `❌ No se reconoce el valor ingresado\\n\\nOpciones válidas:\\n${opciones}`;\n      } else {\n        errorMessage = \"❌ Error: Horarios no cargados. Por favor inicie nuevamente el proceso.\";\n      }\n    } else {\n      updateData.horarioSeleccionado = {\n        id: horarioId,\n        descripcion: updateData.horariosDisponibles[horarioId]\n      };\n      \n      // Show confirmation\n      const resumen = `📋 Resumen del Turno:\\n\\n` +\n                     `👤 DNI: ${updateData.dni}\\n` +\n                     `👨‍⚕️ Especialidad: ${updateData.especialidad.descripcion}\\n` +\n                     `📅 Día: ${updateData.diaSeleccionado.descripcion}\\n` +\n                     `🕐 Horario: ${updateData.horarioSeleccionado.descripcion}\\n\\n` +\n                     `¿Confirma el turno?\\n\\n` +\n                     `1. ✅ Aceptar\\n` +\n                     `2. ❌ Cancelar`;\n      \n      response = {\n        message: resumen\n      };\n      newState = \"CONFIRMACION\";\n    }\n    break;\n\n  case \"CONFIRMACION\":\n    const confirmacion = parseInt(messageText);\n    \n    if (confirmacion === 1) {\n      needsApiSubmission = true;\n      newState = \"ENVIANDO_API\";\n      response = {\n        message: \"✅ Turno confirmado\\n\\nProcesando su solicitud...\"\n      };\n    } else if (confirmacion === 2) {\n      updateData = {};\n      newState = \"INICIO\";\n      response = {\n        message: \"❌ Turno cancelado\\n\\n¿Desea agendar un nuevo turno?\\n\\nEnvíe cualquier mensaje para comenzar.\"\n      };\n    } else {\n      isValid = false;\n      errorMessage = \"❌ No se reconoce el valor ingresado\\n\\nOpciones válidas:\\n1. ✅ Aceptar\\n2. ❌ Cancelar\";\n    }\n    break;\n\n  default:\n    // Unknown state, restart\n    response = {\n      message: \"🏥 Bienvenido al Sistema de Turnos\\n\\nPor favor, indique su DNI (solo números, sin puntos):\"\n    };\n    newState = \"ESPERANDO_DNI\";\n    updateData = {};\n}\n\n// Update session data\nallSessions[chatId] = {\n  chatId: chatId,\n  estado: isValid ? newState : userSession.estado,\n  datos: isValid ? updateData : userSession.datos,\n  createdAt: userSession.createdAt,\n  lastActivity: new Date().toISOString()\n};\n\n// Clean message for WhatsApp\nlet finalMessage = isValid ? response.message : errorMessage;\nlet cleanedMessage = finalMessage\n  .replace(/^#+\\\\s+(.+)$/gm, \"$1\")\n  .replace(/\\\\*\\\\*([^*]+)\\\\*\\\\*/g, \"$1\")\n  .replace(/^\\\\s*-\\\\s+/gm, \"- \");\n\nreturn {\n  json: {\n    chatId: chatId,\n    isValid: isValid,\n    response: {\n      message: cleanedMessage\n    },\n    allSessions: allSessions,\n    token: token,\n    needsDniValidation: needsDniValidation,\n    needsDaysData: needsDaysData,\n    needsHoursData: needsHoursData,\n    needsApiSubmission: needsApiSubmission,\n    currentState: isValid ? newState : userSession.estado,\n    timestamp: new Date().toISOString()\n  }\n};"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        960,
-        -60
+        -1160,
+        540
       ],
-      "id": "3815a839-038a-4692-abf5-e35bf2698c51",
+      "id": "54a428c3-a939-4c14-9499-ffd2d2fb9bec",
       "name": "Process State Logic"
     },
     {
@@ -134,10 +134,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
       "position": [
-        1220,
-        -360
+        -900,
+        240
       ],
-      "id": "5970339d-bb9d-4a29-8432-fc75105626ef",
+      "id": "d19067ca-39dd-49f0-8a43-fd59447a1e17",
       "name": "Check DNI Validation"
     },
     {
@@ -157,23 +157,24 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        1440,
-        -440
+        -680,
+        160
       ],
-      "id": "8969a511-b557-41e8-8697-90060451eeef",
-      "name": "Validate DNI"
+      "id": "5a70ab52-359c-43ea-ae7c-3584e4592172",
+      "name": "Validate DNI",
+      "onError": "continueRegularOutput"
     },
     {
       "parameters": {
-        "jsCode": "// Process DNI Validation Result\nconst stateData = $('Process State Logic').first().json;\nconst chatId = stateData.chatId;\nlet allSessions = stateData.allSessions;\n\n// Get especialidades with validation\nlet especialidades = [];\ntry {\n  const especialidadesResponse = $('Get Especialidades').all();\n  \n  // Validate and normalize especialidades\n  if (Array.isArray(especialidadesResponse)) {\n    especialidades = especialidadesResponse;\n  } else if (especialidadesResponse && typeof especialidadesResponse === 'object') {\n    // If it's an object, try to extract array or handle as single item\n    if (especialidadesResponse.data && Array.isArray(especialidadesResponse.data)) {\n      especialidades = especialidadesResponse.data;\n    } else if (especialidadesResponse.especialidades && Array.isArray(especialidadesResponse.especialidades)) {\n      especialidades = especialidadesResponse.especialidades;\n    } else if (especialidadesResponse.idEspecialidad) {\n      // Single specialty object\n      especialidades = [especialidadesResponse];\n    }\n  }\n  \n  console.log('✅ Especialidades processed:', especialidades.length + ' items');\n} catch (error) {\n  console.log('❌ Error processing especialidades:', error.message);\n  especialidades = [];\n}\n\n// Check if DNI validation was successful\nlet dniValid = false;\nlet errorMessage = \"\";\n\ntry {\n  const dniResponse = $('Validate DNI').first().json;\n  if (dniResponse && (dniResponse.idPaciente || dniResponse.id)) {\n    dniValid = true;\n    // Store patient data\n    allSessions[chatId].datos.paciente = dniResponse;\n  } else {\n    errorMessage = \"❌ DNI no encontrado en el sistema\\n\\nPor favor verifique el número ingresado o comuníquese con la clínica para registrarse.\";\n  }\n} catch (error) {\n  console.log('DNI Validation Error:', error.message);\n  errorMessage = \"❌ Error validando DNI\\n\\nPor favor intente nuevamente o verifique el número ingresado.\";\n}\n\nlet responseMessage = \"\";\n\nif (dniValid) {\n  // Show specialties\n  allSessions[chatId].estado = \"ESPERANDO_ESPECIALIDAD\";\n  \n  let especialidadesText = \"👨‍⚕️ Seleccione una especialidad:\\n\\n\";\n  \n  // Validate especialidades is an array before forEach\n  if (Array.isArray(especialidades) && especialidades.length > 0) {\n    especialidades.forEach(esp => {\n      if (esp && esp.idEspecialidad && esp.descripcion) {\n        especialidadesText += `${esp.idEspecialidad}. ${esp.descripcion}\\n`;\n      }\n    });\n  } else {\n    console.log('⚠️ No especialidades available or invalid format');\n    especialidadesText = \"❌ No hay especialidades disponibles en este momento.\\n\\nPor favor intente más tarde.\";\n    // Keep in DNI validation state to allow retry\n    allSessions[chatId].estado = \"ESPERANDO_DNI\";\n  }\n  \n  responseMessage = especialidadesText;\n} else {\n  // Keep in DNI state with error\n  allSessions[chatId].estado = \"ESPERANDO_DNI\";\n  responseMessage = errorMessage;\n}\n\n// Clean message for WhatsApp\nlet cleanedMessage = responseMessage\n  .replace(/^#+\\\\s+(.+)$/gm, \"$1\")\n  .replace(/\\\\*\\\\*([^*]+)\\\\*\\\\*/g, \"$1\")\n  .replace(/^\\\\s*-\\\\s+/gm, \"- \");\n\nreturn {\n  json: {\n    chatId: chatId,\n    response: {\n      message: cleanedMessage\n    },\n    allSessions: allSessions,\n    dniValid: dniValid,\n    timestamp: new Date().toISOString()\n  }\n};"
+        "jsCode": "// Process DNI Validation Result\nconst stateData = $('Process State Logic').first().json;\nconst chatId = stateData.chatId;\nlet allSessions = stateData.allSessions;\n\n// Get especialidades with validation\nlet especialidades = [];\ntry {\n  const especialidadesResponse = $('Get Especialidades').all();\n  \n  // Validate and normalize especialidades\n  if (Array.isArray(especialidadesResponse)) {\n    especialidades = especialidadesResponse;\n  } else if (especialidadesResponse && typeof especialidadesResponse === 'object') {\n    // If it's an object, try to extract array or handle as single item\n    if (especialidadesResponse.data && Array.isArray(especialidadesResponse.data)) {\n      especialidades = especialidadesResponse.data;\n    } else if (especialidadesResponse.especialidades && Array.isArray(especialidadesResponse.especialidades)) {\n      especialidades = especialidadesResponse.especialidades;\n    } else if (especialidadesResponse.idEspecialidad) {\n      // Single specialty object\n      especialidades = [especialidadesResponse];\n    }\n  }\n  \n  console.log('✅ Especialidades processed:', especialidades.length + ' items');\n} catch (error) {\n  console.log('❌ Error processing especialidades:', error.message);\n  especialidades = [];\n}\n\n// Check if DNI validation was successful\nlet dniValid = false;\nlet errorMessage = \"\";\n\ntry {\n  const dniResponse = $('Validate DNI').first().json;\n  if (dniResponse && (dniResponse.idPaciente || dniResponse.id)) {\n    dniValid = true;\n    // Store patient data\n    allSessions[chatId].datos.paciente = dniResponse;\n  } else {\n    errorMessage = \"❌ DNI no encontrado en el sistema\\n\\nPor favor verifique el número ingresado o comuníquese con la clínica para registrarse.\";\n  }\n} catch (error) {\n  console.log('DNI Validation Error:', error.message);\n  errorMessage = \"❌ Error validando DNI\\n\\nPor favor intente nuevamente o verifique el número ingresado.\";\n}\n\nlet responseMessage = \"\";\n\nif (dniValid) {\n  // Show specialties\n  allSessions[chatId].estado = \"ESPERANDO_ESPECIALIDAD\";\n  \n  // Extract patient name from API response\n  const pacienteData = allSessions[chatId].datos.paciente;\n  let patientName = \"\";\n  \n  // Try different possible name fields from the API response\n  if (pacienteData) {\n    patientName = pacienteData.nombre || \n                 pacienteData.name || \n                 pacienteData.nombreCompleto || \n                 pacienteData.fullName || \n                 pacienteData.nombrePaciente || \n                 pacienteData.nombreApellido || \n                 pacienteData.apellidoNombre || \n                 \"\";\n  }\n  \n  // Build the welcome message with or without name\n  let especialidadesText = \"\";\n  if (patientName && patientName.trim() !== \"\") {\n    especialidadesText = `👋 ¡Hola ${patientName.trim()}!\\n\\n👨‍⚕️ Seleccione una especialidad:\\n\\n`;\n  } else {\n    especialidadesText = \"👨‍⚕️ Seleccione una especialidad:\\n\\n\";\n  }\n  \n  // Validate especialidades is an array before forEach\n  if (Array.isArray(especialidades) && especialidades.length > 0) {\n    especialidades.forEach(esp => {\n      if (esp && esp.idEspecialidad && esp.descripcion) {\n        especialidadesText += `${esp.idEspecialidad}. ${esp.descripcion}\\n`;\n      }\n    });\n  } else {\n    console.log('⚠️ No especialidades available or invalid format');\n    especialidadesText = \"❌ No hay especialidades disponibles en este momento.\\n\\nPor favor intente más tarde.\";\n    // Keep in DNI validation state to allow retry\n    allSessions[chatId].estado = \"ESPERANDO_DNI\";\n  }\n  \n  responseMessage = especialidadesText;\n} else {\n  // Keep in DNI state with error\n  allSessions[chatId].estado = \"ESPERANDO_DNI\";\n  responseMessage = errorMessage;\n}\n\n// Clean message for WhatsApp\nlet cleanedMessage = responseMessage\n  .replace(/^#+\\\\s+(.+)$/gm, \"$1\")\n  .replace(/\\\\*\\\\*([^*]+)\\\\*\\\\*/g, \"$1\")\n  .replace(/^\\\\s*-\\\\s+/gm, \"- \");\n\nreturn [{\n  json: {\n    chatId: chatId,\n    response: {\n      message: cleanedMessage\n    },\n    allSessions: allSessions,\n    dniValid: dniValid,\n    timestamp: new Date().toISOString()\n  }\n}];"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1680,
-        -440
+        -400,
+        180
       ],
-      "id": "0b4528d7-15ec-41b3-8680-f68384ab8de1",
+      "id": "19b8b36b-e825-4667-9e76-14b5a1cd9d5b",
       "name": "Process DNI Result"
     },
     {
@@ -203,10 +204,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
       "position": [
-        1220,
-        -160
+        -900,
+        440
       ],
-      "id": "797dbd6e-5614-413a-bb71-10fb8fd8fb9d",
+      "id": "0e1462c1-01d1-4e6e-9a41-c3204399317d",
       "name": "Check Days Data"
     },
     {
@@ -226,10 +227,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        1460,
-        -200
+        -680,
+        440
       ],
-      "id": "f0586b4a-d0bb-4a20-b667-5e79b931e440",
+      "id": "8e5142ac-8d6e-4002-a762-1c7c2d1c0692",
       "name": "Get Days"
     },
     {
@@ -239,10 +240,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1620,
-        -160
+        -500,
+        440
       ],
-      "id": "ab9c4f90-30eb-4a3e-b13c-ca35624b66b0",
+      "id": "4b60e6cd-9761-44c5-b2da-39b78e4e6e3d",
       "name": "Process Days Result"
     },
     {
@@ -271,10 +272,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
       "position": [
-        1220,
-        60
+        -900,
+        660
       ],
-      "id": "50dfe85c-8d03-4548-9387-ba1b26b42f04",
+      "id": "f7c45435-e9b2-43ba-b7d9-08ed56444f6b",
       "name": "Check Hours Data"
     },
     {
@@ -294,10 +295,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        1420,
-        60
+        -700,
+        660
       ],
-      "id": "7bdb8186-f137-4265-91c9-e391956a36e4",
+      "id": "f52ec25a-2674-457f-bc6c-09fec96a0755",
       "name": "Get Hours"
     },
     {
@@ -307,10 +308,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1620,
-        60
+        -500,
+        660
       ],
-      "id": "57a563dc-4c78-4026-8c5b-8c1790edf49e",
+      "id": "5326c53e-6f30-4d86-b0cf-45ee22b303e7",
       "name": "Process Hours Result"
     },
     {
@@ -339,11 +340,44 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
       "position": [
-        1220,
-        260
+        -900,
+        860
       ],
-      "id": "f075afef-6494-4e19-8b59-c6198f8e256d",
+      "id": "73b87f81-c6bf-462a-b3d0-030581397b00",
       "name": "Check API Submission"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "initial-state",
+              "leftValue": "={{ $('Process State Logic').first().json.currentState }}",
+              "rightValue": "ESPERANDO_DNI",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        -860,
+        60
+      ],
+      "id": "a7f055da-e03d-4e34-96f2-7e9ef0391570",
+      "name": "Check Initial State"
     },
     {
       "parameters": {
@@ -366,10 +400,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        1420,
-        260
+        -700,
+        860
       ],
-      "id": "f3a7e58e-93ab-456d-9dae-8a45cb541c54",
+      "id": "af5756ac-64fe-41e1-b412-1ba087a3ebaa",
       "name": "Submit Turno"
     },
     {
@@ -379,10 +413,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1620,
-        260
+        -500,
+        860
       ],
-      "id": "1d5f50e0-b326-4c21-9524-07fc006d26ba",
+      "id": "12d54b51-38f4-4ccc-aa43-08fc8529d0a8",
       "name": "Process API Result"
     },
     {
@@ -392,10 +426,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1940,
-        -20
+        -140,
+        580
       ],
-      "id": "f58820f3-ff0c-4df4-9697-4b0cace1c353",
+      "id": "2bba3e76-117c-482a-9478-d5efc0277d64",
       "name": "Merge Responses"
     },
     {
@@ -405,10 +439,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        2120,
-        -360
+        0,
+        240
       ],
-      "id": "d06b20f5-c19d-432a-bda7-b3c07476e58c",
+      "id": "183e4c03-c5a8-4350-bcdc-9a154c6ff07b",
       "name": "Prepare JSONBin Update"
     },
     {
@@ -436,10 +470,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        2420,
-        -440
+        300,
+        160
       ],
-      "id": "eb485d55-249c-4d35-a9d8-a751280a09b5",
+      "id": "779bc951-6695-4616-b667-ffbd4d5a272b",
       "name": "Update JSONBin"
     },
     {
@@ -449,10 +483,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        2340,
-        0
+        220,
+        600
       ],
-      "id": "aa155fcb-3c18-4efa-8f91-60b6eb961dc5",
+      "id": "0526c572-d7bb-493c-93dc-c5b444addc9f",
       "name": "Prepare WhatsApp Message"
     },
     {
@@ -480,10 +514,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        2660,
-        -160
+        540,
+        440
       ],
-      "id": "e7d42bf1-a865-413a-9a17-bd53509246f0",
+      "id": "3187b0c9-6ed5-43ac-b360-103081b802f0",
       "name": "Send WhatsApp"
     }
   ],
@@ -538,14 +572,14 @@
         ]
       ]
     },
-    "Get Especialidades": {
-      "main": [
-        []
-      ]
-    },
     "Process State Logic": {
       "main": [
         [
+          {
+            "node": "Check Initial State",
+            "type": "main",
+            "index": 0
+          },
           {
             "node": "Check DNI Validation",
             "type": "main",
@@ -563,11 +597,6 @@
           },
           {
             "node": "Check API Submission",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Merge Responses",
             "type": "main",
             "index": 0
           }
@@ -684,6 +713,17 @@
         ]
       ]
     },
+    "Check Initial State": {
+      "main": [
+        [
+          {
+            "node": "Merge Responses",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
     "Submit Turno": {
       "main": [
         [
@@ -755,7 +795,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "01c3cdc6-c53c-43d1-8926-60db5aac8d38",
+  "versionId": "e2ec1796-8890-40c1-8f44-36dd06e71ec0",
   "meta": {
     "instanceId": "556514cf317cac5c724bf084ccbb32127ff27cc56f225fb39f131295f3c7f3d0"
   },
