@@ -10,10 +10,10 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
       "position": [
-        -1940,
-        440
+        -2544,
+        -576
       ],
-      "id": "06f4a861-6ace-4710-b240-7f14fc79b3d0",
+      "id": "e673ef9f-3e9f-4744-a446-fbc3557dc852",
       "name": "Webhook Start",
       "webhookId": "e3b2122c-9d00-4104-b64f-91553cc08f8c"
     },
@@ -24,10 +24,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -1680,
-        500
+        -2288,
+        -528
       ],
-      "id": "da81bf1d-c7d5-461d-9ea9-5b8acff48a70",
+      "id": "497cd8f5-8a95-4e03-870d-e830017c0f96",
       "name": "Parse Message"
     },
     {
@@ -42,10 +42,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -1420,
-        240
+        -2016,
+        -784
       ],
-      "id": "8bcbe112-4e02-4433-8471-d5bef1409d32",
+      "id": "60ba11cf-5b71-4135-b12d-5d35c674c352",
       "name": "Get Auth Token"
     },
     {
@@ -65,10 +65,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -1420,
-        560
+        -2016,
+        -464
       ],
-      "id": "f788d4b0-7e55-400d-9106-431d9c8db242",
+      "id": "06d663e7-176c-498b-b84b-a0ac938caed6",
       "name": "Get User Session"
     },
     {
@@ -88,23 +88,23 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -1160,
-        200
+        -1760,
+        -816
       ],
-      "id": "7b1790c2-5da0-43f5-95bc-b0417350810e",
+      "id": "55e49698-dff8-42d4-8980-eecbac9fbc74",
       "name": "Get Especialidades"
     },
     {
       "parameters": {
-        "jsCode": "// Process User State and Determine Next Step\nconst chatId = $('Parse Message').first().json.chatId;\nconst messageText = $('Parse Message').first().json.messageText.trim();\nconst token = $('Get Auth Token').first().json.token;\n// FIXED: Use .all() to get all items from the node, then extract the data\nconst especialidadesItems = $('Get Especialidades').all();\nconst especialidades = (especialidadesItems && especialidadesItems.length > 0) ? especialidadesItems.map(item => item.json) : [];\n\n// Get user session from JSONBin\nlet allSessions = {};\nlet userSession = null;\n\ntry {\n  const jsonbinResponse = $('Get User Session').first().json;\n  if (jsonbinResponse && jsonbinResponse.record && jsonbinResponse.record.sessions) {\n    allSessions = jsonbinResponse.record.sessions;\n    console.log('✅ JSONBin data loaded, total users:', Object.keys(allSessions).length);\n  } else {\n    console.log('⚠️ No existing JSONBin data, creating new structure');\n    allSessions = {};\n  }\n  userSession = allSessions[chatId];\n} catch (error) {\n  console.log('❌ Error reading JSONBin, creating new structure:', error.message);\n  allSessions = {};\n}\n\n// Initialize new user session if doesn't exist\nif (!allSessions[chatId]) {\n  allSessions[chatId] = {\n    chatId: chatId,\n    estado: \"INICIO\",\n    datos: {},\n    createdAt: new Date().toISOString(),\n    lastActivity: new Date().toISOString()\n  };\n  console.log('🆕 Initialized new user session for:', chatId);\n}\n\n// Get current user session\nuserSession = allSessions[chatId];\nconst isNewUser = !userSession.datos || Object.keys(userSession.datos).length === 0;\n\n// Update last activity\nuserSession.lastActivity = new Date().toISOString();\nconsole.log(isNewUser ? '🆕 New user detected' : '🔄 Existing user session loaded');\n\n// Process based on current state\nlet response = {};\nlet newState = userSession.estado;\nlet updateData = { ...userSession.datos };\nlet isValid = true;\nlet errorMessage = \"\";\nlet needsDniValidation = false;\nlet needsDaysData = false;\nlet needsHoursData = false;\nlet needsApiSubmission = false;\nlet needsConfirmationDisplay = false;\n\n// CRITICAL FIX: Detect if we're transitioning from INICIO/COMPLETADO states\nconst currentState = userSession.estado || \"INICIO\";\nlet skipDniProcessing = (currentState === \"INICIO\" || currentState === \"COMPLETADO\");\n\n// CRITICAL: If skipDniProcessing is true, we MUST prevent ALL processing nodes from executing\nif (skipDniProcessing) {\n  console.log('🛑 SKIP MODE ACTIVE: Preventing all processing operations for state transition from ' + currentState);\n  // Force all processing flags to false to prevent parallel execution of validation nodes\n  needsDniValidation = false;\n  needsDaysData = false;\n  needsHoursData = false;\n  needsApiSubmission = false;\n  needsConfirmationDisplay = false;\n}\n\nswitch (userSession.estado) {\n  case \"INICIO\":\n  case \"COMPLETADO\":\n    // Start or restart flow - ONLY show welcome message\n    if (userSession.estado === \"COMPLETADO\") {\n      updateData = {}; // Clear previous data\n    }\n    response = {\n      message: \"🏥 Bienvenido al Sistema de Turnos\\n\\nPor favor, indique su DNI (solo números, sin puntos):\"\n    };\n    newState = \"ESPERANDO_DNI\";\n    console.log('🔄 State transition: ' + currentState + ' -> ESPERANDO_DNI (skipDniProcessing: true)');\n    break;\n\n  case \"ESPERANDO_DNI\":\n    // CRITICAL: Skip DNI processing if we just transitioned from INICIO/COMPLETADO\n    if (skipDniProcessing) {\n      console.log('⏭️ Skipping DNI processing - just transitioned from ' + currentState + ' state');\n      // The user will need to send another message for actual DNI validation\n      // Keep current response (welcome message) and don't process current message as DNI\n      // DO NOT break here - we want to keep the welcome message from the previous case\n      console.log('📝 Keeping welcome message, user needs to send DNI in next message');\n      break;\n    }\n    \n    // Process actual DNI input from user's next message\n    console.log('🔍 Processing DNI input: \"' + messageText + '\"');\n    \n    // Clean and validate DNI\n    const cleanDNI = messageText.replace(/[^\\d]/g, '');\n    \n    if (!cleanDNI || cleanDNI.length < 7 || cleanDNI.length > 8) {\n      isValid = false;\n      errorMessage = `❌ DNI inválido\\n\\nPor favor ingrese solo números, entre 7 y 8 dígitos.\\n\\nFormatos aceptados:\\n• 25430441\\n• 25.430.441\\n• 25 430 441\\n\\nSu entrada: \"${messageText}\"\\nProcesado como: \"${cleanDNI}\"`;\n      console.log('❌ Validation failed for state:', userSession.estado);\n      console.log('❌ Error message:', errorMessage);\n      console.log('❌ isValid flag:', isValid);\n    } else {\n      updateData.dni = cleanDNI;\n      needsDniValidation = true;\n      newState = \"VALIDANDO_DNI\";\n      response = {\n        message: \"⏳ Validando DNI...\"\n      };\n    }\n    break;\n\n  case \"ESPERANDO_ESPECIALIDAD\":\n    const especialidadId = parseInt(messageText);\n    \n    // Ensure especialidades is an array\n    let especialidadesArray = [];\n    if (Array.isArray(especialidades)) {\n      especialidadesArray = especialidades;\n    } else if (especialidades && Array.isArray(especialidades)) {\n      especialidadesArray = especialidades;\n    }\n    \n    const especialidad = especialidadesArray.find(e => e.idEspecialidad === especialidadId);\n    \n    if (!especialidad) {\n      isValid = false;\n      let opciones = especialidadesArray.map(e => `${e.idEspecialidad}. ${e.descripcion}`).join('\\n');\n      errorMessage = `❌ No se reconoce el valor ingresado\\n\\nOpciones válidas:\\n${opciones}`;\n      console.log('❌ Validation failed for state:', userSession.estado);\n      console.log('❌ Error message:', errorMessage);\n      console.log('❌ isValid flag:', isValid);\n    } else {\n      updateData.especialidad = especialidad;\n      needsDaysData = true;\n      newState = \"CARGANDO_DIAS\";\n      response = {\n        message: `⏳ Obteniendo días disponibles para ${especialidad.descripcion}...`\n      };\n    }\n    break;\n\n  case \"ESPERANDO_DIA\":\n    const diaId = parseInt(messageText);\n    if (!updateData.diasDisponibles || !updateData.diasDisponibles[diaId]) {\n      isValid = false;\n      if (updateData.diasDisponibles) {\n        let opciones = Object.keys(updateData.diasDisponibles).map(key => `${key}. ${updateData.diasDisponibles[key]}`).join('\\n');\n        errorMessage = `❌ No se reconoce el valor ingresado\\n\\nOpciones válidas:\\n${opciones}`;\n      console.log('❌ Validation failed for state:', userSession.estado);\n      console.log('❌ Error message:', errorMessage);\n      console.log('❌ isValid flag:', isValid);\n      } else {\n        errorMessage = \"❌ Error: Días no cargados. Por favor inicie nuevamente el proceso.\";\n      console.log('❌ Validation failed for state:', userSession.estado);\n      console.log('❌ Error message:', errorMessage);\n      console.log('❌ isValid flag:', isValid);\n      }\n    } else {\n      updateData.diaSeleccionado = {\n        id: diaId,\n        descripcion: updateData.diasDisponibles[diaId]\n      };\n      needsHoursData = true;\n      newState = \"CARGANDO_HORARIOS\";\n      response = {\n        message: `⏳ Obteniendo horarios disponibles para ${updateData.diaSeleccionado.descripcion}...`\n      };\n    }\n    break;\n\n  case \"ESPERANDO_HORARIO\":\n    const horarioId = parseInt(messageText);\n    if (!updateData.horariosDisponibles || !updateData.horariosDisponibles[horarioId]) {\n      isValid = false;\n      if (updateData.horariosDisponibles) {\n        let opciones = Object.keys(updateData.horariosDisponibles).map(key => `${key}. ${updateData.horariosDisponibles[key]}`).join('\\n');\n        errorMessage = `❌ No se reconoce el valor ingresado\\n\\nOpciones válidas:\\n${opciones}`;\n      console.log('❌ Validation failed for state:', userSession.estado);\n      console.log('❌ Error message:', errorMessage);\n      console.log('❌ isValid flag:', isValid);\n      } else {\n        errorMessage = \"❌ Error: Horarios no cargados. Por favor inicie nuevamente el proceso.\";\n      console.log('❌ Validation failed for state:', userSession.estado);\n      console.log('❌ Error message:', errorMessage);\n      console.log('❌ isValid flag:', isValid);\n      }\n    } else {\n      updateData.horarioSeleccionado = {\n        id: horarioId,\n        descripcion: updateData.horariosDisponibles[horarioId]\n      };\n      \n      // Show confirmation\n      const resumen = `📋 Resumen de su turno:\\n\\n` +\n                     `👤 Paciente: ${updateData.paciente?.nombre || updateData.paciente?.name || updateData.paciente?.nombreCompleto || \"Paciente\"}\\n` +\n                     `🏥 Especialidad: ${updateData.especialidad.descripcion}\\n` +\n                     `📅 Día: ${updateData.diaSeleccionado.descripcion}\\n` +\n                     `🕐 Horario: ${updateData.horarioSeleccionado.descripcion}\\n\\n` +\n                     `¿Confirma la reserva del turno?\\n\\n` +\n                     `✅ Escriba \"SI\" para confirmar\\n` +\n                     `❌ Escriba \"NO\" para cancelar`;\n      \n      response = {\n        message: resumen\n      };\n      newState = \"ESPERANDO_CONFIRMACION\";\n      needsConfirmationDisplay = true;\n    }\n    break;\n\n  case \"ESPERANDO_CONFIRMACION\":\n    const confirmacionText = messageText.toUpperCase().trim();\n    \n    if (confirmacionText === \"SI\") {\n      needsApiSubmission = true;\n      newState = \"PROCESANDO_API\";\n      response = {\n        message: \"✅ Turno confirmado\\n\\nProcesando su solicitud...\"\n      };\n    } else if (confirmacionText === \"NO\") {\n      updateData = {};\n      newState = \"INICIO\";\n      response = {\n        message: \"❌ Turno cancelado\\n\\n¿Desea agendar un nuevo turno?\\n\\nEnvíe cualquier mensaje para comenzar.\"\n      };\n    } else {\n      isValid = false;\n      errorMessage = \"❌ No se reconoce el valor ingresado\\\\n\\\\nOpciones válidas:\\\\n✅ Escriba \\\"SI\\\" para confirmar\\\\n❌ Escriba \\\"NO\\\" para cancelar\";\n      console.log('❌ Validation failed for state:', userSession.estado);\n      console.log('❌ Error message:', errorMessage);\n      console.log('❌ isValid flag:', isValid);\n    }\n    break;\n\n  default:\n    // Unknown state, restart\n    response = {\n      message: \"🏥 Bienvenido al Sistema de Turnos\\n\\nPor favor, indique su DNI (solo números, sin puntos):\"\n    };\n    newState = \"ESPERANDO_DNI\";\n    updateData = {};\n}\n\n// Update session data\nallSessions[chatId] = {\n  chatId: chatId,\n  estado: isValid ? newState : userSession.estado,\n  datos: isValid ? updateData : userSession.datos,\n  createdAt: userSession.createdAt,\n  lastActivity: new Date().toISOString()\n};\n\n// Clean message for WhatsApp\nlet finalMessage = isValid ? response.message : errorMessage;\nlet cleanedMessage = finalMessage\n\n  .replace(/\\\\*\\\\*([^*]+)\\\\*\\\\*/g, \"$1\")\n  .replace(/^\\\\s*-\\\\s+/gm, \"- \");\n\nreturn {\n  json: {\n    chatId: chatId,\n    isValid: isValid,\n    response: {\n      message: cleanedMessage\n    },\n    allSessions: allSessions,\n    token: token,\n    needsDniValidation: needsDniValidation,\n    needsDaysData: needsDaysData,\n    needsHoursData: needsHoursData,\n    needsApiSubmission: needsApiSubmission,\n    needsConfirmationDisplay: needsConfirmationDisplay,\n    currentState: isValid ? newState : userSession.estado,\n    timestamp: new Date().toISOString()\n  }\n};"
+        "jsCode": "// Process User State and Determine Next Step\nconst chatId = $('Parse Message').first().json.chatId;\nconst messageText = $('Parse Message').first().json.messageText.trim();\nconst token = $('Get Auth Token').first().json.token;\n// FIXED: Use .all() to get all items from the node, then extract the data\nconst especialidadesItems = $('Get Especialidades').all();\nconst especialidades = (especialidadesItems && especialidadesItems.length > 0) ? especialidadesItems.map(item => item.json) : [];\n\n// Get user session from JSONBin\nlet allSessions = {};\nlet userSession = null;\n\ntry {\n  const jsonbinResponse = $('Get User Session').first().json;\n  if (jsonbinResponse && jsonbinResponse.record && jsonbinResponse.record.sessions) {\n    allSessions = jsonbinResponse.record.sessions;\n    console.log('✅ JSONBin data loaded, total users:', Object.keys(allSessions).length);\n  } else {\n    console.log('⚠️ No existing JSONBin data, creating new structure');\n    allSessions = {};\n  }\n  userSession = allSessions[chatId];\n} catch (error) {\n  console.log('❌ Error reading JSONBin, creating new structure:', error.message);\n  allSessions = {};\n}\n\n// Initialize new user session if doesn't exist\nif (!allSessions[chatId]) {\n  allSessions[chatId] = {\n    chatId: chatId,\n    estado: \"INICIO\",\n    datos: {},\n    createdAt: new Date().toISOString(),\n    lastActivity: new Date().toISOString()\n  };\n  console.log('🆕 Initialized new user session for:', chatId);\n}\n\n// Get current user session\nuserSession = allSessions[chatId];\nconst isNewUser = !userSession.datos || Object.keys(userSession.datos).length === 0;\n\n// Update last activity\nuserSession.lastActivity = new Date().toISOString();\nconsole.log(isNewUser ? '🆕 New user detected' : '🔄 Existing user session loaded');\n\n// Process based on current state\nlet response = {};\nlet newState = userSession.estado;\nlet updateData = { ...userSession.datos };\nlet isValid = true;\nlet errorMessage = \"\";\nlet needsDniValidation = false;\nlet needsDaysData = false;\nlet needsHoursData = false;\nlet needsApiSubmission = false;\nlet needsConfirmationDisplay = false;\n\n// CRITICAL FIX: Detect if we're transitioning from INICIO/COMPLETADO states\nconst currentState = userSession.estado || \"INICIO\";\nlet skipDniProcessing = (currentState === \"INICIO\" || currentState === \"COMPLETADO\");\n\n// CRITICAL: If skipDniProcessing is true, we MUST prevent ALL processing nodes from executing\nif (skipDniProcessing) {\n  console.log('🛑 SKIP MODE ACTIVE: Preventing all processing operations for state transition from ' + currentState);\n  // Force all processing flags to false to prevent parallel execution of validation nodes\n  needsDniValidation = false;\n  needsDaysData = false;\n  needsHoursData = false;\n  needsApiSubmission = false;\n  needsConfirmationDisplay = false;\n}\n\nswitch (userSession.estado) {\n  case \"INICIO\":\n  case \"COMPLETADO\":\n    // Start or restart flow - ONLY show welcome message\n    if (userSession.estado === \"COMPLETADO\") {\n      updateData = {}; // Clear previous data\n    }\n    response = {\n      message: \"🏥 Bienvenido al Sistema de Turnos\\n\\nPor favor, indique su DNI (solo números, sin puntos):\"\n    };\n    newState = \"ESPERANDO_DNI\";\n    console.log('🔄 State transition: ' + currentState + ' -> ESPERANDO_DNI (skipDniProcessing: true)');\n    break;\n\n  case \"ESPERANDO_DNI\":\n    // CRITICAL: Skip DNI processing if we just transitioned from INICIO/COMPLETADO\n    if (skipDniProcessing) {\n      console.log('⏭️ Skipping DNI processing - just transitioned from ' + currentState + ' state');\n      // The user will need to send another message for actual DNI validation\n      // Keep current response (welcome message) and don't process current message as DNI\n      // DO NOT break here - we want to keep the welcome message from the previous case\n      console.log('📝 Keeping welcome message, user needs to send DNI in next message');\n      break;\n    }\n    \n    // Process actual DNI input from user's next message\n    console.log('🔍 Processing DNI input: \"' + messageText + '\"');\n    \n    // Clean and validate DNI\n    const cleanDNI = messageText.replace(/[^\\d]/g, '');\n    \n    if (!cleanDNI || cleanDNI.length < 7 || cleanDNI.length > 8) {\n      isValid = false;\n      errorMessage = `❌ DNI inválido\\n\\nPor favor ingrese solo números, entre 7 y 8 dígitos.\\n\\nFormatos aceptados:\\n• 25430441\\n• 25.430.441\\n• 25 430 441\\n\\nSu entrada: \"${messageText}\"\\nProcesado como: \"${cleanDNI}\"`;\n      console.log('🔍 DNI ERROR SOURCE: Process State Logic - Format validation');\n      console.log('❌ Validation failed for state:', userSession.estado);\n      console.log('❌ Error message:', errorMessage);\n      console.log('❌ isValid flag:', isValid);\n    } else {\n      updateData.dni = cleanDNI;\n      needsDniValidation = true;\n      newState = \"VALIDANDO_DNI\";\n      response = {\n        message: \"⏳ Validando DNI...\"\n      };\n    }\n    break;\n\n  case \"ESPERANDO_ESPECIALIDAD\":\n    const especialidadId = parseInt(messageText);\n    \n    // Ensure especialidades is an array\n    let especialidadesArray = [];\n    if (Array.isArray(especialidades)) {\n      especialidadesArray = especialidades;\n    } else if (especialidades && Array.isArray(especialidades)) {\n      especialidadesArray = especialidades;\n    }\n    \n    const especialidad = especialidadesArray.find(e => e.idEspecialidad === especialidadId);\n    \n    if (!especialidad) {\n      isValid = false;\n      let opciones = especialidadesArray.map(e => `${e.idEspecialidad}. ${e.descripcion}`).join('\\n');\n      errorMessage = `❌ No se reconoce el valor ingresado\\n\\nOpciones válidas:\\n${opciones}`;\n      console.log('❌ Validation failed for state:', userSession.estado);\n      console.log('❌ Error message:', errorMessage);\n      console.log('❌ isValid flag:', isValid);\n    } else {\n      updateData.especialidad = especialidad;\n      needsDaysData = true;\n      newState = \"CARGANDO_DIAS\";\n      response = {\n        message: `⏳ Obteniendo días disponibles para ${especialidad.descripcion}...`\n      };\n    }\n    break;\n\n  case \"ESPERANDO_DIA\":\n    const diaId = parseInt(messageText);\n    if (!updateData.diasDisponibles || !updateData.diasDisponibles[diaId]) {\n      isValid = false;\n      if (updateData.diasDisponibles) {\n        let opciones = Object.keys(updateData.diasDisponibles).map(key => `${key}. ${updateData.diasDisponibles[key]}`).join('\\n');\n        errorMessage = `❌ No se reconoce el valor ingresado\\n\\nOpciones válidas:\\n${opciones}`;\n      console.log('❌ Validation failed for state:', userSession.estado);\n      console.log('❌ Error message:', errorMessage);\n      console.log('❌ isValid flag:', isValid);\n      } else {\n        errorMessage = \"❌ Error: Días no cargados. Por favor inicie nuevamente el proceso.\";\n      console.log('❌ Validation failed for state:', userSession.estado);\n      console.log('❌ Error message:', errorMessage);\n      console.log('❌ isValid flag:', isValid);\n      }\n    } else {\n      updateData.diaSeleccionado = {\n        id: diaId,\n        descripcion: updateData.diasDisponibles[diaId]\n      };\n      needsHoursData = true;\n      newState = \"CARGANDO_HORARIOS\";\n      response = {\n        message: `⏳ Obteniendo horarios disponibles para ${updateData.diaSeleccionado.descripcion}...`\n      };\n    }\n    break;\n\n  case \"ESPERANDO_HORARIO\":\n    const horarioId = parseInt(messageText);\n    if (!updateData.horariosDisponibles || !updateData.horariosDisponibles[horarioId]) {\n      isValid = false;\n      if (updateData.horariosDisponibles) {\n        let opciones = Object.keys(updateData.horariosDisponibles).map(key => `${key}. ${updateData.horariosDisponibles[key]}`).join('\\n');\n        errorMessage = `❌ No se reconoce el valor ingresado\\n\\nOpciones válidas:\\n${opciones}`;\n      console.log('❌ Validation failed for state:', userSession.estado);\n      console.log('❌ Error message:', errorMessage);\n      console.log('❌ isValid flag:', isValid);\n      } else {\n        errorMessage = \"❌ Error: Horarios no cargados. Por favor inicie nuevamente el proceso.\";\n      console.log('❌ Validation failed for state:', userSession.estado);\n      console.log('❌ Error message:', errorMessage);\n      console.log('❌ isValid flag:', isValid);\n      }\n    } else {\n      updateData.horarioSeleccionado = {\n        id: horarioId,\n        descripcion: updateData.horariosDisponibles[horarioId]\n      };\n      \n      // Show confirmation\n      const resumen = `📋 Resumen de su turno:\\n\\n` +\n                     `👤 Paciente: ${updateData.paciente?.nombre || updateData.paciente?.name || updateData.paciente?.nombreCompleto || \"Paciente\"}\\n` +\n                     `🏥 Especialidad: ${updateData.especialidad.descripcion}\\n` +\n                     `📅 Día: ${updateData.diaSeleccionado.descripcion}\\n` +\n                     `🕐 Horario: ${updateData.horarioSeleccionado.descripcion}\\n\\n` +\n                     `¿Confirma la reserva del turno?\\n\\n` +\n                     `✅ Escriba \"SI\" para confirmar\\n` +\n                     `❌ Escriba \"NO\" para cancelar`;\n      \n      response = {\n        message: resumen\n      };\n      newState = \"ESPERANDO_CONFIRMACION\";\n      needsConfirmationDisplay = true;\n    }\n    break;\n\n  case \"ESPERANDO_CONFIRMACION\":\n    const confirmacionText = messageText.toUpperCase().trim();\n    \n    if (confirmacionText === \"SI\") {\n      needsApiSubmission = true;\n      newState = \"PROCESANDO_API\";\n      response = {\n        message: \"✅ Turno confirmado\\n\\nProcesando su solicitud...\"\n      };\n    } else if (confirmacionText === \"NO\") {\n      updateData = {};\n      newState = \"INICIO\";\n      response = {\n        message: \"❌ Turno cancelado\\n\\n¿Desea agendar un nuevo turno?\\n\\nEnvíe cualquier mensaje para comenzar.\"\n      };\n    } else {\n      isValid = false;\n      errorMessage = \"❌ No se reconoce el valor ingresado\\\\n\\\\nOpciones válidas:\\\\n✅ Escriba \\\"SI\\\" para confirmar\\\\n❌ Escriba \\\"NO\\\" para cancelar\";\n      console.log('❌ Validation failed for state:', userSession.estado);\n      console.log('❌ Error message:', errorMessage);\n      console.log('❌ isValid flag:', isValid);\n    }\n    break;\n\n  default:\n    // Unknown state, restart\n    response = {\n      message: \"🏥 Bienvenido al Sistema de Turnos\\n\\nPor favor, indique su DNI (solo números, sin puntos):\"\n    };\n    newState = \"ESPERANDO_DNI\";\n    updateData = {};\n}\n\n// Update session data\nallSessions[chatId] = {\n  chatId: chatId,\n  estado: isValid ? newState : userSession.estado,\n  datos: isValid ? updateData : userSession.datos,\n  createdAt: userSession.createdAt,\n  lastActivity: new Date().toISOString()\n};\n\n// Clean message for WhatsApp\nlet finalMessage = isValid ? response.message : errorMessage;\nlet cleanedMessage = finalMessage\n\n  .replace(/\\\\*\\\\*([^*]+)\\\\*\\\\*/g, \"$1\")\n  .replace(/^\\\\s*-\\\\s+/gm, \"- \");\n\nreturn {\n  json: {\n    chatId: chatId,\n    isValid: isValid,\n    response: {\n      message: cleanedMessage\n    },\n    allSessions: allSessions,\n    token: token,\n    needsDniValidation: needsDniValidation,\n    needsDaysData: needsDaysData,\n    needsHoursData: needsHoursData,\n    needsApiSubmission: needsApiSubmission,\n    needsConfirmationDisplay: needsConfirmationDisplay,\n    currentState: isValid ? newState : userSession.estado,\n    timestamp: new Date().toISOString()\n  }\n};"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -1160,
-        540
+        -1760,
+        -480
       ],
-      "id": "54a428c3-a939-4c14-9499-ffd2d2fb9bec",
+      "id": "0bceec49-e42f-4519-86bd-46a975681ceb",
       "name": "Process State Logic"
     },
     {
@@ -134,10 +134,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
       "position": [
-        -900,
-        240
+        -1504,
+        -736
       ],
-      "id": "d19067ca-39dd-49f0-8a43-fd59447a1e17",
+      "id": "a8ebdb91-5b60-4661-9d38-9f8203dcae16",
       "name": "Check DNI Validation"
     },
     {
@@ -157,24 +157,24 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -680,
-        160
+        -1280,
+        -864
       ],
-      "id": "5a70ab52-359c-43ea-ae7c-3584e4592172",
+      "id": "95e3a734-dd72-4676-8786-53a58dce7a5d",
       "name": "Validate DNI",
       "onError": "continueRegularOutput"
     },
     {
       "parameters": {
-        "jsCode": "// Process DNI Validation Result - WITH EXTENSIVE DEBUGGING\nconst stateData = $('Process State Logic').first().json;\nconst chatId = stateData.chatId;\nlet allSessions = stateData.allSessions;\n\nconsole.log('🔍 DEBUG: Starting Process DNI Result with chatId:', chatId);\nconsole.log('🔍 DEBUG: State data:', JSON.stringify(stateData, null, 2));\n\n// Get especialidades with validation\nlet especialidades = [];\ntry {\n  // FIXED: Use .all() instead of .first().json to get all items from the node\n  const especialidadesItems = $('Get Especialidades').all();\n  \n  console.log('📊 Get Especialidades items count:', especialidadesItems.length);\n  console.log('📊 Get Especialidades items structure:', JSON.stringify(especialidadesItems, null, 2));\n  \n  let especialidadesResponse = null;\n  if (especialidadesItems && especialidadesItems.length > 0) {\n    // Extract the actual data from the first item's json property\n    especialidadesResponse = especialidadesItems.map(item => item.json);\n    console.log('🔍 DEBUG: Raw especialidades data type:', typeof especialidadesResponse);\n    console.log('🔍 DEBUG: Is especialidades an array?', Array.isArray(especialidadesResponse));\n    console.log('🔍 DEBUG: Especialidades length:', especialidadesResponse?.length);\n    console.log('🔍 DEBUG: First specialty item:', especialidadesResponse?.[0]);\n    console.log('🔍 DEBUG: All specialties:', JSON.stringify(especialidadesResponse, null, 2));\n  } else {\n    console.log('⚠️ No items returned from Get Especialidades node');\n    especialidadesResponse = null;\n  }\n  \n  console.log('📊 Raw especialidades response:', JSON.stringify(especialidadesResponse, null, 2));\n  \n  // Only process if we have valid response data\n  if (!especialidadesResponse) {\n    console.log('⚠️ No especialidades data available');\n    especialidades = [];\n  } else if (Array.isArray(especialidadesResponse)) {\n    especialidades = especialidadesResponse;\n  } else if (especialidadesResponse && typeof especialidadesResponse === 'object') {\n    // If it's wrapped in an object, try to extract the array\n    if (especialidadesResponse.data && Array.isArray(especialidadesResponse.data)) {\n      especialidades = especialidadesResponse.data;\n    } else if (especialidadesResponse.especialidades && Array.isArray(especialidadesResponse.especialidades)) {\n      especialidades = especialidadesResponse.especialidades;\n    } else if (especialidadesResponse.idEspecialidad) {\n      // Single specialty object\n      especialidades = [especialidadesResponse];\n    }\n  }\n  \n  console.log('✅ Especialidades processed:', especialidades.length + ' items');\n  console.log('📋 Especialidades array:', JSON.stringify(especialidades, null, 2));\n} catch (error) {\n  console.log('❌ Error processing especialidades:', error.message);\n  console.log('❌ Error stack:', error.stack);\n  especialidades = [];\n}\n\n// Check if DNI validation was successful\nlet dniValid = false;\nlet errorMessage = \"\";\n\ntry {\n  const dniResponse = $('Validate DNI').first().json;\n  console.log('🔍 DEBUG: DNI Response:', JSON.stringify(dniResponse, null, 2));\n  if (dniResponse && (dniResponse.idPaciente || dniResponse.id)) {\n    dniValid = true;\n    // Store patient data\n    allSessions[chatId].datos.paciente = dniResponse;\n    console.log('✅ DEBUG: DNI Valid, patient data stored');\n  } else {\n    errorMessage = \"❌ DNI no encontrado en el sistema\\n\\nPor favor verifique el número ingresado o comuníquese con la clínica para registrarse.\";\n    console.log('❌ DEBUG: DNI Invalid, no patient found');\n  }\n} catch (error) {\n  console.log('DNI Validation Error:', error.message);\n  console.log('❌ Error stack:', error.stack);\n  errorMessage = \"❌ Error validando DNI\\n\\nPor favor intente nuevamente o verifique el número ingresado.\";\n}\n\nlet responseMessage = \"\";\n\nif (dniValid) {\n  // Show specialties\n  allSessions[chatId].estado = \"ESPERANDO_ESPECIALIDAD\";\n  \n  // Extract patient name from API response\n  const pacienteData = allSessions[chatId].datos.paciente;\n  let patientName = \"\";\n  \n  // Try different possible name fields from the API response\n  if (pacienteData) {\n    patientName = pacienteData.nombre || \n                 pacienteData.name || \n                 pacienteData.nombreCompleto || \n                 pacienteData.fullName || \n                 pacienteData.nombrePaciente || \n                 pacienteData.nombreApellido || \n                 pacienteData.apellidoNombre || \n                 \"\";\n  }\n  \n  console.log('👤 DEBUG: Patient name extracted:', patientName);\n  \n  // Build the welcome message with or without name\n  let especialidadesText = \"\";\n  if (patientName && patientName.trim() !== \"\") {\n    especialidadesText = `👋 ¡Hola ${patientName.trim()}!\\n\\n👨‍⚕️ Seleccione una especialidad:\\n\\n`;\n  } else {\n    especialidadesText = \"👨‍⚕️ Seleccione una especialidad:\\n\\n\";\n  }\n  \n  console.log('🔄 DEBUG: Starting forEach with', especialidades.length, 'items');\n  console.log('🔄 DEBUG: Initial especialidadesText:', especialidadesText);\n  \n  // Validate especialidades is an array before forEach\n  if (Array.isArray(especialidades) && especialidades.length > 0) {\n    console.log('🔄 Building especialidades list with', especialidades.length, 'items');\n    \n    // CRITICAL FIX: Build the list directly without intermediate variable\n    // Process each specialty and append immediately\n    especialidades.forEach((esp, index) => {\n      console.log(`🔄 DEBUG: Processing specialty ${index + 1}:`, esp);\n      console.log(`🔄 DEBUG: Before adding item ${index + 1}, text length:`, especialidadesText.length);\n      \n      if (esp && esp.idEspecialidad && esp.descripcion) {\n        const listItem = `${esp.idEspecialidad}. ${esp.descripcion}\\n`;\n        console.log(`🔄 DEBUG: Adding item: \"${listItem}\"`);\n        \n        // Append directly to especialidadesText to avoid string concatenation issues\n        especialidadesText += listItem;\n        \n        console.log(`🔄 DEBUG: After adding item ${index + 1}, text length:`, especialidadesText.length);\n        console.log(`🔄 DEBUG: Current text:`, especialidadesText);\n        console.log(`✅ Added specialty: ${esp.idEspecialidad}. ${esp.descripcion}`);\n      } else {\n        console.log('⚠️ Invalid specialty object at index', index, ':', esp);\n      }\n    });\n    \n    console.log('✅ DEBUG: Final especialidadesText length:', especialidadesText.length);\n    console.log('✅ DEBUG: Final especialidadesText content:', especialidadesText);\n    console.log(`📊 Final especialidades text (${especialidadesText.length} chars):`);\n    console.log('📝 Final text content:', especialidadesText);\n  } else {\n    console.log('⚠️ No especialidades available or invalid format. Data:', especialidades);\n    especialidadesText += \"❌ No hay especialidades disponibles en este momento.\\n\\nPor favor intente más tarde.\";\n    // Keep in DNI validation state to allow retry\n    allSessions[chatId].estado = \"ESPERANDO_DNI\";\n  }\n  \n  responseMessage = especialidadesText;\n  console.log('🧹 DEBUG: Before cleaning, responseMessage:', responseMessage);\n} else {\n  // Keep in DNI state with error\n  allSessions[chatId].estado = \"ESPERANDO_DNI\";\n  responseMessage = errorMessage;\n  console.log('🧹 DEBUG: Before cleaning, error responseMessage:', responseMessage);\n}\n\n// CRITICAL FIX: Simplified message cleaning - avoid aggressive regex that might truncate content\nlet cleanedMessage = responseMessage\n  .replace(/\\\\*\\\\*([^*]+)\\\\*\\\\*/g, \"$1\")  // Remove markdown bold\n  .replace(/^\\\\s*-\\\\s+/gm, \"- \");       // Clean list items\n\nconsole.log('🧹 DEBUG: After cleaning, cleanedMessage:', cleanedMessage);\nconsole.log('📊 DEBUG: Final cleaned message length:', cleanedMessage.length);\n\nconst result = [{\n  json: {\n    chatId: chatId,\n    response: {\n      message: cleanedMessage\n    },\n    allSessions: allSessions,\n    dniValid: dniValid,\n    timestamp: new Date().toISOString()\n  }\n}];\n\nconsole.log('📤 DEBUG: Final return result:', JSON.stringify(result, null, 2));\n\nreturn result;"
+        "jsCode": "// Process DNI Validation Result - WITH EXTENSIVE DEBUGGING\nconst stateData = $('Process State Logic').first().json;\nconst chatId = stateData.chatId;\nlet allSessions = stateData.allSessions;\n\nconsole.log('🔍 DEBUG: Starting Process DNI Result with chatId:', chatId);\nconsole.log('🔍 DEBUG: State data:', JSON.stringify(stateData, null, 2));\n\n// CRITICAL FIX: Check if format validation already failed in Process State Logic\nif (stateData.isValid === false) {\n  console.log('🛑 EARLY EXIT: Format validation failed in Process State Logic, skipping API validation');\n  console.log('🛑 Reason: Preventing duplicate error messages');\n  // Return empty result to prevent this node from generating output\n  // The error message from Process State Logic will be used instead\n  return [];\n}\n\n// Only proceed if format validation passed\nconsole.log('✅ Format validation passed, proceeding with API validation');\n\n// Get especialidades with validation\nlet especialidades = [];\ntry {\n  // FIXED: Use .all() instead of .first().json to get all items from the node\n  const especialidadesItems = $('Get Especialidades').all();\n  \n  console.log('📊 Get Especialidades items count:', especialidadesItems.length);\n  console.log('📊 Get Especialidades items structure:', JSON.stringify(especialidadesItems, null, 2));\n  \n  let especialidadesResponse = null;\n  if (especialidadesItems && especialidadesItems.length > 0) {\n    // Extract the actual data from the first item's json property\n    especialidadesResponse = especialidadesItems.map(item => item.json);\n    console.log('🔍 DEBUG: Raw especialidades data type:', typeof especialidadesResponse);\n    console.log('🔍 DEBUG: Is especialidades an array?', Array.isArray(especialidadesResponse));\n    console.log('🔍 DEBUG: Especialidades length:', especialidadesResponse?.length);\n    console.log('🔍 DEBUG: First specialty item:', especialidadesResponse?.[0]);\n    console.log('🔍 DEBUG: All specialties:', JSON.stringify(especialidadesResponse, null, 2));\n  } else {\n    console.log('⚠️ No items returned from Get Especialidades node');\n    especialidadesResponse = null;\n  }\n  \n  console.log('📊 Raw especialidades response:', JSON.stringify(especialidadesResponse, null, 2));\n  \n  // Only process if we have valid response data\n  if (!especialidadesResponse) {\n    console.log('⚠️ No especialidades data available');\n    especialidades = [];\n  } else if (Array.isArray(especialidadesResponse)) {\n    especialidades = especialidadesResponse;\n  } else if (especialidadesResponse && typeof especialidadesResponse === 'object') {\n    // If it's wrapped in an object, try to extract the array\n    if (especialidadesResponse.data && Array.isArray(especialidadesResponse.data)) {\n      especialidades = especialidadesResponse.data;\n    } else if (especialidadesResponse.especialidades && Array.isArray(especialidadesResponse.especialidades)) {\n      especialidades = especialidadesResponse.especialidades;\n    } else if (especialidadesResponse.idEspecialidad) {\n      // Single specialty object\n      especialidades = [especialidadesResponse];\n    }\n  }\n  \n  console.log('✅ Especialidades processed:', especialidades.length + ' items');\n  console.log('📋 Especialidades array:', JSON.stringify(especialidades, null, 2));\n} catch (error) {\n  console.log('❌ Error processing especialidades:', error.message);\n  console.log('❌ Error stack:', error.stack);\n  especialidades = [];\n}\n\n// Check if DNI validation was successful\nlet dniValid = false;\nlet errorMessage = \"\";\n\ntry {\n  const dniResponse = $('Validate DNI').first().json;\n  console.log('🔍 DEBUG: DNI Response:', JSON.stringify(dniResponse, null, 2));\n  if (dniResponse && (dniResponse.idPaciente || dniResponse.id)) {\n    dniValid = true;\n    // Store patient data\n    allSessions[chatId].datos.paciente = dniResponse;\n    console.log('✅ DEBUG: DNI Valid, patient data stored');\n  } else {\n    errorMessage = \"❌ DNI no encontrado en el sistema\\n\\nPor favor verifique el número ingresado o comuníquese con la clínica para registrarse.\";\n    console.log('🔍 DNI ERROR SOURCE: Process DNI Result - API validation');\n    console.log('❌ DEBUG: DNI Invalid, no patient found');\n  }\n} catch (error) {\n  console.log('DNI Validation Error:', error.message);\n  console.log('❌ Error stack:', error.stack);\n  errorMessage = \"❌ Error validando DNI\\n\\nPor favor intente nuevamente o verifique el número ingresado.\";\n}\n\nlet responseMessage = \"\";\n\nif (dniValid) {\n  // Show specialties\n  allSessions[chatId].estado = \"ESPERANDO_ESPECIALIDAD\";\n  \n  // Extract patient name from API response\n  const pacienteData = allSessions[chatId].datos.paciente;\n  let patientName = \"\";\n  \n  // Try different possible name fields from the API response\n  if (pacienteData) {\n    patientName = pacienteData.nombre || \n                 pacienteData.name || \n                 pacienteData.nombreCompleto || \n                 pacienteData.fullName || \n                 pacienteData.nombrePaciente || \n                 pacienteData.nombreApellido || \n                 pacienteData.apellidoNombre || \n                 \"\";\n  }\n  \n  console.log('👤 DEBUG: Patient name extracted:', patientName);\n  \n  // Build the welcome message with or without name\n  let especialidadesText = \"\";\n  if (patientName && patientName.trim() !== \"\") {\n    especialidadesText = `👋 ¡Hola ${patientName.trim()}!\\n\\n👨‍⚕️ Seleccione una especialidad:\\n\\n`;\n  } else {\n    especialidadesText = \"👨‍⚕️ Seleccione una especialidad:\\n\\n\";\n  }\n  \n  console.log('🔄 DEBUG: Starting forEach with', especialidades.length, 'items');\n  console.log('🔄 DEBUG: Initial especialidadesText:', especialidadesText);\n  \n  // Validate especialidades is an array before forEach\n  if (Array.isArray(especialidades) && especialidades.length > 0) {\n    console.log('🔄 Building especialidades list with', especialidades.length, 'items');\n    \n    // CRITICAL FIX: Build the list directly without intermediate variable\n    // Process each specialty and append immediately\n    especialidades.forEach((esp, index) => {\n      console.log(`🔄 DEBUG: Processing specialty ${index + 1}:`, esp);\n      console.log(`🔄 DEBUG: Before adding item ${index + 1}, text length:`, especialidadesText.length);\n      \n      if (esp && esp.idEspecialidad && esp.descripcion) {\n        const listItem = `${esp.idEspecialidad}. ${esp.descripcion}\\n`;\n        console.log(`🔄 DEBUG: Adding item: \"${listItem}\"`);\n        \n        // Append directly to especialidadesText to avoid string concatenation issues\n        especialidadesText += listItem;\n        \n        console.log(`🔄 DEBUG: After adding item ${index + 1}, text length:`, especialidadesText.length);\n        console.log(`🔄 DEBUG: Current text:`, especialidadesText);\n        console.log(`✅ Added specialty: ${esp.idEspecialidad}. ${esp.descripcion}`);\n      } else {\n        console.log('⚠️ Invalid specialty object at index', index, ':', esp);\n      }\n    });\n    \n    console.log('✅ DEBUG: Final especialidadesText length:', especialidadesText.length);\n    console.log('✅ DEBUG: Final especialidadesText content:', especialidadesText);\n    console.log(`📊 Final especialidades text (${especialidadesText.length} chars):`);\n    console.log('📝 Final text content:', especialidadesText);\n  } else {\n    console.log('⚠️ No especialidades available or invalid format. Data:', especialidades);\n    especialidadesText += \"❌ No hay especialidades disponibles en este momento.\\n\\nPor favor intente más tarde.\";\n    // Keep in DNI validation state to allow retry\n    allSessions[chatId].estado = \"ESPERANDO_DNI\";\n  }\n  \n  responseMessage = especialidadesText;\n  console.log('🧹 DEBUG: Before cleaning, responseMessage:', responseMessage);\n} else {\n  // Keep in DNI state with error\n  allSessions[chatId].estado = \"ESPERANDO_DNI\";\n  responseMessage = errorMessage;\n  console.log('🧹 DEBUG: Before cleaning, error responseMessage:', responseMessage);\n}\n\n// CRITICAL FIX: Simplified message cleaning - avoid aggressive regex that might truncate content\nlet cleanedMessage = responseMessage\n  .replace(/\\\\*\\\\*([^*]+)\\\\*\\\\*/g, \"$1\")  // Remove markdown bold\n  .replace(/^\\\\s*-\\\\s+/gm, \"- \");       // Clean list items\n\nconsole.log('🧹 DEBUG: After cleaning, cleanedMessage:', cleanedMessage);\nconsole.log('📊 DEBUG: Final cleaned message length:', cleanedMessage.length);\n\nconst result = [{\n  json: {\n    chatId: chatId,\n    response: {\n      message: cleanedMessage\n    },\n    allSessions: allSessions,\n    dniValid: dniValid,\n    timestamp: new Date().toISOString()\n  }\n}];\n\nconsole.log('📤 DEBUG: Final return result:', JSON.stringify(result, null, 2));\n\nreturn result;"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -400,
-        180
+        -1008,
+        -848
       ],
-      "id": "19b8b36b-e825-4667-9e76-14b5a1cd9d5b",
+      "id": "2066bbce-a473-4867-8d8f-95abe40bd645",
       "name": "Process DNI Result"
     },
     {
@@ -204,10 +204,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
       "position": [
-        -900,
-        440
+        -1504,
+        -576
       ],
-      "id": "0e1462c1-01d1-4e6e-9a41-c3204399317d",
+      "id": "df44d2c5-668c-4905-bec1-723ab9496e1a",
       "name": "Check Days Data"
     },
     {
@@ -227,10 +227,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -680,
-        440
+        -1280,
+        -576
       ],
-      "id": "8e5142ac-8d6e-4002-a762-1c7c2d1c0692",
+      "id": "41dd3f81-3597-4c33-8d22-40bcbce98055",
       "name": "Get Days"
     },
     {
@@ -240,10 +240,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -500,
-        440
+        -1104,
+        -576
       ],
-      "id": "4b60e6cd-9761-44c5-b2da-39b78e4e6e3d",
+      "id": "8a9469ad-2604-4815-9e1b-c1cbb9c7af96",
       "name": "Process Days Result"
     },
     {
@@ -272,10 +272,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
       "position": [
-        -900,
-        660
+        -1504,
+        -368
       ],
-      "id": "f7c45435-e9b2-43ba-b7d9-08ed56444f6b",
+      "id": "778c6035-e528-4273-93b2-22f9b07c0c1e",
       "name": "Check Hours Data"
     },
     {
@@ -295,10 +295,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -700,
-        660
+        -1296,
+        -368
       ],
-      "id": "f52ec25a-2674-457f-bc6c-09fec96a0755",
+      "id": "8993722c-7dcb-40bd-a149-877cdffb470b",
       "name": "Get Hours"
     },
     {
@@ -308,10 +308,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -500,
-        660
+        -1104,
+        -368
       ],
-      "id": "5326c53e-6f30-4d86-b0cf-45ee22b303e7",
+      "id": "efe5bdd1-684a-450b-98e3-b840b386b358",
       "name": "Process Hours Result"
     },
     {
@@ -340,10 +340,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
       "position": [
-        -900,
-        860
+        -1504,
+        -160
       ],
-      "id": "73b87f81-c6bf-462a-b3d0-030581397b00",
+      "id": "9e0abe8b-6622-4725-b812-2a7f4cfab068",
       "name": "Check API Submission"
     },
     {
@@ -373,10 +373,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
       "position": [
-        -860,
-        60
+        -1504,
+        -896
       ],
-      "id": "a7f055da-e03d-4e34-96f2-7e9ef0391570",
+      "id": "d4c48bd5-68fe-4b67-ba3a-6b7725ee12a6",
       "name": "Check Initial State"
     },
     {
@@ -400,10 +400,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -700,
-        860
+        -1296,
+        -160
       ],
-      "id": "af5756ac-64fe-41e1-b412-1ba087a3ebaa",
+      "id": "0b00f8a3-160d-4f92-8336-78e88b4d145e",
       "name": "Submit Turno"
     },
     {
@@ -433,10 +433,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
       "position": [
-        -900,
-        1060
+        -1504,
+        64
       ],
-      "id": "c5d8e9f1-4b2a-3c4d-5e6f-7890abcdef12",
+      "id": "c4cb9504-e3c8-49f5-8cb1-1a46533aa84f",
       "name": "Check Confirmation Display"
     },
     {
@@ -466,10 +466,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
       "position": [
-        -900,
-        1260
+        -1504,
+        272
       ],
-      "id": "e7f8g9h0-1234-5678-9abc-def123456789",
+      "id": "0d81cf87-57d3-410d-b8ba-443a0b30c690",
       "name": "Check Error Routing"
     },
     {
@@ -479,23 +479,23 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -500,
-        860
+        -1104,
+        -160
       ],
-      "id": "12d54b51-38f4-4ccc-aa43-08fc8529d0a8",
+      "id": "9e451d9e-9700-48c1-8cc3-9734dc2d8635",
       "name": "Process API Result"
     },
     {
       "parameters": {
-        "jsCode": "// Merge All Responses\nconst stateData = $('Process State Logic').first().json;\n\nconsole.log('🔄 Merge Responses: Starting with state data:', JSON.stringify(stateData, null, 2));\nconsole.log('🔄 Merge Responses: isValid =', stateData.isValid);\n\n// Check if we have responses from other nodes\nlet finalResponse = stateData.response;\nlet finalAllSessions = stateData.allSessions;\n\n// CRITICAL FIX: If validation failed (isValid = false), use the error message from Process State Logic directly\nif (stateData.isValid === false) {\n  console.log('❌ Merge Responses: Validation failed, using error response directly');\n  console.log('❌ Error response message:', stateData.response.message);\n  \n  // Use the error response from Process State Logic directly\n  return {\n    json: {\n      chatId: stateData.chatId,\n      response: stateData.response,\n      allSessions: stateData.allSessions,\n      timestamp: new Date().toISOString(),\n      source: 'error_routing'\n    }\n  };\n}\n\n// For valid responses, check for results from processing nodes\nconsole.log('✅ Merge Responses: Validation passed, checking processing nodes');\n\n// Check for DNI validation result\ntry {\n  const dniResult = $('Process DNI Result').first()?.json;\n  if (dniResult && dniResult.response) {\n    console.log('📋 Using DNI result response');\n    finalResponse = dniResult.response;\n    finalAllSessions = dniResult.allSessions;\n  }\n} catch (error) {\n  console.log('⚠️ No DNI result available');\n}\n\n// Check for days result\ntry {\n  const daysResult = $('Process Days Result').first()?.json;\n  if (daysResult && daysResult.response) {\n    console.log('📋 Using Days result response');\n    finalResponse = daysResult.response;\n    finalAllSessions = daysResult.allSessions;\n  }\n} catch (error) {\n  console.log('⚠️ No Days result available');\n}\n\n// Check for hours result\ntry {\n  const hoursResult = $('Process Hours Result').first()?.json;\n  if (hoursResult && hoursResult.response) {\n    console.log('📋 Using Hours result response');\n    finalResponse = hoursResult.response;\n    finalAllSessions = hoursResult.allSessions;\n  }\n} catch (error) {\n  console.log('⚠️ No Hours result available');\n}\n\n// Check for API submission result\ntry {\n  const apiResult = $('Process API Result').first()?.json;\n  if (apiResult && apiResult.response) {\n    console.log('📋 Using API result response');\n    finalResponse = apiResult.response;\n    finalAllSessions = apiResult.allSessions;\n  }\n} catch (error) {\n  console.log('⚠️ No API result available');\n}\n\nconsole.log('📤 Merge Responses: Final response:', JSON.stringify(finalResponse, null, 2));\n\nreturn {\n  json: {\n    chatId: stateData.chatId,\n    response: finalResponse,\n    allSessions: finalAllSessions,\n    timestamp: new Date().toISOString(),\n    source: 'normal_flow'\n  }\n};"
+        "jsCode": "// Merge All Responses\nconst stateData = $('Process State Logic').first().json;\n\nconsole.log('🔄 Merge Responses: Starting with state data:', JSON.stringify(stateData, null, 2));\nconsole.log('🔄 Merge Responses: isValid =', stateData.isValid);\n\n// Check if we have responses from other nodes\nlet finalResponse = stateData.response;\nlet finalAllSessions = stateData.allSessions;\n\n// CRITICAL FIX: If validation failed (isValid = false), use the error message from Process State Logic directly\nif (stateData.isValid === false) {\n  console.log('❌ Merge Responses: Validation failed, using error response directly');\n  console.log('❌ Error response message:', stateData.response.message);\n  \n  // Use the error response from Process State Logic directly\n  return {\n    json: {\n      chatId: stateData.chatId,\n      response: stateData.response,\n      allSessions: stateData.allSessions,\n      timestamp: new Date().toISOString(),\n      source: 'error_routing'\n    }\n  };\n}\n\n// For valid responses, check for results from processing nodes\nconsole.log('✅ Merge Responses: Validation passed, checking processing nodes');\n\n// Check for DNI validation result\ntry {\n  const dniResult = $('Process DNI Result').first()?.json;\n  if (dniResult && dniResult.response) {\n    console.log('📋 Using DNI result response');\n    finalResponse = dniResult.response;\n    finalAllSessions = dniResult.allSessions;\n  } else {\n    console.log('⚠️ No DNI result available (likely skipped due to format validation failure)');\n  }\n} catch (error) {\n  console.log('⚠️ No DNI result available - node may have returned empty array to prevent duplicate errors');\n}\n\n// Check for days result\ntry {\n  const daysResult = $('Process Days Result').first()?.json;\n  if (daysResult && daysResult.response) {\n    console.log('📋 Using Days result response');\n    finalResponse = daysResult.response;\n    finalAllSessions = daysResult.allSessions;\n  }\n} catch (error) {\n  console.log('⚠️ No Days result available');\n}\n\n// Check for hours result\ntry {\n  const hoursResult = $('Process Hours Result').first()?.json;\n  if (hoursResult && hoursResult.response) {\n    console.log('📋 Using Hours result response');\n    finalResponse = hoursResult.response;\n    finalAllSessions = hoursResult.allSessions;\n  }\n} catch (error) {\n  console.log('⚠️ No Hours result available');\n}\n\n// Check for API submission result\ntry {\n  const apiResult = $('Process API Result').first()?.json;\n  if (apiResult && apiResult.response) {\n    console.log('📋 Using API result response');\n    finalResponse = apiResult.response;\n    finalAllSessions = apiResult.allSessions;\n  }\n} catch (error) {\n  console.log('⚠️ No API result available');\n}\n\nconsole.log('📤 Merge Responses: Final response:', JSON.stringify(finalResponse, null, 2));\n\nreturn {\n  json: {\n    chatId: stateData.chatId,\n    response: finalResponse,\n    allSessions: finalAllSessions,\n    timestamp: new Date().toISOString(),\n    source: 'normal_flow'\n  }\n};"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -140,
-        580
+        -736,
+        -448
       ],
-      "id": "2bba3e76-117c-482a-9478-d5efc0277d64",
+      "id": "98f8c1c7-df34-4b2f-bcdb-a6230da84901",
       "name": "Merge Responses"
     },
     {
@@ -505,10 +505,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        0,
-        240
+        -608,
+        -784
       ],
-      "id": "183e4c03-c5a8-4350-bcdc-9a154c6ff07b",
+      "id": "2d065172-8ac9-4387-b482-e7c4754b37d4",
       "name": "Prepare JSONBin Update"
     },
     {
@@ -536,10 +536,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        300,
-        160
+        -304,
+        -864
       ],
-      "id": "779bc951-6695-4616-b667-ffbd4d5a272b",
+      "id": "852999c0-ff42-48f0-90a5-cad400df3ec3",
       "name": "Update JSONBin"
     },
     {
@@ -549,16 +549,16 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        220,
-        600
+        -384,
+        -416
       ],
-      "id": "0526c572-d7bb-493c-93dc-c5b444addc9f",
+      "id": "3f98bcfb-bfb6-4ffb-933d-f1e7d3aea023",
       "name": "Prepare WhatsApp Message"
     },
     {
       "parameters": {
         "method": "POST",
-        "url": "https://waapi.app/api/v1/instances/76556/client/action/send-message ",
+        "url": "https://waapi.app/api/v1/instances/82249/client/action/send-message ",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -580,10 +580,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        540,
-        440
+        -64,
+        -576
       ],
-      "id": "3187b0c9-6ed5-43ac-b360-103081b802f0",
+      "id": "e53bda1e-389f-46d9-a805-e11de91bad3b",
       "name": "Send WhatsApp"
     }
   ],
@@ -889,11 +889,11 @@
       ]
     }
   },
-  "active": false,
+  "active": true,
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "e2ec1796-8890-40c1-8f44-36dd06e71ec0",
+  "versionId": "40223aeb-056e-46e9-8e25-b5f767960161",
   "meta": {
     "instanceId": "556514cf317cac5c724bf084ccbb32127ff27cc56f225fb39f131295f3c7f3d0"
   },
