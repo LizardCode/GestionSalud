@@ -15,6 +15,7 @@ using System.Data;
 using System.Threading.Tasks;
 
 using Custom = LizardCode.SalmaSalud.Domain.EntitiesCustom;
+using LizardCode.SalmaSalud.Application.Helpers.WHApi;
 
 namespace LizardCode.SalmaSalud.Application.Business
 {
@@ -24,16 +25,19 @@ namespace LizardCode.SalmaSalud.Application.Business
         private readonly IWAppApiHelper _wAppApiHelper;
         private readonly ILogger<ChatApiBusiness> _logger;
         private readonly IAuditoriasChatApiRepository _auditoriasChatApiRepository;
+        private readonly IWHApiHelper _wHApiHelper;
 
         public ChatApiBusiness(IChatApiHelper chatApiHelper,
                                 IWAppApiHelper wAppApiHelper,
                                 ILogger<ChatApiBusiness> logger,
-                                IAuditoriasChatApiRepository auditoriasChatApiRepository)
+                                IAuditoriasChatApiRepository auditoriasChatApiRepository,
+                                IWHApiHelper wHApiHelper)
         {
             _chatApiHelper = chatApiHelper;
             _wAppApiHelper = wAppApiHelper;
             _logger = logger;
             _auditoriasChatApiRepository = auditoriasChatApiRepository;
+            _wHApiHelper = wHApiHelper;
         }
 
         public async Task SendMessageBienvenida(string telefono, string nombre, int? idPaciente = null, IDbTransaction transaction = null)
@@ -329,18 +333,26 @@ namespace LizardCode.SalmaSalud.Application.Business
         {
             string id = null;
             var estado = (int)EstadoAuditoriaChatApi.Error;
-            WAppApiResponse sendResponse = null;
+            //WAppApiResponse sendResponse = null;
+            WHApiResponse sendResponse = null;
 
             telefono = telefono.Replace("549", string.Empty);
 
             try
             {
-                sendResponse = await _wAppApiHelper.SendMessage(telefono, mensaje);
+                //sendResponse = await _wAppApiHelper.SendMessage(telefono, mensaje);
+                sendResponse = await _wHApiHelper.SendMessage(telefono, mensaje);
 
-                if (sendResponse != null && sendResponse.Status == "success")
+                //if (sendResponse != null && sendResponse.Status == "success")
+                //{
+                //    estado = (int)EstadoAuditoriaChatApi.Enviado;
+                //    id = sendResponse.Data?.InstanceId;
+                //}
+
+                if (sendResponse != null && sendResponse.sent)
                 {
                     estado = (int)EstadoAuditoriaChatApi.Enviado;
-                    id = sendResponse.Data?.InstanceId;
+                    id = sendResponse.message.id;
                 }
             }
             catch (Exception ex)

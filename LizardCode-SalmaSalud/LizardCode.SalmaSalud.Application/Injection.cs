@@ -8,6 +8,7 @@ using LizardCode.Framework.Application.Common.Extensions;
 using LizardCode.SalmaSalud.Application.Interfaces.Business;
 using System.Reflection;
 using LizardCode.SalmaSalud.Application.Helpers;
+using LizardCode.SalmaSalud.Application.Helpers.WHApi;
 
 namespace LizardCode.SalmaSalud.Application
 {
@@ -99,6 +100,7 @@ namespace LizardCode.SalmaSalud.Application
             services.AddScoped<IRangosHorariosBusiness, RangosHorariosBusiness>();
             services.AddScoped<IEspecialidadesBusiness, EspecialidadesBusiness>();
             services.AddScoped<IWAppApiHelper, WAppApiHelper>();
+            services.AddScoped<IWHApiHelper, WHApiHelper>();
 
             return services;
         }
